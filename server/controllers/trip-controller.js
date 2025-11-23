@@ -1,15 +1,29 @@
+import { generateTripPlaceholderSummary } from "../ai-services/open-ai/trip-summary.js";
 import { tripModal } from "../models/trip-modal.js";
+import { generateDataHash } from "../utils/hashUtils.js";
 
 const insertTrip = async (req, res) => {
   try {
     const data = req.body;
 
     // Create a new Trip entry using your trip model
-    const entry = new tripModal(data);
-    await entry.save();
+    const newTrip = new tripModal(data);
+    //await newTrip.save();
+    const placeholderText = await generateTripPlaceholderSummary(newTrip);
+
+    console.log("Placeholder Generated text", placeholderText);
+
+    const initialData = {
+      tripDetails: newTrip.toObject(),
+      expenses: [], // Important: Use an empty array since no expenses exist yet
+    };
+    const initialHash = generateDataHash(initialData);
+    newTrip.tripSummary = placeholderText ?? "Not Generated";
+    newTrip.tripHashData = initialHash;
+    await newTrip.save();
 
     // Send success response
-    res.status(201).json(entry);
+    res.status(201).json(newTrip);
   } catch (error) {
     console.error("Insert Trip Error:", error);
     return res

@@ -29,7 +29,8 @@ const tripValidation = [
       if (!value) {
         throw new Error("abroadInfo is required for international trips");
       }
-      if (!value.country) throw new Error("country name is required in abroadInfo");
+      if (!value.country)
+        throw new Error("country name is required in abroadInfo");
       if (!value.currency)
         throw new Error("currency name is required in abroadInfo");
       if (!value.currencyCode)
@@ -100,6 +101,8 @@ const tripValidation = [
     .withMessage("Trip total must be a number")
     .isFloat({ min: 0 })
     .withMessage("Trip total cannot be negative"),
+  body("tripHashData").optional().isString().trim(),
+  body("tripSummary").optional().isString().trim(),
 
   // Middleware function to check validation errors
   (req, res, next) => {

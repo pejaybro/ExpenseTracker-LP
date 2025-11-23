@@ -66,6 +66,16 @@ const tripSchema = new Schema(
       index: true,
       min: [0, "Trip total cannot be negative"],
     },
+    tripHashData: {
+      type: String,
+      required: false,
+      default: null,
+    },
+    tripSummary: {
+      type: String,
+      required: false,
+      default: null,
+    },
   },
   {
     collection: "default-trip", // <-- this line overrides pluralization of adding "s" at last of collection name

@@ -6,8 +6,9 @@ const TripDetails = () => {
   const { getTripDetails } = useTripConfig();
   const { tripid } = useParams();
   const trip = getTripDetails(tripid);
+  console.log("Trip Details", trip);
 
-  return <>{trip._id}</>;
+  return <>{trip.tripSummary}</>;
 };
 
 export default TripDetails;
