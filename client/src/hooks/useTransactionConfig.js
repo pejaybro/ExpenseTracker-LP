@@ -10,8 +10,10 @@ import {
   selectExpenseList,
   selectGlobalFilteredExpense,
   selectGlobalFilteredIncome,
+  selectGroupedTripExpense,
   selectIncomeList,
   selectRecentTransactionsList,
+  selectTripExpenseList,
 } from "@/redux/selectors/transaction-selector";
 import { useEffect, useMemo, useState } from "react";
 import { useSelector } from "react-redux";
@@ -29,6 +31,8 @@ const useTransactionConfig = ({ isExpense = false } = {}) => {
   const RecentTransactionList = useSelector(selectRecentTransactionsList);
   const FilteredExpenseList = useSelector(selectGlobalFilteredExpense);
   const FilteredIncomeList = useSelector(selectGlobalFilteredIncome);
+  const TripExpensesList = useSelector(selectTripExpenseList);
+  const GroupedTripExpenses = useSelector(selectGroupedTripExpense);
 
   //? --- filter for transactions ---
   const TransactionFilters = (isExpense && {
@@ -168,6 +172,7 @@ const useTransactionConfig = ({ isExpense = false } = {}) => {
     incomeLoading,
     incomeError,
     RecentTransactionList,
+    GroupedTripExpenses,
     recentTransactionsLoading,
     FilteredExpenses,
     FilteredIncome,

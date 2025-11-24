@@ -20,6 +20,7 @@ import HorizontalDivider from "../strips/horizontal-divider";
 import { bgDarkA3, cardBg, cardBgv2 } from "@/global/style";
 import ExpButton from "../buttons/exp-button";
 import TypewriterAni from "../TypewriterAni";
+import { Spinner } from "flowbite-react";
 
 const CreateTripForm = () => {
   const dispatch = useDispatch();
@@ -41,7 +42,7 @@ const CreateTripForm = () => {
     watch, // To watch for changes in form values
     trigger, // To validate specific steps
     setValue, // To set form values programmatically
-    formState: { errors },
+    formState: { errors, isSubmitting },
   } = useForm({
     defaultValues: {
       userID: 123456,
@@ -71,14 +72,21 @@ const CreateTripForm = () => {
     try {
       await dispatch(insertTrip({ data })).unwrap();
       toast.success("Success!", {
+        duration: 5000,
         description: "Your new trip has been created.",
-        action: { label: "Ok!", onClick: () => resetForm() },
       });
+      resetForm();
       setOpen(false);
     } catch (errMessage) {
       toast.error("Creation Failed", {
+        duration: Infinity,
         description: errMessage,
-        action: { label: "Try Again", onClick: () => {} },
+        action: {
+          label: "Ok!",
+          onClick: () => {
+            resetForm();
+          },
+        },
       });
     }
   };
@@ -143,10 +151,14 @@ const CreateTripForm = () => {
 
   return (
     <>
-      <Flexcol className={cn("h-full w-full rounded-lg p-8 gap-1.25 ", bgDarkA3)}>
-        <Flexrow className=" items-center gap-2 text-24px">
+      <Flexcol
+        className={cn("h-full w-full gap-1.25 rounded-lg p-8", bgDarkA3)}
+      >
+        <Flexrow className="text-24px items-center gap-2">
           <Icons.trip />
-          <span className="font-title tracking-wide " >Your New Adventures Calling</span>
+          <span className="font-title tracking-wide">
+            Your New Adventures Calling
+          </span>
         </Flexrow>
         <Flexrow className="relative items-center">
           {!isTitleFocused && (
@@ -168,7 +180,7 @@ const CreateTripForm = () => {
           />
         </Flexrow>
         <ErrorFieldTrip error={errors.tripTitle?.message} />
-        <Flexrow className="justify-end mt-5">
+        <Flexrow className="mt-5 justify-end">
           <ExpButton
             type="button"
             onClick={async () => {
@@ -213,9 +225,9 @@ const CreateTripForm = () => {
                     <Icons.cross className="text-18px hover:text-trip-a4" />
                   </ExpButton>
                 </Flexrow>
-                <Flexrow className={"items-center gap-1"}>
+                <Flexrow className={"items-center"}>
                   {[1, 2, 3, 4].map((s) => (
-                    <Flexrow key={s} className="items-center">
+                    <>
                       <StepRing className={step >= s && "border-trip-a2"}>
                         <StepCircle
                           className={
@@ -226,11 +238,11 @@ const CreateTripForm = () => {
                         </StepCircle>
                       </StepRing>
                       {s < 4 && (
-                        <VerticalDevider
-                          className={step >= s && "bg-trip-a2"}
+                        <HorizontalDivider
+                          className={step >= s + 1 && "bg-trip-a2"}
                         />
                       )}
-                    </Flexrow>
+                    </>
                   ))}
                 </Flexrow>
               </Flexcol>
@@ -387,6 +399,7 @@ const CreateTripForm = () => {
                     onClick={prevStep}
                     custom_textbtn
                     className={"bg-trip-a2 text-dark-a2"}
+                    disabled={isSubmitting}
                   >
                     Back
                   </ExpButton>
@@ -396,8 +409,19 @@ const CreateTripForm = () => {
                   onClick={nextStep}
                   custom_textbtn
                   className={"bg-trip-a2 text-dark-a2"}
+                  disabled={isSubmitting}
                 >
-                  {step < 4 ? "Next" : "Submit"}
+                  {step < 4 ? (
+                    "Next"
+                  ) : isSubmitting ? (
+                    <Spinner
+                      className="fill-slate-a1 text-dark-a2"
+                      size="sm"
+                      aria-label="trip-form-loader"
+                    />
+                  ) : (
+                    "Submit"
+                  )}
                 </ExpButton>
               </Flexrow>
             </Flexcol>

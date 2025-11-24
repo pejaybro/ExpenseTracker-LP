@@ -50,6 +50,26 @@ export const selectRecurringExpenseList = createSelector(
   [selectRawRecurringExpenseData],
   (recurringData) => ArrayCheck(recurringData) || [],
 );
+export const selectTripExpenseList = createSelector(
+  [selectExpenseList],
+  (expenseData) => expenseData.filter((e) => e.isTripExpense === true),
+);
+
+export const selectGroupedTripExpense = createSelector(
+  [selectTripExpenseList],
+  (tripExpenses) => {
+    if (!tripExpenses.length) return [];
+    const groupedMap = tripExpenses.reduce((acc, expense) => {
+      const tripId = expense.ofTrip;
+      if (!acc[tripId]) {
+        acc[tripId] = { tripID: tripId, expenses: [] };
+      }
+      acc[tripId].expenses.push(expense);
+      return acc;
+    }, {});
+    return Object.values(groupedMap);
+  },
+);
 
 export const selectRecentTransactionsList = createSelector(
   [selectRawRecentTransactions],

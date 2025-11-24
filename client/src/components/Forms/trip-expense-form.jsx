@@ -1,9 +1,6 @@
-import { useParams } from "react-router-dom";
 import Form from "./Form";
 
-const TripExpenseForm = () => {
-  const params = useParams();
-  const id = params.tripid ? params.tripid : null;
+const TripExpenseForm = ({ id }) => {
   return <Form isTrip tripID={id} />;
 };
 
