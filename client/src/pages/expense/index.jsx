@@ -107,7 +107,7 @@ const ExpenseIndex = () => {
         
 
         <Flexrow>
-          <SelectBar className={"bg-exp-a3 text-dark-a3 gap-1.25"}>
+          <SelectBar className={"bg-exp-a3 text-dark-a3 gap-1.25 w-max"}>
             <span>
               <Icons.filter_funnel className="text-18px" />
             </span>

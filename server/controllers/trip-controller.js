@@ -1,4 +1,4 @@
-import { generateTripPlaceholderSummary } from "../ai-services/open-ai/trip-summary.js";
+import { generateTripPlaceholderSummary } from "../ai-services/genai/trip-summary.js";
 import { tripModal } from "../models/trip-modal.js";
 import { generateDataHash } from "../utils/hashUtils.js";
 

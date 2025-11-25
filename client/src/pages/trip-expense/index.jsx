@@ -110,12 +110,10 @@ const TripIndex = () => {
             <CreateTripForm />
           </div>
         </Flexrow>
-        <Flexrow
-          className={cn(
-            "!text-14px mt-5 w-full gap-2.5",
-          )}
-        >
-          <span className="font-title text-[32px] tracking-wide" >Your Amazing Adventures Catalog </span>
+        <Flexrow className={cn("!text-14px mt-5 w-full gap-2.5")}>
+          <span className="font-title text-[32px] tracking-wide">
+            Your Amazing Adventures Catalog{" "}
+          </span>
         </Flexrow>
 
         <Flexrow className={"flex-wrap justify-center gap-5"}>

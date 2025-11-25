@@ -100,7 +100,7 @@ const IncomeIndex = () => {
 
       <Flexcol className="pt-20 gap-2.5">
         <Flexrow>
-          <SelectBar className={"bg-inc-a3 text-dark-a3 gap-1.25"}>
+          <SelectBar className={"bg-inc-a3 text-dark-a3 gap-1.25 w-max"}>
             <span>
               <Icons.filter_funnel className="text-18px" />
             </span>

@@ -416,7 +416,7 @@ const Form = ({
               Add Now
             </ExpButton>
 
-            {isTrip && hasTripExpense && (
+            {hasTripExpense  && (
               <ExpButton
                 onClick={() => {
                   reset();
