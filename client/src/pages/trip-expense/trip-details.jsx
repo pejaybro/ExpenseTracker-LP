@@ -12,7 +12,7 @@ import { useParams } from "react-router-dom";
 const TripDetails = () => {
   const { getTripDetails } = useTripConfig();
   const { tripid } = useParams();
-  const trip = getTripDetails(tripid);
+  const trip = useMemo(() => getTripDetails(tripid), [tripid]);
   console.log("Trip Details", trip);
   const { GroupedTripExpenses } = useTransactionConfig();
   const tripExpenses = useMemo(() => {
@@ -23,19 +23,26 @@ const TripDetails = () => {
   return (
     <Flexcol>
       <Flexrow className={"rounded-lg"}>
-        <div className="text-dark-a0 flex max-h-full min-h-[200px] w-[350px] items-center justify-center rounded-lg bg-amber-400">
+        <div className="text-dark-a0 flex max-h-full min-h-[200px] max-w-[350px] min-w-[350px] flex-1 items-center justify-center rounded-lg bg-amber-400">
           image here
         </div>
-        <div className="flex flex-col justify-center">
-          {/*  <MonthCalander isExpense list={ExpenseList ?? []} /> */}
-          <span className="font-para2-b text-20px">{trip.tripSummary}</span>
-        </div>
+        <Flexcol className="flex flex-col justify-center">
+          <span className="font-para2-b text-20px">{trip?.tripSummary}</span>
+        </Flexcol>
       </Flexrow>
 
       {tripExpenses.length ? (
         <TransactionListTable isExpesne entries={tripExpenses} />
       ) : (
-        <TripExpenseForm id={tripid} />
+        <Flexrow>
+          <div className="text-dark-a0 flex max-h-full min-h-[200px] max-w-[350px] min-w-[350px] flex-1 items-center justify-center rounded-lg bg-amber-400">
+            image here
+          </div>
+          <TripExpenseForm
+            hasTripExpense={!tripExpenses.length ? false : true}
+            id={tripid}
+          />
+        </Flexrow>
       )}
     </Flexcol>
   );

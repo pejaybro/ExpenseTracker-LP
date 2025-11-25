@@ -1,7 +1,7 @@
 import Form from "./Form";
 
-const TripExpenseForm = ({ id }) => {
-  return <Form isTrip tripID={id} />;
+const TripExpenseForm = ({hasTripExpense, id }) => {
+  return <Form isTrip hasTripExpense={hasTripExpense} tripID={id} />;
 };
 
 export default TripExpenseForm;

@@ -40,6 +40,7 @@ import Flexrow from "../section/flexrow";
 import { useState } from "react";
 
 const Form = ({
+  hasTripExpense,
   newExpense,
   newIncome,
   isExpense,
@@ -174,7 +175,7 @@ const Form = ({
   /**==================================================================== */
 
   return (
-    <div className="text-14px font-medium">
+    <div className="text-14px font-medium flex-1">
       <form onSubmit={handleSubmit(onSubmit)}>
         {/* --- Form Switcher for Expense/Income --- */}
         {!isReccuring && !isTrip && newExpense && newIncome && (
@@ -415,17 +416,32 @@ const Form = ({
               Add Now
             </ExpButton>
 
-            <ExpButton
-              onClick={() => {
-                reset();
-                handleCancel();
-              }}
-              type="button"
-              custom_textbtn
-              className={cn("bg-error-a1")}
-            >
-              Cancel
-            </ExpButton>
+            {isTrip && hasTripExpense && (
+              <ExpButton
+                onClick={() => {
+                  reset();
+                  handleCancel();
+                }}
+                type="button"
+                custom_textbtn
+                className={cn("bg-error-a1")}
+              >
+                Cancel
+              </ExpButton>
+            )}
+            {isExpense && isIncome && isReccuring && (
+              <ExpButton
+                onClick={() => {
+                  reset();
+                  handleCancel();
+                }}
+                type="button"
+                custom_textbtn
+                className={cn("bg-error-a1")}
+              >
+                Cancel
+              </ExpButton>
+            )}
           </div>
         </FormField>
       </form>
