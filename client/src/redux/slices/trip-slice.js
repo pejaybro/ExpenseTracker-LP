@@ -7,6 +7,7 @@ import {
 import { ArrayCheck } from "@/components/utility";
 import { filterTypes, selectCurrentFilter } from "./filter-slice";
 import moment from "moment";
+import { deleteExpense, insertExpense } from "./transaction-slice";
 
 const initialState = {
   TripData: null,
@@ -14,6 +15,10 @@ const initialState = {
   TripError: null,
   CreateTripLoading: false,
   CreateTripError: null,
+
+  tripExpenseData: null,
+  tripExpenseLoading: false,
+  tripExpenseError: null,
 };
 
 const userID = 123456;
@@ -39,6 +44,16 @@ export const insertTrip = createAsyncThunk(
       // Your server's /add-trip endpoint must return the newly created trip object
       const res = await apiCLient.post(`/trip/add-trip`, data);
       return res.data;
+    } catch (err) {
+      return rejectWithValue(err.message);
+    }
+  },
+);
+
+export const fetchTripExpense = createAsyncThunk(
+  "trip/fetchTripExpense",
+  async () => {
+    try {
     } catch (err) {
       return rejectWithValue(err.message);
     }
@@ -82,6 +97,32 @@ const trip = createSlice({
       .addCase(insertTrip.rejected, (state, action) => {
         state.CreateTripLoading = false;
         state.CreateTripError = action.payload;
+      })
+      .addCase(insertExpense.fulfilled, (state, action) => {
+        const expense = action.payload;
+        if (!expense.isTripExpense) return;
+
+        const tripId = expense.ofTrip._id ?? expense.ofTrip ?? null;
+        if (!tripId) return;
+
+        const trip = state.TripData.find(
+          (t) => String(t._id) === String(tripId),
+        );
+        if (!trip) return;
+
+        trip.tripTotal = (trip.tripTotal || 0) + (expense.ofAmount || 0);
+      })
+      .addCase(deleteExpense.fulfilled, (state, action) => {
+        const expense = action.payload;
+        if (!expense.isTripExpense) return;
+        const tripId = expense.ofTrip._id ?? expense.ofTrip ?? null;
+        if (!tripId) return;
+        const trip = state.TripData.find(
+          (t) => String(t._id) === String(tripId),
+        );
+        if (!trip) return;
+
+        trip.tripTotal = Math.max(0, trip.tripTotal - expense.ofAmount);
       });
   },
 });
@@ -214,7 +255,7 @@ const calculateTripSummary = (tripList) => {
     const tripStart = moment(trip.startOn);
     const tripEnd = moment(trip.endsOn);
     // diff() calculates duration. Add 1 to be inclusive (e.g., Nov 4 to Nov 5 is 2 days)
-    const duration = tripEnd.diff(tripStart, 'days') + 1;
+    const duration = tripEnd.diff(tripStart, "days") + 1;
     return sum + duration;
   }, 0);
 
@@ -222,15 +263,15 @@ const calculateTripSummary = (tripList) => {
   // Only run this logic if money was actually spent.
   if (totalSpent > 0) {
     // Filter out trips with no cost to find a valid starting point
-    const validTrips = tripList.filter(t => (t.tripTotal || 0) > 0);
-    
+    const validTrips = tripList.filter((t) => (t.tripTotal || 0) > 0);
+
     if (validTrips.length > 0) {
       // Start with the first valid trip
       mostExpensiveTrip = validTrips[0];
       cheapestTrip = validTrips[0];
 
       // Find the most/cheapest among the valid trips
-      validTrips.forEach(trip => {
+      validTrips.forEach((trip) => {
         if (trip.tripTotal > mostExpensiveTrip.tripTotal) {
           mostExpensiveTrip = trip;
         }
@@ -248,7 +289,7 @@ const calculateTripSummary = (tripList) => {
     totalSpent,
     totalDaysTraveled,
     mostExpensiveTrip, // This is the full trip object
-    cheapestTrip,      // This is the full trip object
+    cheapestTrip, // This is the full trip object
   };
 };
 

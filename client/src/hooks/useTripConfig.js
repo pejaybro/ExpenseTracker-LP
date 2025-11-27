@@ -12,8 +12,9 @@ const useTripConfig = () => {
   const FilteredTripSummary = useSelector(selectTripSummary);
   const AllTripSummary = useSelector(selectAllTripsSummary);
 
-  // This helper function is still useful, so we keep it.
-  const getTripDetails = (id) => TripList?.find((t) => t._id === id) ?? null;
+  
+
+  const getTripDetails = (id) => TripList?.find((t) => t._id === id);
 
   return {
     TripList,

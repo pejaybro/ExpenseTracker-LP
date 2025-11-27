@@ -175,7 +175,7 @@ const Form = ({
   /**==================================================================== */
 
   return (
-    <div className="text-14px font-medium flex-1">
+    <div className="text-14px flex-1 font-medium">
       <form onSubmit={handleSubmit(onSubmit)}>
         {/* --- Form Switcher for Expense/Income --- */}
         {!isReccuring && !isTrip && newExpense && newIncome && (
@@ -416,7 +416,7 @@ const Form = ({
               Add Now
             </ExpButton>
 
-            {hasTripExpense  && (
+            {hasTripExpense && (
               <ExpButton
                 onClick={() => {
                   reset();

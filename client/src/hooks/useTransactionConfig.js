@@ -33,6 +33,7 @@ const useTransactionConfig = ({ isExpense = false } = {}) => {
   const FilteredIncomeList = useSelector(selectGlobalFilteredIncome);
   const TripExpensesList = useSelector(selectTripExpenseList);
   const GroupedTripExpenses = useSelector(selectGroupedTripExpense);
+  console.log("---Trip EX in hook ---", GroupedTripExpenses);
 
   //? --- filter for transactions ---
   const TransactionFilters = (isExpense && {
@@ -108,7 +109,7 @@ const useTransactionConfig = ({ isExpense = false } = {}) => {
         bVal = new Date(b.onDate);
       }
 
-      if (sortOrder === 1) {
+      if (sortOrder === 2) {
         return aVal - bVal;
       } else {
         return bVal - aVal;
@@ -152,7 +153,7 @@ const useTransactionConfig = ({ isExpense = false } = {}) => {
         bVal = new Date(b.onDate);
       }
 
-      if (sortOrder === 1) {
+      if (sortOrder === 2) {
         return aVal - bVal;
       } else {
         return bVal - aVal;

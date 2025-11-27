@@ -2,6 +2,7 @@ import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { fetchTotal } from "./total-slice";
 import { fetchMM } from "./minmax-slice";
 import { apiCLient } from "@/api/apiClient";
+import { fetchTrips } from "./trip-slice";
 
 const initialState = {
   // --- States for FETCHING data ---
@@ -355,6 +356,7 @@ const transaction = createSlice({
         } else {
           state.expenseData = [action.payload];
         }
+
         //----- logic to get recent transaction -----
         updateRecentTransactions(state, action.payload);
       })
