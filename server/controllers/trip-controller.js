@@ -53,4 +53,27 @@ const fetchTrip = async (req, res) => {
   }
 };
 
-export { insertTrip, fetchTrip };
+const updateTripTotal = async (type, entry, session) => {
+  try {
+    const { userID, ofAmount, ofTrip } = entry;
+    const tripData = await tripModal
+      .findOne({ userID, _id: ofTrip })
+      .session(session);
+    if (!tripData) {
+      throw new Error("Trip not found");
+    }
+    if (type === 1) {
+      tripData.tripTotal = tripData.tripTotal + ofAmount;
+    } else if (type === 0) {
+      // This ensures it never goes below 0
+      tripData.tripTotal = Math.max(0, tripData.tripTotal - ofAmount);
+    }
+    await tripData.save({ session });
+    console.log("Trip Total updated correctly.");
+  } catch (error) {
+    console.error("Error occurred while updating Trip Total:", error);
+    throw new Error("Failed to update trip total breakdown.");
+  }
+};
+
+export { insertTrip, fetchTrip, updateTripTotal };

@@ -20,16 +20,21 @@ const TripDetails = () => {
   const trip = useMemo(() => getTripDetails(tripid), [tripid]);
   console.log("Trip Details", trip);
   const { GroupedTripExpenses } = useTransactionConfig();
+
+
+  
   const tripExpenses = useMemo(() => {
     if (!GroupedTripExpenses.length) return [];
     return GroupedTripExpenses.find((t) => t.tripID === tripid)?.expenses || [];
   }, [GroupedTripExpenses, tripid]);
 
+
+
   const days = getDurationCategory(trip?.startOn, trip?.endsOn);
 
   return (
     <Flexcol>
-      <Flexrow className={"items-center rounded-lg bg-dark-a3"}>
+      <Flexrow className={"bg-dark-a3 items-center rounded-lg"}>
         <div className="text-dark-a0 flex max-h-full min-h-[200px] max-w-[350px] min-w-[350px] flex-1 items-center justify-center rounded-lg bg-amber-400">
           image here
         </div>

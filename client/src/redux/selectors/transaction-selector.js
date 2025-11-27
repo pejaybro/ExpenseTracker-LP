@@ -60,7 +60,7 @@ export const selectGroupedTripExpense = createSelector(
   (tripExpenses) => {
     if (!tripExpenses.length) return [];
     const groupedMap = tripExpenses.reduce((acc, expense) => {
-      const tripId = expense.ofTrip;
+      const tripId = expense.ofTrip._id;
       if (!acc[tripId]) {
         acc[tripId] = { tripID: tripId, expenses: [] };
       }

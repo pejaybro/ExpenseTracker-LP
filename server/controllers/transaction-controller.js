@@ -8,6 +8,7 @@ import {
 import { decrementTotal, insertTotal } from "./total-controller.js";
 import { updateMinMax } from "./minmax-controller.js";
 import moment from "moment";
+import { updateTripTotal } from "./trip-controller.js";
 
 /**
  * *==================== FETCH Functions ====================
@@ -149,10 +150,13 @@ export const insertExpense = async (req, res) => {
     session.startTransaction();
     const data = req.body;
     const newExpense = new expenseModal(data);
+   
+    
     const savedEntry = await newExpense.save({ session });
-
     await insertTotal(savedEntry, session);
-    await updateMinMax(savedEntry, session);
+
+    if (savedEntry.isTripExpense === true)
+      await updateTripTotal(1, savedEntry, session);
 
     // If everything succeeded, commit
     await session.commitTransaction();

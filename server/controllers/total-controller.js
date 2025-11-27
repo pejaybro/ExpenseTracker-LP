@@ -1,5 +1,6 @@
 import { totalModal } from "../models/total-modal.js";
 import moment from "moment";
+import { updateTripTotal } from "./trip-controller.js";
 
 /**
  * @see insertTotal - add the transaction amount in total DB
@@ -112,6 +113,7 @@ export const decrementTotal = async (entry, session) => {
       onDate,
       primeCategory,
       subCategory,
+      isTripExpense,
     } = entry;
 
     const year = moment(onDate).year();
@@ -158,6 +160,8 @@ export const decrementTotal = async (entry, session) => {
       await doc.save({ session });
       console.log("Totals decremented and pruned successfully.");
     }
+
+    if (isTripExpense === true) updateTripTotal(0, entry, session);
   } catch (error) {
     console.error("Error occurred in decrementTotal:", error);
     throw new Error("Failed to decrement total breakdown.");
