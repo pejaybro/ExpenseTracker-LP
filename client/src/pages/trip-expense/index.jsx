@@ -171,11 +171,12 @@ const TripIndex = () => {
                 </Flexcol>
 
                 <Flexrow className={"w-max items-center justify-end gap-2"}>
+                 
                   <TooltipStrip content="Delete Trip">
                     <ExpButton
                       delete_iconbtn
                       onClick={() => deleteToast(dispatch, trip._id)}
-                      className={"bg-error-a1 text-slate-a1"}
+                      className={"bg-error-a1 text-slate-a1 !text-18px"}
                     />
                   </TooltipStrip>
                   <ExpButton

@@ -31,7 +31,7 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 import { Checkbox } from "../ui/checkbox";
-import OuterBar from "../selectFilter/SelectBar";
+import SelectBar from "../selectFilter/SelectBar";
 import SelectCard from "../selectFilter/SelectCard";
 import SelectFilter from "../selectFilter/SelectFilter";
 import { Icons } from "../icons";
@@ -311,7 +311,14 @@ const Form = ({
         {/* --- Main Category --- */}
         <FormField>
           <FieldLabel iconColor={formLabelIconColor} label="Main Category" />
-          <OuterBar>
+          <SelectBar
+            className={cn("text-dark-a3 w-full gap-1.25", {
+              "bg-exp-a3": isExpense,
+              "bg-inc-a3": isIncome,
+              "bg-trip-a4": isTrip,
+              "bg-rep-a3": isReccuring,
+            })}
+          >
             <SelectCard
               isExpense={isExpense}
               isTrip={isTrip}
@@ -324,6 +331,7 @@ const Form = ({
                 rules={{ required: "* Please Select a Main Category" }}
                 render={({ field }) => (
                   <SelectFilter
+                    className={"flex-1"}
                     placeholder="Select"
                     onValueChange={field.onChange}
                     list={listOfPrimeCats}
@@ -332,7 +340,7 @@ const Form = ({
                 )}
               />
             </SelectCard>
-          </OuterBar>
+          </SelectBar>
           <ErrorField error={errors.primeCategory} />
         </FormField>
 

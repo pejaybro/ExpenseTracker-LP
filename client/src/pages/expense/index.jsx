@@ -95,7 +95,7 @@ const ExpenseIndex = () => {
         {/** =========== Top - Budget Strip & Add Exp Btn =========== */}
 
         <LinearGraphData isExpense />
- <Flexrow className={"bg-dark-a0 rounded-lg"}>
+        <Flexrow className={"bg-dark-a0 rounded-lg"}>
           <div className="text-dark-a0 flex h-[200px] w-[350px] items-center justify-center rounded-lg bg-amber-400">
             image here
           </div>
@@ -103,88 +103,88 @@ const ExpenseIndex = () => {
             <span>Your Latest Transactions</span>
           </div>
         </Flexrow>
-       <Flexcol className="gap-2.5">
-        
-
-        <Flexrow>
-          <SelectBar className={"bg-exp-a3 text-dark-a3 gap-1.25 w-max"}>
-            <span>
-              <Icons.filter_funnel className="text-18px" />
-            </span>
-            <SelectCard  title={"List Filter"}>
-              <SelectFilter
-                placeholder={"Select Type"}
-                value={listFilter}
-                onValueChange={handleListFilter}
-                list={Object.values(TransactionFilters)}
-              />
-            </SelectCard>
-            <SelectCard>
-              <SelectFilter
-                placeholder={"Select Type"}
-                value={sortList}
-                onValueChange={handleListSort}
-                list={Object.values(TransactionSorts)}
-              />
-            </SelectCard>
-          </SelectBar>
-
-          <Flexrow className={"text-18px items-center gap-2.5"}>
-            <ExpButton
-              custom_iconbtn
-              custom_toolContent="Change Order"
-              className={cn("bg-dark-a3", "hover:bg-exp-a3 hover:text-dark-a3")}
-              onClick={() => handleOrder()}
-            >
-              <Icons.list_order />
-            </ExpButton>
-            <ExpButton
-              custom_iconbtn
-              custom_toolContent="Reset"
-              className={cn("bg-dark-a3", "hover:bg-exp-a3 hover:text-dark-a3")}
-              onClick={() => handleReset()}
-            >
-              <Icons.list_reset />
-            </ExpButton>
-          </Flexrow>
-        </Flexrow>
-
-        {(listFilter === TransactionFilters.BY_PRIME ||
-          listFilter === TransactionFilters.BY_SUB) && (
-          <Flexrow className={"w-max"}>
-            <SelectBar className={"bg-exp-a3 text-dark-a3 gap-1.25"}>
-             
-              {listFilter === TransactionFilters.BY_SUB && (
-                <SelectCard className={"pr-2"} title={"Sub Category "}>
-                  <SelectFilter
-                    placeholder={"Select Type"}
-                    value={sub}
-                    onValueChange={handleSubFilter}
-                    list={availableSubs}
-                  />
-                </SelectCard>
-              )}
-              <SelectCard
-               
-                title={
-                  listFilter === TransactionFilters.BY_SUB
-                    ? "of Prime "
-                    : "Category"
-                }
-              >
+        <Flexcol className="gap-2.5">
+          <Flexrow>
+            <SelectBar className={"bg-exp-a3 text-dark-a3  gap-1.25"}>
+              <span>
+                <Icons.filter_funnel className="text-18px" />
+              </span>
+              <SelectCard  title={"List Filter"}>
                 <SelectFilter
                   placeholder={"Select Type"}
-                  value={prime}
-                  onValueChange={handlePrimeFilter}
-                  list={expensePrimes}
+                  value={listFilter}
+                  onValueChange={handleListFilter}
+                  list={Object.values(TransactionFilters)}
+                />
+              </SelectCard>
+              <SelectCard>
+                <SelectFilter
+                  placeholder={"Select Type"}
+                  value={sortList}
+                  onValueChange={handleListSort}
+                  list={Object.values(TransactionSorts)}
                 />
               </SelectCard>
             </SelectBar>
-          </Flexrow>
-        )}
 
-       
-       </Flexcol>
+            <Flexrow className={"text-18px items-center gap-2.5"}>
+              <ExpButton
+                custom_iconbtn
+                custom_toolContent="Change Order"
+                className={cn(
+                  "bg-dark-a3",
+                  "hover:bg-exp-a3 hover:text-dark-a3",
+                )}
+                onClick={() => handleOrder()}
+              >
+                <Icons.list_order />
+              </ExpButton>
+              <ExpButton
+                custom_iconbtn
+                custom_toolContent="Reset"
+                className={cn(
+                  "bg-dark-a3",
+                  "hover:bg-exp-a3 hover:text-dark-a3",
+                )}
+                onClick={() => handleReset()}
+              >
+                <Icons.list_reset />
+              </ExpButton>
+            </Flexrow>
+          </Flexrow>
+
+          {(listFilter === TransactionFilters.BY_PRIME ||
+            listFilter === TransactionFilters.BY_SUB) && (
+            <Flexrow className={"w-max"}>
+              <SelectBar className={"bg-exp-a3 text-dark-a3 gap-1.25"}>
+                {listFilter === TransactionFilters.BY_SUB && (
+                  <SelectCard className={"pr-2"} title={"Sub Category "}>
+                    <SelectFilter
+                      placeholder={"Select Type"}
+                      value={sub}
+                      onValueChange={handleSubFilter}
+                      list={availableSubs}
+                    />
+                  </SelectCard>
+                )}
+                <SelectCard
+                  title={
+                    listFilter === TransactionFilters.BY_SUB
+                      ? "of Prime "
+                      : "Category"
+                  }
+                >
+                  <SelectFilter
+                    placeholder={"Select Type"}
+                    value={prime}
+                    onValueChange={handlePrimeFilter}
+                    list={expensePrimes}
+                  />
+                </SelectCard>
+              </SelectBar>
+            </Flexrow>
+          )}
+        </Flexcol>
         <TransactionListTable isExpesne entries={FilteredExpenses ?? []} />
       </Flexcol>
     </>

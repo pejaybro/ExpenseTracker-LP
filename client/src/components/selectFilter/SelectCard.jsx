@@ -9,14 +9,15 @@ const SelectCard = ({
   isReccuring,
   isTrip,
   noIcon,
+  titleClass,
   className,
 }) => {
   return (
     <>
       <Flexrow
-        className={cn("!text-14px font-para2-b items-center gap-2 w-max", className)}
+        className={cn("!text-14px font-para2-b items-center gap-2", className)}
       >
-        {title && <span>{title}</span>}
+        {title && <span className={cn("w-max",titleClass)}>{title}</span>}
         {children}
       </Flexrow>
     </>

@@ -62,6 +62,7 @@ export const deleteTrip = createAsyncThunk(
       );
       return res.data;
     } catch (err) {
+      console.log("TERR", err.message);
       return rejectWithValue(err.message);
     }
   },

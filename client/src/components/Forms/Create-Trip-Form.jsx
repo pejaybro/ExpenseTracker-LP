@@ -258,6 +258,7 @@ const CreateTripForm = () => {
                       rules={{ required: "Start date is required" }}
                       render={({ field }) => (
                         <SelectDate
+                          className={"bg-dark-a2"}
                           onSelect={field.onChange}
                           selected={field.value}
                         />
@@ -277,6 +278,7 @@ const CreateTripForm = () => {
                       }}
                       render={({ field }) => (
                         <SelectDate
+                          className={"bg-dark-a2"}
                           onSelect={field.onChange}
                           selected={field.value}
                         />
@@ -290,7 +292,7 @@ const CreateTripForm = () => {
                     {[0, 1].map((i) => (
                       <Flexrow key={i} className={"w-max items-center gap-2"}>
                         <Checkbox
-                          className="data-[state=checked]:bg-trip-a3 data-[state=checked]:text-dark-a2 text-18px border-dark-a7 size-5 border hover:cursor-pointer"
+                          className="data-[state=checked]:bg-trip-a3 data-[state=checked]:text-dark-a2 text-18px border-dark-a7 size-5 border hover:cursor-pointer bg-dark-a2"
                           checked={tripType === i}
                           onCheckedChange={() =>
                             setValue("tripType", tripType === i ? 0 : i)
@@ -318,13 +320,14 @@ const CreateTripForm = () => {
                             },
                           }}
                           render={({ field }) => (
-                            <SelectBar className={cn("bg-dark-a5 shadow-none")}>
-                              <SelectCard
-                                noIcon
-                                isExpense
-                                title={"Select Country"}
-                              >
+                            <SelectBar
+                              className={
+                                "bg-trip-a3 text-dark-a3 gap-1.25"
+                              }
+                            >
+                              <SelectCard title={"Select Country"}>
                                 <SelectFilter
+                                  className={"flex-1"}
                                   placeholder={"Select"}
                                   onValueChange={handleSelectCountry}
                                   list={getCountryNames()}
@@ -354,7 +357,7 @@ const CreateTripForm = () => {
                     {[0, 1, 2, 3].map((i) => (
                       <Flexrow key={i} className={"w-max items-center gap-2"}>
                         <Checkbox
-                          className="data-[state=checked]:bg-trip-a3 data-[state=checked]:text-dark-a2 text-18px border-dark-a7 size-5 border hover:cursor-pointer"
+                          className="data-[state=checked]:bg-trip-a3 data-[state=checked]:text-dark-a2 text-18px border-dark-a7 size-5 border hover:cursor-pointer bg-dark-a2"
                           checked={travelType === i}
                           onCheckedChange={() =>
                             setValue("travelType", travelType === i ? 0 : i)

@@ -125,6 +125,13 @@ const TripDetails = () => {
         >
           Delete Trip
         </ExpButton>
+        <ExpButton
+          custom_textbtn
+          onClick={() => console.log("working")}
+          className={cn(style, "cursor-default")}
+        >
+          Edit Trip
+        </ExpButton>
 
         {trip?.tripType === TripType.abroad && trip?.abroadInfo && (
           <ExpButton custom_textbtn className={cn(style, "cursor-default")}>
