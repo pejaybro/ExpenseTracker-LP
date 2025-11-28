@@ -19,6 +19,9 @@ const initialState = {
   tripExpenseData: null,
   tripExpenseLoading: false,
   tripExpenseError: null,
+
+  tripDeleteLoading: false,
+  tripDeleteError: null,
 };
 
 const userID = 123456;
@@ -50,10 +53,14 @@ export const insertTrip = createAsyncThunk(
   },
 );
 
-export const fetchTripExpense = createAsyncThunk(
-  "trip/fetchTripExpense",
-  async () => {
+export const deleteTrip = createAsyncThunk(
+  "trip/deleteTrip",
+  async ({ userID, tripId }, { dispatch, rejectWithValue }) => {
     try {
+      const res = await apiCLient.delete(
+        `/trip/delete-trip/${userID}/${tripId}`,
+      );
+      return res.data;
     } catch (err) {
       return rejectWithValue(err.message);
     }
@@ -123,6 +130,13 @@ const trip = createSlice({
         if (!trip) return;
 
         trip.tripTotal = Math.max(0, trip.tripTotal - expense.ofAmount);
+      })
+      .addCase(deleteTrip.fulfilled, (state, action) => {
+        const { trip } = action.payload;
+        if (!trip) return;
+        if (state.TripData && Array.isArray(state.TripData)) {
+          state.TripData = state.TripData.filter((t) => t._id !== trip._id);
+        }
       });
   },
 });

@@ -11,10 +11,16 @@ import { cn } from "@/lib/utils";
 import { getDate } from "@/utilities/calander-utility";
 import { useEffect, useMemo, useState } from "react";
 
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
+import { deleteToast } from ".";
+import TooltipStrip from "@/components/strips/tooltip-strip";
+import { useDispatch } from "react-redux";
+import { PATH } from "@/router/routerConfig";
 const style = "!text-12px bg-trip-a3 text-dark-a3 px-3 w-max font-para2-b";
 
 const TripDetails = () => {
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
   const { getTripDetails } = useTripConfig();
   const { tripid } = useParams();
   const trip = getTripDetails(tripid);
@@ -106,6 +112,20 @@ const TripDetails = () => {
               : "INR"}
           </span>
         </ExpButton>
+
+        <ExpButton
+          custom_textbtn
+          custom_toolContent={"Delete Trip"}
+          onClick={() =>
+            deleteToast(dispatch, trip?._id).then((success) => {
+              if (success) navigate(PATH.trip);
+            })
+          }
+          className={cn(style, "bg-error-a1 text-slate-a1 cursor-default")}
+        >
+          Delete Trip
+        </ExpButton>
+
         {trip?.tripType === TripType.abroad && trip?.abroadInfo && (
           <ExpButton custom_textbtn className={cn(style, "cursor-default")}>
             <Icons.dayCal />

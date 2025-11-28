@@ -1,5 +1,9 @@
 import express from "express";
-import { fetchTrip, insertTrip } from "../controllers/trip-controller.js";
+import {
+  deleteTrip,
+  fetchTrip,
+  insertTrip,
+} from "../controllers/trip-controller.js";
 import { tripValidation } from "../middlewares/trip-validation.js";
 
 const tripRouter = express.Router();
@@ -11,5 +15,7 @@ tripRouter.post(
   tripValidation, // ✅ validate incoming trip data
   insertTrip // ✅ insert trip into DB
 );
+
+tripRouter.delete("/delete-trip/:userID/:tripId", deleteTrip);
 
 export { tripRouter };

@@ -1,6 +1,8 @@
 import { generateTripPlaceholderSummary } from "../ai-services/genai/trip-summary.js";
 import { tripModal } from "../models/trip-modal.js";
 import { generateDataHash } from "../utils/hashUtils.js";
+import mongoose from "mongoose";
+import { deleteTripExpenses } from "./transaction-controller.js";
 
 const insertTrip = async (req, res) => {
   try {
@@ -73,6 +75,44 @@ const updateTripTotal = async (type, entry, session) => {
   } catch (error) {
     console.error("Error occurred while updating Trip Total:", error);
     throw new Error("Failed to update trip total breakdown.");
+  }
+};
+
+export const deleteTrip = async (req, res) => {
+  const session = await mongoose.startSession();
+  try {
+    session.startTransaction();
+    const { userID, tripId } = req.params;
+    if (!userID || !tripId) {
+      return res
+        .status(400)
+        .json({ message: "userID and tripId are required" });
+    }
+    const trip = await tripModal.findOneAndDelete(
+      {
+        userID,
+        _id: tripId,
+      },
+      { session }
+    );
+    if (!trip) {
+      await session.abortTransaction();
+      return res.status(400).json({ message: "No Trip Found to delete." });
+    }
+    const count = await deleteTripExpenses(tripId, userID, session);
+    await session.commitTransaction();
+    res.status(200).json({
+      count: count,
+      trip: trip,
+    });
+  } catch (error) {
+    await session.abortTransaction();
+    console.error("Delete Trip aborted:", error);
+    return res.status(500).json({
+      message: error.message || "Failed to Delete Trip",
+    });
+  } finally {
+    session.endSession();
   }
 };
 

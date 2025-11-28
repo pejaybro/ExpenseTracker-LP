@@ -29,9 +29,15 @@ import { cn } from "@/lib/utils";
 import { PATH } from "@/router/routerConfig";
 import { Spinner } from "flowbite-react";
 import { GraphTitleSquare } from "@/components/analysis/linear-graph-data";
+import TooltipStrip from "@/components/strips/tooltip-strip";
+import { toast } from "sonner";
+import { useDispatch } from "react-redux";
+import { deleteTrip } from "@/redux/slices/trip-slice";
+import { amountFloat } from "@/components/utilityFilter";
 
 const TripIndex = () => {
   const navigate = useNavigate();
+
   const location = useLocation();
   const {
     TripList,
@@ -65,6 +71,8 @@ const TripIndex = () => {
   const handleNextPage = useCallback(() => {
     setPage((prevPage) => Math.min(prevPage + 1, totalPages));
   }, [totalPages]);
+  const dispatch = useDispatch();
+
   // NOTE: 1. Handle the loading state first
   if (TripLoading) {
     // Replace with your preferred loading spinner component
@@ -163,6 +171,13 @@ const TripIndex = () => {
                 </Flexcol>
 
                 <Flexrow className={"w-max items-center justify-end gap-2"}>
+                  <TooltipStrip content="Delete Trip">
+                    <ExpButton
+                      delete_iconbtn
+                      onClick={() => deleteToast(dispatch, trip._id)}
+                      className={"bg-error-a1 text-slate-a1"}
+                    />
+                  </TooltipStrip>
                   <ExpButton
                     className={"bg-trip-a3 text-dark-a2 !text-18px"}
                     custom_iconbtn
@@ -229,3 +244,63 @@ const TripIndex = () => {
 export default TripIndex;
 
 const truncate = (str) => (str.length > 24 ? str.slice(0, 24) + "..." : str);
+
+export const deleteToast = (dispatch, ID, userID = 123456) => {
+  return new Promise((resolve) => {
+    toast.custom((t) => (
+      <Flexrow
+        className={cn(
+          "!text-14px bg-dark-br1 text-slate-1 border-dark-br1 shadow-dark-p2 w-[24rem] items-center gap-2 rounded-lg border px-4 py-2 shadow-md",
+        )}
+      >
+        <Flexcol className="flex-1 gap-0">
+          <span className="font-medium">Delete Trip ?</span>
+          <span>Do you want to delete ?</span>
+        </Flexcol>
+
+        <Flexrow className="w-max justify-end gap-2">
+          <ExpButton
+            custom_textbtn
+            className="bg-ggbg"
+            onClick={async () => {
+              try {
+                const { trip, count } = await dispatch(
+                  deleteTrip({ tripId: ID, userID }),
+                ).unwrap();
+
+                toast.dismiss(t.id);
+                toast.success("Trip Deleted !", {
+                  description: `Name : ${trip.tripTitle} wtih [${count}] Expenses of Amount : ${amountFloat(trip.ofAmount)} `,
+                  style: {
+                    width: "24rem", // custom width
+                  },
+                });
+                resolve(true);
+              } catch (error) {
+                toast.error("Operation Failed !", {
+                  description: error,
+                  style: {
+                    width: "24rem", // custom width
+                  },
+                });
+                resolve(false);
+              }
+            }}
+          >
+            Yes
+          </ExpButton>
+          <ExpButton
+            custom_textbtn
+            className="bg-rrbg"
+            onClick={() => {
+              toast.dismiss(t.id);
+              resolve(false);
+            }}
+          >
+            No
+          </ExpButton>
+        </Flexrow>
+      </Flexrow>
+    ));
+  });
+};

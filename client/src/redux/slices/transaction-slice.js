@@ -2,7 +2,7 @@ import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { fetchTotal } from "./total-slice";
 import { fetchMM } from "./minmax-slice";
 import { apiCLient } from "@/api/apiClient";
-import { fetchTrips } from "./trip-slice";
+import { deleteTrip, fetchTrips } from "./trip-slice";
 
 const initialState = {
   // --- States for FETCHING data ---
@@ -280,7 +280,7 @@ export const deleteRecurringExpense = createAsyncThunk(
 );
 
 // Helper function to build the recent transactions list
-const processRecentTransactions = (state) => {
+export const processRecentTransactions = (state) => {
   if (!state.expenseData || !state.incomeData) {
     return;
   }
@@ -296,7 +296,7 @@ const processRecentTransactions = (state) => {
 };
 
 // --- HELPER FUNCTION to update the recent list on insert ---
-const updateRecentTransactions = (state, newTransaction) => {
+export const updateRecentTransactions = (state, newTransaction) => {
   if (!state.recentTransactions) {
     return;
   }
@@ -425,6 +425,17 @@ const transaction = createSlice({
       .addCase(deleteExpense.rejected, (state, action) => {
         state.deleteExpenseLoading = false;
         state.deleteExpenseError = action.payload;
+      })
+      .addCase(deleteTrip.fulfilled, (state, action) => {
+        const { trip } = action.payload;
+
+        if (!trip) return;
+
+        state.expenseData = state.expenseData.filter((e) => {
+          const expenseTripId = e.ofTrip || e.ofTrip?._id;
+          return expenseTripId !== trip._id;
+        });
+        processRecentTransactions(state);
       })
 
       /**

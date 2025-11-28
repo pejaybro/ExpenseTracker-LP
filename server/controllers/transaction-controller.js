@@ -150,8 +150,7 @@ export const insertExpense = async (req, res) => {
     session.startTransaction();
     const data = req.body;
     const newExpense = new expenseModal(data);
-   
-    
+
     const savedEntry = await newExpense.save({ session });
     await insertTotal(savedEntry, session);
 
@@ -349,6 +348,27 @@ export const deleteRecurringExpense = async (req, res) => {
     });
   } finally {
     session.endSession();
+  }
+};
+
+export const deleteTripExpenses = async (tripId, userID, session) => {
+  try {
+    const exp = await expenseModal.deleteMany(
+      {
+        userID,
+        ofTrip: tripId,
+        isTripExpense: true,
+      },
+      { session }
+    );
+
+    const count = exp.deletedCount || 0;
+
+    console.log("Trip Expenses Deleted");
+    return count;
+  } catch (error) {
+    console.error("Error occurred in deleting Trip Expenses:", error);
+    throw new Error("Failed to Delete Trip Expense.");
   }
 };
 
