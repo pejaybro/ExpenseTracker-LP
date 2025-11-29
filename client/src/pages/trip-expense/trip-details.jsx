@@ -16,6 +16,7 @@ import { deleteToast } from ".";
 import TooltipStrip from "@/components/strips/tooltip-strip";
 import { useDispatch } from "react-redux";
 import { PATH } from "@/router/routerConfig";
+import EditTripForm from "@/components/Forms/edit-trip-form";
 const style = "!text-12px bg-trip-a3 text-dark-a3 px-3 w-max font-para2-b";
 
 const TripDetails = () => {
@@ -45,6 +46,8 @@ const TripDetails = () => {
   console.log("---Trip EX ---", tripExpenses);
 
   const days = getDurationCategory(trip?.startOn, trip?.endsOn);
+
+  const [editingTripDetails, setEditingTripDetails] = useState(null);
 
   return (
     <Flexcol>
@@ -127,7 +130,7 @@ const TripDetails = () => {
         </ExpButton>
         <ExpButton
           custom_textbtn
-          onClick={() => console.log("working")}
+          onClick={() => setEditingTripDetails(trip)}
           className={cn(style, "cursor-default")}
         >
           Edit Trip
@@ -163,6 +166,11 @@ const TripDetails = () => {
       {tripExpenses.length > 0 && (
         <TransactionListTable isExpesne entries={tripExpenses} />
       )}
+      <EditTripForm
+        tripDetails={editingTripDetails}
+        setEditingTripDetails={setEditingTripDetails}
+        onClose={() => setEditingTripDetails(null)}
+      />
     </Flexcol>
   );
 };

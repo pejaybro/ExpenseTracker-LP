@@ -9,7 +9,7 @@ import moment from "moment";
 import useTripConfig from "@/hooks/useTripConfig";
 
 // --- App Components ---
-import CreateTripForm from "@/components/Forms/Create-Trip-Form";
+import CreateTripForm from "@/components/Forms/create-trip-form";
 import ExpButton from "@/components/buttons/exp-button";
 import { Icons } from "@/components/icons";
 import Flexcol from "@/components/section/flexcol";

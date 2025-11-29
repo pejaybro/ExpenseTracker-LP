@@ -116,4 +116,38 @@ export const deleteTrip = async (req, res) => {
   }
 };
 
+export const updateTrip = async (req, res) => {
+  const session = await mongoose.startSession();
+  try {
+    session.startTransaction();
+    const data = req.body;
+    const updatedTrip = await tripModal.findOneAndUpdate(
+      {
+        userID: data.userID,
+        _id: data._id,
+      },
+      { $set: data },
+      { new: true, runValidators: true, timestamps: true, session: session }
+    );
+
+    if (!updatedTrip) {
+      // Abort the transaction before sending the response
+      await session.abortTransaction();
+      return res.status(404).json({ message: "Trip not found to update." });
+    }
+
+    // Send success response
+    await session.commitTransaction();
+    res.status(201).json(updatedTrip);
+  } catch (error) {
+    await session.abortTransaction();
+    console.error("Update Trip Error:", error);
+    return res
+      .status(500)
+      .json({ message: error.message || "Failed to Update Trip" });
+  } finally {
+    session.endSession();
+  }
+};
+
 export { insertTrip, fetchTrip, updateTripTotal };

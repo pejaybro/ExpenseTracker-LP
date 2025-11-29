@@ -22,6 +22,9 @@ const initialState = {
 
   tripDeleteLoading: false,
   tripDeleteError: null,
+
+  tripDetailsUpdateLoading: false,
+  tripDetailsUpdateError: null,
 };
 
 const userID = 123456;
@@ -62,7 +65,18 @@ export const deleteTrip = createAsyncThunk(
       );
       return res.data;
     } catch (err) {
-      console.log("TERR", err.message);
+      return rejectWithValue(err.message);
+    }
+  },
+);
+
+export const updateTripDetails = createAsyncThunk(
+  "trip/updateTripDetails",
+  async ({ data }, { dispatch, rejectWithValue }) => {
+    try {
+      const res = await apiCLient.post(`/trip/update-trip-details`, data);
+      return res.data;
+    } catch (err) {
       return rejectWithValue(err.message);
     }
   },
@@ -138,6 +152,11 @@ const trip = createSlice({
         if (state.TripData && Array.isArray(state.TripData)) {
           state.TripData = state.TripData.filter((t) => t._id !== trip._id);
         }
+      })
+      .addCase(updateTripDetails.fulfilled, (state, action) => {
+        const trip = action.payload;
+        const index = state.TripData.findIndex((t) => t._id === trip._id);
+        if (index !== -1) state.TripData[index] = { ...trip };
       });
   },
 });

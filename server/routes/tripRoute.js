@@ -3,6 +3,7 @@ import {
   deleteTrip,
   fetchTrip,
   insertTrip,
+  updateTrip,
 } from "../controllers/trip-controller.js";
 import { tripValidation } from "../middlewares/trip-validation.js";
 
@@ -17,5 +18,7 @@ tripRouter.post(
 );
 
 tripRouter.delete("/delete-trip/:userID/:tripId", deleteTrip);
+
+tripRouter.post("/update-trip-details", tripValidation, updateTrip);
 
 export { tripRouter };

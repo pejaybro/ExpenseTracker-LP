@@ -23,7 +23,6 @@ import SelectFilter from "../selectFilter/SelectFilter";
 import Flexrow from "../section/flexrow";
 import { DialogClose } from "@radix-ui/react-dialog";
 import {
-  insertRecurringExpense,
   updateExpense,
   updateIncome,
   updateRecurringExpense,
@@ -58,8 +57,7 @@ const TransactionEditForm = ({
     formState: { errors, isSubmitting },
   } = useForm();
 
-  isRecurring && console.log("recurr", transaction);
-
+  
   const isTripExpense = watch("isTripExpense");
   const isRecurringExpense = isExpesne ? watch("isRecurringExpense") : false;
   const selectedPrimeCat = watch("primeCategory");
