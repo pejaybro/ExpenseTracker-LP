@@ -25,6 +25,8 @@ const initialState = {
 
   tripDetailsUpdateLoading: false,
   tripDetailsUpdateError: null,
+
+  TripFlags: null,
 };
 
 const userID = 123456;
@@ -95,7 +97,7 @@ const trip = createSlice({
       })
       .addCase(fetchTrips.fulfilled, (state, action) => {
         state.TripLoading = false;
-        state.TripData = action.payload;
+        state.TripData = action.payload || [];
       })
       .addCase(fetchTrips.rejected, (state, action) => {
         state.TripLoading = false;
@@ -108,24 +110,32 @@ const trip = createSlice({
       })
       .addCase(insertTrip.fulfilled, (state, action) => {
         state.CreateTripLoading = false;
-        // action.payload is the new trip object from the server.
-        // Add it to the beginning of the TripData array.
-        if (state.TripData) {
-          state.TripData.unshift(action.payload);
+
+        const newTrip = action.payload;
+        if (!newTrip) return;
+
+        // add trip to TripData (ensure it's an array)
+        if (state.TripData && Array.isArray(state.TripData)) {
+          state.TripData.unshift(newTrip);
         } else {
-          state.TripData = [action.payload];
+          state.TripData = [newTrip];
         }
       })
       .addCase(insertTrip.rejected, (state, action) => {
         state.CreateTripLoading = false;
         state.CreateTripError = action.payload;
       })
+
+      //Inserting Exp in Trip
       .addCase(insertExpense.fulfilled, (state, action) => {
         const expense = action.payload;
-        if (!expense.isTripExpense) return;
+        if (!expense?.isTripExpense) return;
 
-        const tripId = expense.ofTrip._id ?? expense.ofTrip ?? null;
+        const tripId = expense.ofTrip?._id ?? expense.ofTrip ?? null;
         if (!tripId) return;
+
+        // guard TripData
+        if (!state.TripData || !Array.isArray(state.TripData)) return;
 
         const trip = state.TripData.find(
           (t) => String(t._id) === String(tripId),
@@ -133,30 +143,76 @@ const trip = createSlice({
         if (!trip) return;
 
         trip.tripTotal = (trip.tripTotal || 0) + (expense.ofAmount || 0);
+
+        // ensure TripFlags is an array
+        if (!state.TripFlags || typeof state.TripFlags !== "object")
+          state.TripFlags = {};
+
+        state.TripFlags[String(tripId)] = 1;
       })
+      //Deleting Exp in Trip
       .addCase(deleteExpense.fulfilled, (state, action) => {
         const expense = action.payload;
-        if (!expense.isTripExpense) return;
-        const tripId = expense.ofTrip._id ?? expense.ofTrip ?? null;
+        if (!expense?.isTripExpense) return;
+
+        const tripId = expense.ofTrip?._id ?? expense.ofTrip ?? null;
         if (!tripId) return;
+
+        if (!state.TripData || !Array.isArray(state.TripData)) return;
+
         const trip = state.TripData.find(
           (t) => String(t._id) === String(tripId),
         );
         if (!trip) return;
 
-        trip.tripTotal = Math.max(0, trip.tripTotal - expense.ofAmount);
+        trip.tripTotal = Math.max(
+          0,
+          (trip.tripTotal || 0) - (expense.ofAmount || 0),
+        );
+
+        if (!state.TripFlags || typeof state.TripFlags !== "object")
+          state.TripFlags = {};
+
+        state.TripFlags[String(tripId)] = 1;
       })
+      //Deleting Trip
       .addCase(deleteTrip.fulfilled, (state, action) => {
         const { trip } = action.payload;
         if (!trip) return;
+
         if (state.TripData && Array.isArray(state.TripData)) {
-          state.TripData = state.TripData.filter((t) => t._id !== trip._id);
+          state.TripData = state.TripData.filter(
+            (t) => String(t._id) !== String(trip._id),
+          );
         }
+
+        if (!state.TripFlags || typeof state.TripFlags !== "object")
+          state.TripFlags = {};
+        delete state.TripFlags[String(trip._id)];
       })
+      //update trip details
       .addCase(updateTripDetails.fulfilled, (state, action) => {
         const trip = action.payload;
-        const index = state.TripData.findIndex((t) => t._id === trip._id);
-        if (index !== -1) state.TripData[index] = { ...trip };
+        if (!trip) return;
+
+        if (!state.TripData || !Array.isArray(state.TripData)) {
+          state.TripData = [trip];
+        } else {
+          const index = state.TripData.findIndex(
+            (t) => String(t._id) === String(trip._id),
+          );
+          if (index !== -1) {
+            state.TripData[index] = { ...trip };
+          } else {
+            // if trip isn't present, add it (keeps store consistent)
+            state.TripData.unshift(trip);
+          }
+        }
+
+        if (!state.TripFlags || typeof state.TripFlags !== "object")
+          state.TripFlags = {};
+
+        state.TripFlags[String(trip._id)] = 1;
       });
   },
 });

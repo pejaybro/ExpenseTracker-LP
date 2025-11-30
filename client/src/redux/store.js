@@ -10,12 +10,31 @@ import tripReducer from "@/redux/slices/trip-slice.js";
 import userReducer from "@/redux/slices/user-slice.js";
 import filterReducer from "@/redux/slices/filter-slice.js";
 
+import {
+  persistReducer,
+  persistStore,
+  FLUSH,
+  REHYDRATE,
+  PAUSE,
+  PERSIST,
+  PURGE,
+  REGISTER,
+} from "redux-persist";
+import storage from "redux-persist/lib/storage";
+
+const tripPersistConfig = {
+  key: "trip",
+  storage,
+  whitelist: ["TripFlags"], // <-- only this state key will be persisted
+};
+const persistedTripReducer = persistReducer(tripPersistConfig, tripReducer);
+
 export const rootReducer = combineReducers({
   budget: budgetReducer,
   MM: MinMaxReducer,
   total: totalReducer,
   transaction: transactionReducer,
-  trip: tripReducer,
+  trip: persistedTripReducer,
   user: userReducer,
   filter: filterReducer,
 });
@@ -23,5 +42,13 @@ export const rootReducer = combineReducers({
 // Configure store
 export const store = configureStore({
   reducer: rootReducer,
-  middleware: (getDefaultMiddleware) => getDefaultMiddleware(),
+  middleware: (getDefaultMiddleware) =>
+    getDefaultMiddleware({
+      serializableCheck: {
+        // ignore redux-persist action types for serializable middleware
+        ignoredActions: [FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, REGISTER],
+      },
+    }),
 });
+
+export const persistor = persistStore(store);
