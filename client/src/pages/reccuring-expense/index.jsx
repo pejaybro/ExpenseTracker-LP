@@ -1,5 +1,5 @@
 // --- React Core ---
-import React, { useMemo } from "react";
+import React, { useEffect, useMemo } from "react";
 
 // --- 3rd Party Libraries ---
 import { Spinner } from "flowbite-react";
@@ -29,10 +29,18 @@ import {
 import { GraphTitleSquare } from "@/components/analysis/linear-graph-data";
 import { Icons } from "@/components/icons";
 import { cn } from "@/lib/utils";
+import { useSelector } from "react-redux";
 
 const ReccuringExpenseIndex = () => {
   const { RecurringList, RecurringData, recurringLoading, recurringError } =
     useRecurringConfig();
+
+  const notis = useSelector(
+    (state) => state.notifications?.RecurringNotifications,
+  );
+  useEffect(() => {
+    console.log("MY NOtis", notis);
+  }, [notis]);
 
   const { RecTotal, GraphData } = useMemo(() => {
     const GraphData = RecurringData?.GraphData?.map((r) => ({

@@ -9,6 +9,7 @@ import transactionReducer from "@/redux/slices/transaction-slice.js";
 import tripReducer from "@/redux/slices/trip-slice.js";
 import userReducer from "@/redux/slices/user-slice.js";
 import filterReducer from "@/redux/slices/filter-slice.js";
+import NotificationReducer from "@/redux/slices/notification-slice.js";
 
 import {
   persistReducer,
@@ -29,6 +30,16 @@ const tripPersistConfig = {
 };
 const persistedTripReducer = persistReducer(tripPersistConfig, tripReducer);
 
+const notifucationPersistConfig = {
+  key: "notifications",
+  storage,
+  whitelist: ["RecurringNotifications", "RecurringDataHash"], // <-- only this state key will be persisted
+};
+const persistedNotoficationReducer = persistReducer(
+  notifucationPersistConfig,
+  NotificationReducer,
+);
+
 export const rootReducer = combineReducers({
   budget: budgetReducer,
   MM: MinMaxReducer,
@@ -37,6 +48,7 @@ export const rootReducer = combineReducers({
   trip: persistedTripReducer,
   user: userReducer,
   filter: filterReducer,
+  notifications: persistedNotoficationReducer,
 });
 
 // Configure store

@@ -10,6 +10,7 @@ import { useFilterConfig } from "@/hooks/useFilterConfig";
 import SelectBar from "../selectFilter/SelectBar";
 import SelectCard from "../selectFilter/SelectCard";
 import Flexrow from "../section/flexrow";
+import { BiSolidBell } from "react-icons/bi";
 
 const style = "!text-12px w-max font-para2-m space-x-0.75 p-1";
 
@@ -74,9 +75,10 @@ export const UserLogout = () => {
   );
 };
 
-export const UserSettings = () => {
+export const UserSettings = ({ ...props }) => {
   return (
     <ExpButton
+      {...props}
       custom_textbtn
       className={cn(
         style,
@@ -85,6 +87,22 @@ export const UserSettings = () => {
     >
       <IoMdSettings />
       Settings
+    </ExpButton>
+  );
+};
+
+export const NotiBell = ({ ...props }) => {
+  return (
+    <ExpButton
+      {...props}
+      custom_textbtn
+      className={cn(
+        style,
+        "text-14px hover:bg-dark-a5 w-full justify-start px-2",
+      )}
+    >
+      <BiSolidBell />
+      Notification
     </ExpButton>
   );
 };

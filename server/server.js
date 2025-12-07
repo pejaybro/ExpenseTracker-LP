@@ -18,6 +18,9 @@ import { tripRouter } from "./routes/tripRoute.js";
 import { userRouter } from "./routes/userRoute.js";
 import path from "path";
 
+//--- Crons ---
+import "./crons/reset-recurring-payment-status.js";
+
 export const PORT = 8080;
 
 const app = express();

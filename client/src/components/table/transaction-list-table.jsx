@@ -213,7 +213,7 @@ const TransactionListTable = ({ isRecent, isExpesne, isIncome, entries }) => {
       />
 
       {!isRecent && (
-        <Pagination >
+        <Pagination>
           <PaginationContent>
             <PaginationItem>
               <PaginationPrevious

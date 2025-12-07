@@ -2,7 +2,14 @@ import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { fetchTotal } from "./total-slice";
 import { fetchMM } from "./minmax-slice";
 import { apiCLient } from "@/api/apiClient";
-import { deleteTrip, fetchTrips } from "./trip-slice";
+import { deleteTrip } from "./trip-slice";
+import CryptoJS from "crypto-js";
+import {
+  addRecurringNotification,
+  createRecurringNotifications,
+  setReccuringDataHash,
+  updateRecurringNotifications,
+} from "./notification-slice";
 
 const initialState = {
   // --- States for FETCHING data ---
@@ -213,11 +220,20 @@ export const deleteIncome = createAsyncThunk(
 
 export const fetchRecurringExpense = createAsyncThunk(
   "transaction/fetchRecurringExpense",
-  async (_, { rejectWithValue }) => {
+  async (_, { dispatch, rejectWithValue }) => {
     try {
       const res = await apiCLient.get(
         `/transaction/get-recurring-expense/${userID}`,
       );
+      const incomingHash = CryptoJS.SHA256(res.data).toString();
+      const StoredHash = JSON.parse(
+        localStorage.getItem("notifications.RecurringDataHash"),
+      );
+      if (!StoredHash || StoredHash !== incomingHash) {
+        dispatch(setReccuringDataHash(incomingHash));
+        dispatch(createRecurringNotifications(res.data));
+      }
+
       return res.data;
     } catch (err) {
       return rejectWithValue(err.message);
@@ -233,8 +249,12 @@ export const insertRecurringExpense = createAsyncThunk(
         `/transaction/add-recurring-expense`,
         data,
       );
-      const { newExpense } = res.data;
+      const { newExpense, newRecurringExpense } = res.data;
+      if (newRecurringExpense)
+        dispatch(addRecurringNotification(newRecurringExpense));
+
       if (newExpense) {
+        dispatch(addRecurringNotification(newExpense));
         dispatch(fetchTotal());
         dispatch(fetchMM());
       }
@@ -254,6 +274,7 @@ export const updateRecurringExpense = createAsyncThunk(
       );
       const { update } = res.data;
       if (update) {
+        dispatch(updateRecurringNotifications(update));
         return data;
       }
     } catch (err) {

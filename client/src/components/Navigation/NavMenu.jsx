@@ -19,6 +19,7 @@ import {
   ActiveDate,
   GlobalFilter,
   Logo,
+  NotiBell,
   PageTitle,
   UserLogout,
   UserSettings,
@@ -27,9 +28,13 @@ import { AddExp, AddInc, BudgetBarIndicator } from "./bottom-bar";
 import specely from "@/assets/specely.png";
 import TypewriterAni from "../TypewriterAni";
 import { IoMdSettings } from "react-icons/io";
+import NotificationsBlock from "./notifications-block";
+import { useState } from "react";
 
 function Dashboard({ activeBtn, children }) {
   const navigate = useNavigate();
+
+  const [isNotiOpen, setIsNotiOpen] = useState(true);
 
   function selectedStyle(toSet) {
     if (activeBtn === toSet)
@@ -152,17 +157,8 @@ function Dashboard({ activeBtn, children }) {
                     "bg-slate-br1 mx-auto my-2 data-[orientation=horizontal]:w-[95%]"
                   }
                 />
-                <ExpButton
-                  custom_textbtn
-                  className={cn(
-                    "!text-12px font-para2-b w-full justify-start space-x-0.75 p-1 px-2",
-                    selectedStyle(PATH.setting),
-                  )}
-                  onClick={() => navigate(PATH.setting)}
-                >
-                  <IoMdSettings />
-                  Settings
-                </ExpButton>
+                <NotiBell onClick={() => setIsNotiOpen(true)} />
+                <UserSettings onClick={() => navigate(PATH.setting)} />
                 <UserLogout />
               </Flexcol>
             </Flexcol>
@@ -204,6 +200,12 @@ function Dashboard({ activeBtn, children }) {
         </Flexcol>
         {/** ----- Main Body Ends ---- */}
       </Flexrow>
+      {isNotiOpen && (
+        <NotificationsBlock
+          setIsNotiOpen={setIsNotiOpen}
+          isNotiOpen={isNotiOpen}
+        />
+      )}
     </>
   );
 }

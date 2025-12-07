@@ -57,7 +57,6 @@ const TransactionEditForm = ({
     formState: { errors, isSubmitting },
   } = useForm();
 
-  
   const isTripExpense = watch("isTripExpense");
   const isRecurringExpense = isExpesne ? watch("isRecurringExpense") : false;
   const selectedPrimeCat = watch("primeCategory");
