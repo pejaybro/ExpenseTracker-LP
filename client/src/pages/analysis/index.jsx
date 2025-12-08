@@ -25,7 +25,7 @@ export const Index = () => {
     SubCategory,
   } = useTotalConfig();
 
-  console.log("subs", FilteredZerosSubCategory.income);
+  c
 
   // NOTE: 1. Handle the loading state first
   if (expenseLoading) {

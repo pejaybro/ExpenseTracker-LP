@@ -33,7 +33,7 @@ const useTransactionConfig = ({ isExpense = false } = {}) => {
   const FilteredIncomeList = useSelector(selectGlobalFilteredIncome);
   const TripExpensesList = useSelector(selectTripExpenseList);
   const GroupedTripExpenses = useSelector(selectGroupedTripExpense);
-  console.log("---Trip EX in hook ---", GroupedTripExpenses);
+ 
 
   //? --- filter for transactions ---
   const TransactionFilters = (isExpense && {

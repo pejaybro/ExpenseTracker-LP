@@ -1,7 +1,8 @@
 import { PaymentStatus } from "@/global/globalVariables.js";
 import { amountFloat } from "@/components/utilityFilter.js";
-import { createSlice } from "@reduxjs/toolkit";
+import { createSelector, createSlice } from "@reduxjs/toolkit";
 import moment from "moment";
+import { ArrayCheck } from "@/components/utility";
 
 const initialState = {
   RecurringNotifications: [],
@@ -15,10 +16,12 @@ const notifications = createSlice({
   reducers: {
     createRecurringNotifications: (state, action) => {
       const rec = action.payload ?? [];
-      console.log("rec in slice", rec);
+     
 
-      state.RecurringNotifications = rec.map((r) => createNewRecNoti(r));
-      console.log("state in slice", state.RecurringNotifications);
+      state.RecurringNotifications = rec
+        .map((r) => createNewRecNoti(r))
+        .filter(Boolean);
+      
     },
     addRecurringNotification: (state, action) => {
       const newNoti = createNewRecNoti(action.payload);
@@ -33,7 +36,6 @@ const notifications = createSlice({
         state.RecurringNotifications[index] = createNewRecNoti(newRec);
       }
     },
-    fetchRecurringNotifications: (state) => state.RecurringNotifications,
 
     setReccuringDataHash: (state, action) => {
       state.RecurringDataHash = action.payload;
@@ -67,7 +69,7 @@ export const createNewRecNoti = (r) => {
   */
   const today = moment().startOf("day");
 
-  if (r.isReccuringStatus === PaymentStatus.PAID) return;
+  if (r.isReccuringStatus === PaymentStatus.PAID) return null;
 
   // build "this month" equivalents using only day-of-month
   const onDateThisMonth = dateForThisMonthFromIso(r.onDate);
@@ -134,3 +136,14 @@ export const createNewRecNoti = (r) => {
     reccurBy: r.isReccuringBy,
   };
 };
+
+// ====================================================================
+// ? ++ MEMOIZED SELECTORS for Notifications ++
+// ====================================================================
+
+const selectNotificationState = (state) => state.notifications;
+
+export const selectNotifications = createSelector(
+  [selectNotificationState],
+  (noti) => ArrayCheck(noti.RecurringNotifications) || [],
+);

@@ -44,7 +44,7 @@ const expenseValidation = [
     .withMessage("Transaction amount must be a positive number"),
 
   // Validate note: optional, but if present must be a string
-  body("isNote").optional().isString().withMessage("Note must be a string"),
+   body("isNote").optional(),
 
   // Validate primary category: must exist, not be empty, and be a string
   body("primeCategory")
@@ -160,7 +160,7 @@ const recurringValidation = [
     .withMessage("Transaction amount must be positive"),
 
   // isNote (optional string)
-  body("isNote").optional().isString().withMessage("Note must be a string"),
+   body("isNote").optional(),
 
   // primeCategory
   body("primeCategory")
@@ -243,7 +243,7 @@ const incomeValidation = [
     .withMessage("Transaction amount must be a positive number"),
 
   // Validate note: optional, but must be a string if provided
-  body("isNote").optional().isString().withMessage("Note must be a string"),
+  body("isNote").optional(),
 
   // Validate primary category: must exist, not be empty, and be a string
   body("primeCategory")

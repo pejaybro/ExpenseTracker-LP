@@ -80,7 +80,7 @@ const Form = ({
       onDate: new Date(),
       isReccuringBy: null,
       lastPaymentDate: null,
-      isNote: "",
+      isNote: null,
       ofAmount: "",
     },
   });
@@ -125,8 +125,9 @@ const Form = ({
 
       toast.success("Transaction Added!", {
         description: `A new entry for ${result.ofAmount} was saved successfully.`,
-        action: { label: "Ok!", onClick: () => reset() },
+        action: { label: "Ok!" },
       });
+      reset();
       //handleCancel(); // Navigate back on success
     } catch (error) {
       toast.error("Operation Failed!", {
@@ -267,13 +268,12 @@ const Form = ({
                     <Checkbox
                       className="data-[state=checked]:bg-rep-a3 border-slate-a7 hover:cursor-pointer"
                       checked={repeatBy === value}
-                      onCheckedChange={() =>
-                        setValue(
-                          "isReccuringBy",
-                          repeatBy === value ? null : value,
-                          { shouldValidate: true },
-                        )
-                      }
+                      onCheckedChange={(checked) => {
+                        if (checked)
+                          setValue("isReccuringBy", value, {
+                            shouldValidate: true,
+                          });
+                      }}
                     />
                     <span>By {value === 1 ? "Month" : "Year"}</span>
                   </Flexrow>

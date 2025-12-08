@@ -45,7 +45,7 @@ const ExpenseIndex = () => {
     expensePrimes,
   } = useTransactionConfig({ isExpense: true });
 
-  console.log("subs", sub);
+ 
 
   // NOTE: 1. Handle the loading state first
   if (expenseLoading) {

@@ -43,7 +43,7 @@ const TripDetails = () => {
     }
   }, [tripExpenses.length]);
 
-  console.log("---Trip EX ---", tripExpenses);
+ 
 
   const days = getDurationCategory(trip?.startOn, trip?.endsOn);
 

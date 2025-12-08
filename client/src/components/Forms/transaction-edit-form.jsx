@@ -234,7 +234,7 @@ const TransactionEditForm = ({
               rules={{ required: "Category is required" }}
               render={({ field }) => (
                 <>
-                  {console.log("GG", field.value)}
+                  
 
                   <SelectFilter
                     placeholder="Select Sub Category"
@@ -280,7 +280,7 @@ const TransactionEditForm = ({
                           key={type}
                           className={"w-max items-center gap-2"}
                         >
-                          {console.log("check val", field.value)}
+                         
 
                           <Checkbox
                             className="data-[state=checked]:bg-rep-a3 border-slate-a7 hover:cursor-pointer"

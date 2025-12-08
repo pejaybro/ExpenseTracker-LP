@@ -93,6 +93,11 @@ export const insertExpense = createAsyncThunk(
     try {
       const res = await apiCLient.post(`/transaction/add-expense`, data);
 
+      const rec = res.data;
+      if (rec.isRecurringExpense === true) {
+        dispatch(fetchRecurringExpense());
+      }
+
       dispatch(fetchTotal());
       dispatch(fetchMM());
 
@@ -222,13 +227,17 @@ export const fetchRecurringExpense = createAsyncThunk(
   "transaction/fetchRecurringExpense",
   async (_, { dispatch, rejectWithValue }) => {
     try {
+      let StoredHash;
       const res = await apiCLient.get(
         `/transaction/get-recurring-expense/${userID}`,
       );
-      const incomingHash = CryptoJS.SHA256(res.data).toString();
-      const StoredHash = JSON.parse(
-        localStorage.getItem("notifications.RecurringDataHash"),
-      );
+      const incomingHash = CryptoJS.SHA256(JSON.stringify(res.data)).toString();
+      const root = localStorage.getItem("persist:notifications");
+
+      if (root) {
+        StoredHash = JSON.parse(JSON.parse(root)?.RecurringDataHash);
+      }
+
       if (!StoredHash || StoredHash !== incomingHash) {
         dispatch(setReccuringDataHash(incomingHash));
         dispatch(createRecurringNotifications(res.data));
@@ -254,7 +263,6 @@ export const insertRecurringExpense = createAsyncThunk(
         dispatch(addRecurringNotification(newRecurringExpense));
 
       if (newExpense) {
-        dispatch(addRecurringNotification(newExpense));
         dispatch(fetchTotal());
         dispatch(fetchMM());
       }

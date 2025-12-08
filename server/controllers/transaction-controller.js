@@ -149,6 +149,7 @@ export const insertExpense = async (req, res) => {
   try {
     session.startTransaction();
     const data = req.body;
+
     const newExpense = new expenseModal(data);
 
     const savedEntry = await newExpense.save({ session });
@@ -156,6 +157,19 @@ export const insertExpense = async (req, res) => {
 
     if (savedEntry.isTripExpense === true)
       await updateTripTotal(1, savedEntry, session);
+    if (savedEntry.isRecurringExpense === true)
+      await recurringExpModal
+        .findOneAndUpdate(
+          {
+            _id: savedEntry.ofRecurring,
+          },
+          {
+            $set: {
+              isReccuringStatus: 0,
+            },
+          }
+        )
+        .session(session);
 
     // If everything succeeded, commit
     await session.commitTransaction();

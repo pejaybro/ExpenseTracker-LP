@@ -38,9 +38,7 @@ const ReccuringExpenseIndex = () => {
   const notis = useSelector(
     (state) => state.notifications?.RecurringNotifications,
   );
-  useEffect(() => {
-    console.log("MY NOtis", notis);
-  }, [notis]);
+
 
   const { RecTotal, GraphData } = useMemo(() => {
     const GraphData = RecurringData?.GraphData?.map((r) => ({

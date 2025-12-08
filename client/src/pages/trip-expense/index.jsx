@@ -47,8 +47,7 @@ const TripIndex = () => {
     FilteredTripSummary,
   } = useTripConfig();
 
-  console.log("Filtered Summary", FilteredTripSummary);
-  console.log("All Summary", AllTripSummary);
+
 
   const ITEMS_PER_PAGE = 12;
   const [page, setPage] = useState(1);
