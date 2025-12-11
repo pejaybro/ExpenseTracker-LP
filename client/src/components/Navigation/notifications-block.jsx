@@ -11,6 +11,8 @@ import useRecurringConfig from "@/hooks/useRecurringConfig";
 import { toast } from "sonner";
 import { insertExpense } from "@/redux/slices/transaction-slice";
 import { Spinner } from "flowbite-react";
+import Flexrow from "../section/flexrow";
+import { Icons } from "../icons";
 
 const NotificationsBlock = ({ setIsNotiOpen, isNotiOpen }) => {
   const { notifications } = useRecurringConfig();
@@ -20,15 +22,18 @@ const NotificationsBlock = ({ setIsNotiOpen, isNotiOpen }) => {
       data-state={isNotiOpen ? true : false}
       className="data-[state=true]:animate-in data-[state=true]:fade-in data-[state=false]:animate-out data-[state=false]:fade-out absolute inset-0 z-[9999] flex justify-end bg-[#0505055c] p-2.5"
     >
-      <ExpButton
-        custom_textbtn
-        className={"bg-white"}
-        onClick={() => setIsNotiOpen(false)}
-      >
-        close
-      </ExpButton>
       <Flexcol className="bg-dark-a1 border-dark-a3 text-slate-a1 font-para2-m h-full w-[350px] rounded-md border p-5">
-        <div>Notifications</div>
+        <Flexrow className={"justify-between"}>
+          <div>Notifications</div>
+
+          <ExpButton
+            custom_iconbtn
+            className={"text-slate-a1 p-1"}
+            onClick={() => setIsNotiOpen(false)}
+          >
+            <Icons.cross />
+          </ExpButton>
+        </Flexrow>
 
         {notifications.length > 0 &&
           notifications.map((n) => {
@@ -49,7 +54,11 @@ const NotificationsBlock = ({ setIsNotiOpen, isNotiOpen }) => {
               </Flexcol>
             );
           })}
-        {!notifications.length && "no notifications"}
+        {!notifications.length && (
+          <Flexrow className={"text-slate-a6 !text-14px justify-center"}>
+            empty
+          </Flexrow>
+        )}
       </Flexcol>
     </div>
   );

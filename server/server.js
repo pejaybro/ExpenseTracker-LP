@@ -16,6 +16,7 @@ import { minmaxRouter } from "./routes/minmaxRoute.js";
 import { transactionRouter } from "./routes/transactionRoute.js";
 import { tripRouter } from "./routes/tripRoute.js";
 import { userRouter } from "./routes/userRoute.js";
+import { goalRouter } from "./routes/savingGoalRoute.js";
 import path from "path";
 
 //--- Crons ---
@@ -38,6 +39,7 @@ app.use("/total", totalRouter);
 app.use("/minmax", minmaxRouter);
 app.use("/trip", tripRouter);
 app.use("/users", userRouter);
+app.use("/saving-goal", goalRouter);
 
 // This is needed when you're using "type": "module" in your package.json
 const __filename = fileURLToPath(import.meta.url);

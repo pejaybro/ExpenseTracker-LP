@@ -20,6 +20,8 @@ import TripExpenseForm from "@/components/Forms/trip-expense-form.jsx";
 import Analysis from "@/pages/analysis/analysis.jsx";
 import Setting from "@/pages/user-setting/setting.jsx";
 import SettingIndex from "@/pages/user-setting/index.jsx";
+import Goal from "@/pages/goal/goal.jsx";
+import GoalIndex from "@/pages/goal/index.jsx";
 
 const AppRouter = () => {
   return (
@@ -64,6 +66,10 @@ const AppRouter = () => {
       </Route>
       <Route path={PATH.setting} element={<Setting />}>
         <Route index element={<SettingIndex />} />
+        {formRoutes()}
+      </Route>
+      <Route path={PATH.goal} element={<Goal />}>
+        <Route index element={<GoalIndex />} />
         {formRoutes()}
       </Route>
       <Route path="*" element={<NotFound />} />

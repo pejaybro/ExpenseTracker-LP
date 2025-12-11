@@ -42,7 +42,7 @@ import {
 } from "react-icons/bi";
 import { RiShareForwardFill } from "react-icons/ri";
 import { HiPencil } from "react-icons/hi";
-import { TbCancel, TbPlaylistAdd } from "react-icons/tb";
+import { TbCancel, TbPlaylistAdd, TbTargetArrow } from "react-icons/tb";
 
 import { CgAdd } from "react-icons/cg";
 
@@ -114,4 +114,5 @@ export const Icons = {
   filter_list: PiListFill,
   filter_global: RiGlobalFill,
   filter_funnel: MdFilterAlt,
+  goal: TbTargetArrow,
 };

@@ -13,6 +13,7 @@ const PATH = {
   budget: "/budget",
   addTripExpense: "add-trip-expense",
   setting: "/settings",
+  goal: "/goal",
 };
 
 export { PATH };

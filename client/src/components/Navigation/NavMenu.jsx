@@ -24,7 +24,7 @@ import {
   UserLogout,
   UserSettings,
 } from "./top-bar";
-import { AddExp, AddInc, BudgetBarIndicator } from "./bottom-bar";
+import { AddBudget, AddExp, AddInc, BudgetBarIndicator } from "./bottom-bar";
 import specely from "@/assets/specely.png";
 import TypewriterAni from "../TypewriterAni";
 import { IoMdSettings } from "react-icons/io";
@@ -34,7 +34,7 @@ import { useState } from "react";
 function Dashboard({ activeBtn, children }) {
   const navigate = useNavigate();
 
-  const [isNotiOpen, setIsNotiOpen] = useState(true);
+  const [isNotiOpen, setIsNotiOpen] = useState(false);
 
   function selectedStyle(toSet) {
     if (activeBtn === toSet)
@@ -85,6 +85,12 @@ function Dashboard({ activeBtn, children }) {
       name: <span>Budgeting</span>,
       icon: <Icons.calc />,
       link: PATH.budget,
+    },
+    {
+      id: 7,
+      name: <span>Set Goals</span>,
+      icon: <Icons.goal />,
+      link: PATH.goal,
     },
   ];
 
@@ -192,6 +198,7 @@ function Dashboard({ activeBtn, children }) {
             <Flexrow
               className={"flex-1 basis-1 items-center gap-2.5 rounded-sm"}
             >
+              <AddBudget />
               <AddExp />
               <AddInc />
             </Flexrow>
