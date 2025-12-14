@@ -15,6 +15,10 @@ export const goalValivation = [
     .bail()
     .isFloat({ min: 0 })
     .withMessage("ofAmount must be a positive number"),
+  body("isCompleted")
+    .optional()
+    .isBoolean()
+    .withMessage("isCompleted must be a boolean"),
 
   body("startDate")
     .exists()

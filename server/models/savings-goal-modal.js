@@ -47,6 +47,11 @@ const goalSchema = new Schema(
       index: true,
       type: Date,
     },
+    isCompleted: {
+      index: true,
+      type: Boolean,
+      default: false,
+    },
   },
   {
     collection: "default-savings-goal", // <-- this line overrides pluralization of adding "s" at last of collection name

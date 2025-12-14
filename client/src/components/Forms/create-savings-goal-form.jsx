@@ -23,7 +23,6 @@ const CreateSavingsGoalForm = () => {
     defaultValues: {
       userID: 123456,
       startDate: new Date(),
-
       log: [],
     },
   });
