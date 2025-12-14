@@ -8,9 +8,17 @@ import Flexrow from "@/components/section/flexrow";
 import { Progress } from "@/components/ui/progress";
 import { cn } from "@/lib/utils";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
+
+import {
+  Pagination,
+  PaginationContent,
+  PaginationItem,
+  PaginationNext,
+  PaginationPrevious,
+} from "@/components/ui/pagination";
 
 const Index = () => {
   const {
@@ -21,9 +29,31 @@ const Index = () => {
   } = useQuery({
     queryKey: ["saving-goal"],
     queryFn: fetchSavingGoals,
+    select: (goals) => ({
+      activeGoals: goals.filter((g) => !g.isCompleted),
+      completedGoals: goals.filter((g) => g.isCompleted),
+    }),
   });
-  const activeGoals = goals?.filter((g) => !g.isCompleted) ?? [];
-  const completedGoals = goals?.filter((g) => g.isCompleted) ?? [];
+  const activeGoals = goals?.activeGoals ?? [];
+  const completedGoals = goals?.completedGoals ?? [];
+
+  //Pagination
+  const ITEMS_PER_PAGE = 10;
+  const [page_active, setPage_active] = useState(1);
+  const start_active = (page_active - 1) * ITEMS_PER_PAGE;
+  const end_active = start_active + ITEMS_PER_PAGE;
+  const currentPageItems_active = activeGoals.slice(start_active, end_active);
+  const [page_comleted, setPage_comleted] = useState(1);
+  const totalPages_active = Math.ceil(activeGoals.length / ITEMS_PER_PAGE);
+  const start_completed = (page_comleted - 1) * ITEMS_PER_PAGE;
+  const end_completed = start_completed + ITEMS_PER_PAGE;
+
+  const currentPageItems_comleted = completedGoals.slice(
+    start_completed,
+    end_completed,
+  );
+  const totalPages_comleted = Math.ceil(completedGoals.length / ITEMS_PER_PAGE);
+
   return (
     <>
       <Flexrow>
@@ -32,12 +62,35 @@ const Index = () => {
           <CreateSavingsGoalForm />
         </div>
       </Flexrow>
-      {activeGoals?.map((g) => (
-        <GoalCard key={g._id} data={g} />
-      ))}
-      {completedGoals?.map((g) => (
-        <GoalCard key={g._id} data={g} />
-      ))}
+      <Flexrow>
+        <ExpButton className={"bg-exp-a1"} custom_textbtn>
+          Total Goals Completed : {completedGoals.length}
+        </ExpButton>
+        <ExpButton className={"bg-exp-a1"} custom_textbtn>
+          Total Active Completed : {activeGoals.length}
+        </ExpButton>
+      </Flexrow>
+      {currentPageItems_active.length > 0 && (
+        <>
+          {currentPageItems_active?.map((g) => (
+            <GoalCard key={g._id} data={g} />
+          ))}
+
+          <CustomPagination page={page_active} totalPages={totalPages_active} />
+        </>
+      )}
+
+      {currentPageItems_comleted.length > 0 && (
+        <>
+          {currentPageItems_comleted?.map((g) => (
+            <GoalCard key={g._id} data={g} />
+          ))}
+          <CustomPagination
+            page={page_comleted}
+            totalPages={totalPages_comleted}
+          />
+        </>
+      )}
     </>
   );
 };
@@ -60,6 +113,12 @@ export const GoalCard = ({ data }) => {
 
   const updateGoal = async (payload) => {
     const res = await apiCLient.patch(`/saving-goal/update-goal`, payload);
+    return res.data;
+  };
+  const deleteGoal = async (payload) => {
+    const res = await apiCLient.delete(`/saving-goal/delete-goal`, {
+      data: payload,
+    });
     return res.data;
   };
 
@@ -89,7 +148,29 @@ export const GoalCard = ({ data }) => {
       });
     },
     onError: (error) => {
-      alert(error.message || "Failed to create goal");
+      alert(error.message || "Failed to update goal");
+    },
+  });
+
+  const deleteMutation = useMutation({
+    mutationFn: deleteGoal,
+    onMutate: async (deletedGoal) => {
+      await queryClient.cancelQueries({ queryKey: ["saving-goal"] });
+      const previousGoals = queryClient.getQueryData(["saving-goal"]);
+      queryClient.setQueryData(["saving-goal"], (old) =>
+        old?.filter((g) => g._id !== deletedGoal._id),
+      );
+      return { previousGoals };
+    },
+
+    onError: (error, _, context) => {
+      queryClient.setQueryData(["saving-goal"], context.previousGoals);
+      alert(error.message || "Failed to delete goal");
+    },
+    onSuccess: () => {
+      toast.success("Savings Goal Deleted!", {
+        description: `your goal has been deleted`,
+      });
     },
   });
   const {
@@ -147,14 +228,59 @@ export const GoalCard = ({ data }) => {
     ));
   };
 
+  const handleGoalDelete = (data) => {
+    toast.custom((t) => (
+      <Flexrow
+        className={cn(
+          "!text-14px bg-dark-br1 text-slate-1 border-dark-br1 shadow-dark-p2 w-[24rem] items-center gap-2 rounded-lg border px-4 py-2 shadow-md",
+        )}
+      >
+        <Flexcol className="flex-1 gap-0">
+          <span className="font-medium">Delete Goal?</span>
+          <span>are you sure want to delete goal?</span>
+        </Flexcol>
+        <Flexrow className="w-max justify-end gap-2">
+          <ExpButton
+            custom_textbtn
+            className="bg-ggbg"
+            onClick={() => {
+              deleteMutation.mutate(data);
+              toast.dismiss(t);
+            }}
+          >
+            Yes
+          </ExpButton>
+          <ExpButton
+            custom_textbtn
+            className="bg-rrbg"
+            onClick={() => {
+              toast.dismiss(t);
+            }}
+          >
+            No
+          </ExpButton>
+        </Flexrow>
+      </Flexrow>
+    ));
+  };
+
   const onSubmit = (data) => {
     updateMutation.mutate(data);
   };
 
   return (
     <>
-      <Flexcol className="bg-dark-a3 my-5 gap-2.5 rounded-md p-5">
-        <div>Title : {data.title}</div>
+      <Flexcol className="bg-dark-a3 font-para2-m my-5 gap-2.5 rounded-md p-5">
+        <Flexrow className={"justify-between"}>
+          <div className="font-para2-b text-20px"> {data.title}</div>
+          <ExpButton
+            type="button"
+            onClick={() => handleGoalDelete(data)}
+            className={"bg-error-a1 text-12px p-2"}
+            delete_iconbtn
+          />
+        </Flexrow>
+
         <Flexrow className={"justify-between"}>
           <div>
             Goal Achieved : {previousAmount} || {latestAmount}
@@ -212,5 +338,47 @@ export const GoalCard = ({ data }) => {
         <ErrorField error={errors.updatedAmount} />
       </Flexcol>
     </>
+  );
+};
+
+export const CustomPagination = ({
+  bgColor = "bg-exp-a1",
+  page,
+  totalPages,
+}) => {
+  return (
+    <Pagination>
+      <PaginationContent>
+        <PaginationItem>
+          <PaginationPrevious
+            onClick={() => setPage((p) => Math.max(p - 1, 1))}
+            className={
+              page === 1
+                ? "bg-dark-a3 pointer-events-none cursor-not-allowed"
+                : `text-dark-a1 cursor-pointer ${bgColor}`
+            }
+          >
+            <Icons.pageBack />
+          </PaginationPrevious>
+        </PaginationItem>
+
+        <PaginationItem className="text-14px px-5">
+          Page {page} of {totalPages}
+        </PaginationItem>
+
+        <PaginationItem>
+          <PaginationNext
+            onClick={() => setPage((p) => Math.min(p + 1, totalPages))}
+            className={
+              page === totalPages
+                ? "bg-dark-a3 pointer-events-none cursor-not-allowed"
+                : `text-dark-a1 cursor-pointer ${bgColor}`
+            }
+          >
+            <Icons.pageNext />
+          </PaginationNext>
+        </PaginationItem>
+      </PaginationContent>
+    </Pagination>
   );
 };

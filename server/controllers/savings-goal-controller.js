@@ -59,3 +59,18 @@ export const updateGoal = async (req, res) => {
       .json({ message: error.message || "Failed to Update Savings Goal Data" });
   }
 };
+
+export const deleteGoal = async (req, res) => {
+  try {
+    const { _id } = req.body;
+
+    const deletedGoal = await savingsGoalModal.findByIdAndDelete(_id);
+
+    res.status(200).json(deletedGoal);
+  } catch (error) {
+    console.error(error);
+    return res
+      .status(500)
+      .json({ message: error.message || "Failed to delete Savings Goal " });
+  }
+};
