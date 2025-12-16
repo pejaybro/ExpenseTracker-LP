@@ -15,6 +15,9 @@ import { Slider } from "@/components/ui/slider";
 import Flexcol from "./section/flexcol";
 import { useDispatch, useSelector } from "react-redux";
 import { setProfileImage } from "@/redux/slices/user-slice";
+import Flexrow from "./section/flexrow";
+import ExpButton from "./buttons/exp-button";
+import { cn } from "@/lib/utils";
 
 const createImage = (url) =>
   new Promise((resolve, reject) => {
@@ -106,7 +109,7 @@ async function getCroppedImg(
 
 // --- The Main Component in JavaScript ---
 
-const UserAvatar = () => {
+const UserAvatar = ({ isSettings }) => {
   const dispatch = useDispatch();
   const { profileImageUrl, loading, error } = useSelector(
     (state) => state.user,
@@ -180,14 +183,28 @@ const UserAvatar = () => {
 
   return (
     <>
-      <Avatar className="m-2 size-[60px] cursor-pointer rounded-md">
-        <AvatarImage
-          onClick={() => setIsMenuOpen(true)}
-          src={finalAvatarUrl}
-          alt="User Avatar"
-        />
-        <AvatarFallback className="bg-exp-a0 rounded-md" />
-      </Avatar>
+      <Flexrow className={"flex-wrap items-end "}>
+        <Avatar
+          className={cn(
+            "m-2 size-[60px] cursor-default rounded-md",
+            isSettings && "m-0 size-[100px]",
+          )}
+        >
+          <AvatarImage src={finalAvatarUrl} alt="User Avatar" />
+          <AvatarFallback className="bg-exp-a0 rounded-md" />
+        </Avatar>
+        {isSettings && (
+          <>
+            <ExpButton
+              onClick={() => setIsMenuOpen(true)}
+              className={"bg-exp-a0 text-dark-a3"}
+              custom_textbtn
+            >
+              Change Avatar
+            </ExpButton>
+          </>
+        )}
+      </Flexrow>
 
       {/* MODAL 1: Main menu */}
       <Dialog open={isMenuOpen} onOpenChange={setIsMenuOpen}>
