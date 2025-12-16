@@ -15,10 +15,41 @@ import { DualGraphCode } from "@/components/charts/dual-graph-code";
 import { DualGraphData } from "@/components/analysis/dual-graph-data";
 import { IconLibrary } from "@/components/IconLibearay";
 import specely from "@/assets/specely.png";
+import { Icons } from "@/components/icons";
+import NewExpense from "../expense/NewExpense";
+import NewIncome from "../income/NewIncome";
 
 const HomeIndex = () => {
-  const { RecentTransactionList } = useTransactionConfig();
-  const {} = useRecurringConfig();
+  const { RecentTransactionList, recentTransactionsLoading } =
+    useTransactionConfig();
+
+  // NOTE: 1. Handle the loading state first
+  if (recentTransactionsLoading) {
+    // Replace with your preferred loading spinner component
+    return (
+      <Flexrow className="h-full items-center justify-center">
+        <Spinner
+          className="text-slate-a3 fill-exp-a1"
+          size="lg"
+          aria-label="expense page loader"
+        />
+      </Flexrow>
+    );
+  }
+
+  // NOTE: 2. Handle the error state next
+  if (!RecentTransactionList || RecentTransactionList.length === 0) {
+    // This gives the user a clear message if there's nothing to show
+    return (
+      <Flexcol>
+        <WelcomeSection className="pb-0" />
+        <SimplyManage />
+        <NewExpense />
+        <NewIncome />
+      </Flexcol>
+    );
+  }
+
   return (
     <>
       {/*  <Flexrow
@@ -31,14 +62,8 @@ const HomeIndex = () => {
         <Flexrow className="w-1/2 justify-end">FF</Flexrow>
       </Flexrow> */}
 
-      <Flexrow className={"border-dark-a1 bg-dark-a0 mb-5 rounded-lg border"}>
-        <div className="text-dark-a0 flex h-[200px] w-[350px] items-center justify-center rounded-lg bg-amber-400">
-          image here
-        </div>
-        <div className="flex items-center">
-          <TypewriterAni isDashboard />
-        </div>
-      </Flexrow>
+      <WelcomeSection />
+      <SimplyManage />
 
       <Flexrow className={"mb-5 flex-wrap"}>
         <DualGraphData isDashboard />
@@ -94,3 +119,28 @@ const HomeIndex = () => {
 };
 
 export default HomeIndex;
+
+export const WelcomeSection = ({ className }) => {
+  return (
+    <Flexrow className={cn("items-center gap-2 pb-5", className)}>
+      <Icons.handPeace className="text-28px text-exp-a1" />
+      <span className="font-title text-32px tracking-wide">
+        Welcome, <span className="text-exp-a1">Prayas</span>
+      </span>
+      <span>- Begin your journey by adding your first entry.</span>
+    </Flexrow>
+  );
+};
+
+export const SimplyManage = () => {
+  return (
+    <Flexrow className={"border-dark-a1 bg-dark-a0 rounded-lg border"}>
+      <div className="text-dark-a0 flex h-[200px] w-[350px] items-center justify-center rounded-lg bg-amber-400">
+        image here
+      </div>
+      <div className="flex items-center">
+        <TypewriterAni isDashboard />
+      </div>
+    </Flexrow>
+  );
+};

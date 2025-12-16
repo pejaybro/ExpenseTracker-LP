@@ -14,6 +14,8 @@ import TotalCardForMonth from "@/components/cards/total-card-for-month";
 import { CurrentMonth, CurrentYear } from "@/utilities/calander-utility";
 import PieGraphCode from "@/components/charts/pie-graph-code";
 import IncomeCategoryAnalysis from "@/components/analysis/Income-Category-Analysis";
+import { SimplyManage } from "../home";
+import NewIncome from "../income/NewIncome";
 
 export const Index = () => {
   const { ExpenseList, expenseLoading, expenseError } = useTransactionConfig();
@@ -24,8 +26,6 @@ export const Index = () => {
     FilteredZerosExpensePrimeCategory,
     SubCategory,
   } = useTotalConfig();
-
-  c
 
   // NOTE: 1. Handle the loading state first
   if (expenseLoading) {
@@ -54,7 +54,13 @@ export const Index = () => {
   // NOTE: 3. Handle the "no data" state
   if (!ExpenseList || ExpenseList.length === 0) {
     // This gives the user a clear message if there's nothing to show
-    return <NewExpense />;
+    return (
+      <Flexcol>
+        <SimplyManage />
+        <NewExpense />
+        <NewIncome />
+      </Flexcol>
+    );
   }
   // NOTE: 4. If all checks pass, render the main content
 

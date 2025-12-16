@@ -29,6 +29,7 @@ import SelectBar from "@/components/selectFilter/SelectBar";
 import SelectCard from "@/components/selectFilter/SelectCard";
 import SelectFilter from "@/components/selectFilter/SelectFilter";
 import { cn } from "@/lib/utils";
+import { SimplyManage } from "../home";
 
 const IncomeIndex = () => {
   const navigate = useNavigate();
@@ -78,7 +79,12 @@ const IncomeIndex = () => {
   //NOTE: 3. Handle the "no data" state
   if (!IncomeList || IncomeList.length === 0) {
     // This gives the user a clear message if there's nothing to show
-    return <NewIncome />;
+    return (
+      <Flexcol>
+        <SimplyManage />
+        <NewIncome />
+      </Flexcol>
+    );
   }
 
   // NOTE: 4. If all checks pass, render the main content
@@ -98,9 +104,9 @@ const IncomeIndex = () => {
         </Flexrow>
       </Flexcol>
 
-      <Flexcol className="pt-20 gap-2.5">
+      <Flexcol className="gap-2.5 pt-20">
         <Flexrow>
-          <SelectBar className={"bg-inc-a3 text-dark-a3 gap-1.25 w-max"}>
+          <SelectBar className={"bg-inc-a3 text-dark-a3 w-max gap-1.25"}>
             <span>
               <Icons.filter_funnel className="text-18px" />
             </span>
@@ -112,7 +118,7 @@ const IncomeIndex = () => {
                 list={Object.values(TransactionFilters)}
               />
             </SelectCard>
-            <SelectCard >
+            <SelectCard>
               <SelectFilter
                 placeholder={"Select Type"}
                 value={sortList}
@@ -143,7 +149,7 @@ const IncomeIndex = () => {
         </Flexrow>
         {listFilter === TransactionFilters.BY_INCOME_CATEGORY && (
           <Flexrow className={"w-max"}>
-             <SelectBar className={"bg-inc-a3 text-dark-a3 gap-1.25"}>
+            <SelectBar className={"bg-inc-a3 text-dark-a3 gap-1.25"}>
               <SelectCard noIcon isExpense title={"Category"}>
                 <SelectFilter
                   placeholder={"Select Type"}
@@ -155,11 +161,9 @@ const IncomeIndex = () => {
             </SelectBar>
           </Flexrow>
         )}
-       
       </Flexcol>
-       <TransactionListTable isIncome entries={FilteredIncome ?? []} />
+      <TransactionListTable isIncome entries={FilteredIncome ?? []} />
       <Flexcol className="pt-20">
-       
         <LinearGraphData isIncome />
       </Flexcol>
       <Flexcol className="pt-20">

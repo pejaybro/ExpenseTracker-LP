@@ -30,6 +30,7 @@ import { GraphTitleSquare } from "@/components/analysis/linear-graph-data";
 import { Icons } from "@/components/icons";
 import { cn } from "@/lib/utils";
 import { useSelector } from "react-redux";
+import { SimplyManage } from "../home";
 
 const ReccuringExpenseIndex = () => {
   const { RecurringList, RecurringData, recurringLoading, recurringError } =
@@ -105,7 +106,13 @@ const ReccuringExpenseIndex = () => {
   //NOTE: 3. Handle the "no data" state
   if (!RecurringList || RecurringList.length === 0) {
     // This gives the user a clear message if there's nothing to show
-    return <NewReccuringExpense />;
+     return (
+      <Flexcol>
+       <SimplyManage />
+        <NewReccuringExpense />
+      </Flexcol>
+    );
+   
   }
 
   // NOTE: 4. If all checks pass, render the main content

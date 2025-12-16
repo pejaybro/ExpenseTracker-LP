@@ -19,6 +19,7 @@ import {
   PaginationNext,
   PaginationPrevious,
 } from "@/components/ui/pagination";
+import { Spinner } from "flowbite-react";
 
 const Index = () => {
   const {
@@ -54,22 +55,60 @@ const Index = () => {
   );
   const totalPages_comleted = Math.ceil(completedGoals.length / ITEMS_PER_PAGE);
 
+  // NOTE: 1. Handle the loading state first
+  if (isLoading) {
+    // Replace with your preferred loading spinner component
+    return (
+      <Flexrow className="h-full items-center justify-center">
+        <Spinner
+          className="text-slate-a3 fill-exp-a1"
+          size="lg"
+          aria-label="expense page loader"
+        />
+      </Flexrow>
+    );
+  }
+
+  // NOTE: 2. Handle the error state next
+  if (isError) {
+    return (
+      <>
+        <Flexrow className="h-full items-center justify-center">
+          ERROR : {error}
+        </Flexrow>
+      </>
+    );
+  }
+
   return (
-    <>
+    <Flexcol>
+      {!goals.length && (
+        <Flexrow>
+          <div className="text-dark-a0 flex h-[250px] w-full items-center justify-center rounded-lg bg-amber-400">
+            image here
+          </div>
+        </Flexrow>
+      )}
       <Flexrow>
-        <div className={"w-1/2"}>image</div>
+        <div className={"w-1/2"}>
+          <div className="text-dark-a0 flex h-full w-full items-center justify-center rounded-lg bg-amber-400">
+            image here
+          </div>
+        </div>
         <div className="w-1/2">
           <CreateSavingsGoalForm />
         </div>
       </Flexrow>
-      <Flexrow>
-        <ExpButton className={"bg-exp-a1"} custom_textbtn>
-          Total Goals Completed : {completedGoals.length}
-        </ExpButton>
-        <ExpButton className={"bg-exp-a1"} custom_textbtn>
-          Total Active Completed : {activeGoals.length}
-        </ExpButton>
-      </Flexrow>
+      {goals.length > 0 && (
+        <Flexrow>
+          <ExpButton className={"bg-exp-a1"} custom_textbtn>
+            Total Goals Completed : {completedGoals.length}
+          </ExpButton>
+          <ExpButton className={"bg-exp-a1"} custom_textbtn>
+            Total Active Completed : {activeGoals.length}
+          </ExpButton>
+        </Flexrow>
+      )}
       {currentPageItems_active.length > 0 && (
         <>
           {currentPageItems_active?.map((g) => (
@@ -91,7 +130,7 @@ const Index = () => {
           />
         </>
       )}
-    </>
+    </Flexcol>
   );
 };
 

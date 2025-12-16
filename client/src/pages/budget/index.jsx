@@ -27,6 +27,7 @@ import { DualGraphCode } from "@/components/charts/dual-graph-code";
 
 import { GraphTitleSquare } from "@/components/analysis/linear-graph-data";
 import { useMemo } from "react";
+import BudgetStrip from "@/components/strips/budget-strip";
 
 const BudgetIndex = () => {
   //NOTE - BUDGET CONFIG
@@ -167,7 +168,16 @@ const BudgetIndex = () => {
   // NOTE: 3. Handle the "no data" state
   if (!Budget || Budget.length === 0 || !isAnyBudgetExist) {
     // This gives the user a clear message if there's nothing to show
-    return "Set Budget";
+    return (
+      <Flexcol>
+        <Flexrow className={"w-full"}>
+          <div className="text-dark-a0 flex h-[500px] w-full items-center justify-center rounded-lg bg-amber-400">
+            image here
+          </div>
+        </Flexrow>
+        <BudgetStrip className="w-full" />
+      </Flexcol>
+    );
   }
   // NOTE: 4. If all checks pass, render the main content
   return (

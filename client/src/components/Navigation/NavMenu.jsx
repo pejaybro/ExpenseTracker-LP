@@ -26,10 +26,9 @@ import {
 } from "./top-bar";
 import { AddBudget, AddExp, AddInc, BudgetBarIndicator } from "./bottom-bar";
 import specely from "@/assets/specely.png";
-import TypewriterAni from "../TypewriterAni";
-import { IoMdSettings } from "react-icons/io";
 import NotificationsBlock from "./notifications-block";
 import { useState } from "react";
+import useBudgetConfig from "@/hooks/useBudgetConfig";
 
 function Dashboard({ activeBtn, children }) {
   const navigate = useNavigate();
@@ -93,6 +92,9 @@ function Dashboard({ activeBtn, children }) {
       link: PATH.goal,
     },
   ];
+
+  const { Budget, BudgetByMonth } = useBudgetConfig();
+  let isAnyBudgetExist = BudgetByMonth.some((b) => b.amount > 0);
 
   return (
     <>
@@ -198,7 +200,10 @@ function Dashboard({ activeBtn, children }) {
             <Flexrow
               className={"flex-1 basis-1 items-center gap-2.5 rounded-sm"}
             >
-              <AddBudget />
+              {(!Budget || Budget.length === 0 || !isAnyBudgetExist) && (
+                <AddBudget />
+              )}
+
               <AddExp />
               <AddInc />
             </Flexrow>

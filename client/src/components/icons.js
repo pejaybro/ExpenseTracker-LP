@@ -61,7 +61,7 @@ import {
   RiExternalLinkFill,
   RiGlobalFill,
 } from "react-icons/ri";
-import { PiListFill } from "react-icons/pi";
+import { PiListFill, PiHandPeaceFill } from "react-icons/pi";
 
 export const Icons = {
   analysis: MdCalculate,
@@ -115,4 +115,5 @@ export const Icons = {
   filter_global: RiGlobalFill,
   filter_funnel: MdFilterAlt,
   goal: TbTargetArrow,
+  handPeace: PiHandPeaceFill,
 };

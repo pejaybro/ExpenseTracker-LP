@@ -47,8 +47,6 @@ const TripIndex = () => {
     FilteredTripSummary,
   } = useTripConfig();
 
-
-
   const ITEMS_PER_PAGE = 12;
   const [page, setPage] = useState(1);
   // --- Memoize Pagination Calculations ---
@@ -100,7 +98,16 @@ const TripIndex = () => {
   //NOTE: 3. Handle the "no data" state
   if (!TripList || TripList.length === 0) {
     // This gives the user a clear message if there's nothing to show
-    return <CreateTripForm />;
+    return (
+      <Flexcol>
+        <Flexrow className={"w-full"}>
+          <div className="text-dark-a0 flex h-[400px] w-full items-center justify-center rounded-lg bg-amber-400">
+            image here
+          </div>
+        </Flexrow>
+        <CreateTripForm />
+      </Flexcol>
+    );
   }
 
   // NOTE: 4. If all checks pass, render the main content
@@ -170,7 +177,6 @@ const TripIndex = () => {
                 </Flexcol>
 
                 <Flexrow className={"w-max items-center justify-end gap-2"}>
-                 
                   <TooltipStrip content="Delete Trip">
                     <ExpButton
                       delete_iconbtn
