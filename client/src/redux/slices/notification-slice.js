@@ -3,11 +3,13 @@ import { amountFloat } from "@/components/utilityFilter.js";
 import { createSelector, createSlice } from "@reduxjs/toolkit";
 import moment from "moment";
 import { ArrayCheck } from "@/components/utility";
+import { CurrentYear } from "@/utilities/calander-utility";
 
 const initialState = {
   RecurringNotifications: [],
   RecurringDataHash: null,
   TripNotifications: null,
+  BudgetNotification: {},
 };
 
 const notifications = createSlice({
@@ -16,12 +18,9 @@ const notifications = createSlice({
   reducers: {
     createRecurringNotifications: (state, action) => {
       const rec = action.payload ?? [];
-     
-
       state.RecurringNotifications = rec
         .map((r) => createNewRecNoti(r))
         .filter(Boolean);
-      
     },
     addRecurringNotification: (state, action) => {
       const newNoti = createNewRecNoti(action.payload);
@@ -40,6 +39,19 @@ const notifications = createSlice({
     setReccuringDataHash: (state, action) => {
       state.RecurringDataHash = action.payload;
     },
+
+    createBudgetNotification: (state, action) => {
+      const notify = action.payload ?? false;
+      if (CurrentMonth() === 0) {
+        state.BudgetNotification = {
+          id: 0,
+          message: `Set Your ${CurrentYear()} Budget`,
+        };
+        if (notify) {
+          state.BudgetNotification.notify = notify;
+        }
+      }
+    },
   },
   extraReducers: (builder) => {},
 });
@@ -51,6 +63,7 @@ export const {
   addRecurringNotification,
   updateRecurringNotifications,
   fetchRecurringNotifications,
+  createBudgetNotification,
 } = notifications.actions;
 
 function dateForThisMonthFromIso(isoDate) {
@@ -146,4 +159,11 @@ const selectNotificationState = (state) => state.notifications;
 export const selectNotifications = createSelector(
   [selectNotificationState],
   (noti) => ArrayCheck(noti.RecurringNotifications) || [],
+);
+
+export const selectBudgetNotification = createSelector(
+  [selectNotificationState],
+  (noti) => {
+    return noti.BudgetNotification;
+  },
 );

@@ -2,7 +2,6 @@ import Flexrow from "../section/flexrow";
 import VerticalDevider from "../strips/vertical-devider";
 import { PATH } from "@/router/routerConfig";
 import { cn } from "@/lib/utils";
-import { baseBtn, Btn_text } from "@/global/style";
 import { Icons } from "../icons";
 import { useNavigate } from "react-router-dom";
 import ExpButton from "../buttons/exp-button";
@@ -12,6 +11,11 @@ import { useMemo } from "react";
 import useTotalConfig from "@/hooks/useTotalConfig";
 import { CurrentMonth, CurrentYear } from "@/utilities/calander-utility";
 
+/**
+ * ========================================================
+ * ? Budget Component Bottom
+ * ========================================================
+ */
 export const BudgetBarIndicator = () => {
   const { BudgetByMonth } = useBudgetConfig();
   const { FilterMonth } = useFilterConfig();
@@ -31,25 +35,25 @@ export const BudgetBarIndicator = () => {
     0,
     Math.min(Math.round((exp / currentBudget?.amount) * 100), 100),
   );
+
+  //NOTE ----- if no budget exist -----
+  if (currentBudget?.amount <= 0) return <span>No Monthly Budget Exist</span>;
+
+  //NOTE ----- if budget exist -----
   return (
-    <>
-      {!currentBudget?.amount && <span>No Monthly Budget Exist</span>}
-      {currentBudget?.amount && (
-        <Flexrow className={"text-14px font-para2-m items-center gap-2"}>
-          <Icons.calc className="text-12px" />
-          <span>Budget</span>
-          <VerticalDevider />
-          <span>Spent : Rs {exp}</span>
-          <div className="bg-dark-a6 h-2.5 w-[25%] rounded-sm">
-            <div
-              style={{ width: `${percent}%` }}
-              className="bg-bud-a1 h-full rounded-sm"
-            />
-          </div>
-          <span>Remaining : Rs {budgetRemaining}</span>
-        </Flexrow>
-      )}
-    </>
+    <Flexrow className={"text-14px font-para2-m items-center gap-2"}>
+      <Icons.calc className="text-12px" />
+      <span>Budget</span>
+      <VerticalDevider />
+      <span>Spent : Rs {exp}</span>
+      <div className="bg-dark-a6 h-2.5 w-[25%] rounded-sm">
+        <div
+          style={{ width: `${percent}%` }}
+          className="bg-bud-a1 h-full rounded-sm"
+        />
+      </div>
+      <span>Remaining : Rs {budgetRemaining}</span>
+    </Flexrow>
   );
 };
 
@@ -81,5 +85,12 @@ export const AddInc = () => {
 };
 
 export const AddBudget = () => {
-  return <ExpButton className={"h-max w-max"} as="div" setBudget_textbtn />;
+  const { BudgetByMonth } = useBudgetConfig();
+  let isAnyBudgetExist = BudgetByMonth.find(
+    (b) => b.month === CurrentMonth(),
+  )?.amount;
+
+  if (!isAnyBudgetExist || isAnyBudgetExist <= 0)
+    return <ExpButton className={"h-max w-max"} as="div" setBudget_textbtn />;
+  else return;
 };

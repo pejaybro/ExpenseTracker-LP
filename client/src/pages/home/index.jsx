@@ -46,6 +46,7 @@ const HomeIndex = () => {
         <SimplyManage />
         <NewExpense />
         <NewIncome />
+         <IconLibrary />
       </Flexcol>
     );
   }

@@ -6,6 +6,7 @@ import {
 } from "@reduxjs/toolkit";
 import { ArrayCheck } from "@/components/utility";
 import { CurrentYear } from "@/utilities/calander-utility";
+import { createBudgetNotification } from "./notification-slice";
 
 const initialState = {
   BudgetData: null,
@@ -54,6 +55,10 @@ export const fetchBudget = createAsyncThunk(
   async (_, { rejectWithValue }) => {
     try {
       const res = await apiCLient.get(`/budget/get-data/${userID}`);
+      const notify = res?.meta?.isNewYearCreated;
+      if (notify) {
+        createBudgetNotification(notify);
+      }
       return res.data;
     } catch (err) {
       return rejectWithValue(err.message);

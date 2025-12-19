@@ -13,9 +13,19 @@ import { insertExpense } from "@/redux/slices/transaction-slice";
 import { Spinner } from "flowbite-react";
 import Flexrow from "../section/flexrow";
 import { Icons } from "../icons";
+import useBudgetConfig from "@/hooks/useBudgetConfig";
 
 const NotificationsBlock = ({ setIsNotiOpen, isNotiOpen }) => {
   const { notifications } = useRecurringConfig();
+  const { BudgetNotification } = useBudgetConfig();
+
+  console.log("bud noti", BudgetNotification);
+
+  const hasAnyNotification =
+    (Array.isArray(notifications) && notifications.length > 0) ||
+    Boolean(BudgetNotification?.message)
+      ? true
+      : false;
 
   return (
     <div
@@ -35,26 +45,42 @@ const NotificationsBlock = ({ setIsNotiOpen, isNotiOpen }) => {
           </ExpButton>
         </Flexrow>
 
-        {notifications.length > 0 &&
-          notifications.map((n) => {
-            if (!n.message) return;
-            return (
-              <Flexcol
-                key={n.id}
-                className={cn(
-                  "border-exp-a1 bg-exp-a1/5 gap-2 rounded-md border p-4",
-                )}
-              >
-                <div className="text-14px">{n.message}</div>
+        {hasAnyNotification ? (
+          <>
+            {Boolean(BudgetNotification?.message) && (
+              <>
+                <Flexcol
+                  key={BudgetNotification?.id}
+                  className={cn(
+                    "border-bud-a1 bg-bud-a1/8 gap-2 rounded-md border p-4",
+                  )}
+                >
+                  <div className="text-14px">{BudgetNotification?.message}</div>
+                </Flexcol>
+              </>
+            )}
+            {Array.isArray(notifications) &&
+              notifications.length > 0 &&
+              notifications.map((n) => {
+                if (!n.message) return;
+                return (
+                  <Flexcol
+                    key={n.id}
+                    className={cn(
+                      "border-exp-a1 bg-exp-a1/5 gap-2 rounded-md border p-4",
+                    )}
+                  >
+                    <div className="text-14px">{n.message}</div>
 
-                {(n.status === PaymentStatus.DUE ||
-                  n.status === PaymentStatus.OVERDUE) && (
-                  <NotificationTab id={n.id} />
-                )}
-              </Flexcol>
-            );
-          })}
-        {!notifications.length && (
+                    {(n.status === PaymentStatus.DUE ||
+                      n.status === PaymentStatus.OVERDUE) && (
+                      <NotificationTab id={n.id} />
+                    )}
+                  </Flexcol>
+                );
+              })}
+          </>
+        ) : (
           <Flexrow className={"text-slate-a6 !text-14px justify-center"}>
             empty
           </Flexrow>

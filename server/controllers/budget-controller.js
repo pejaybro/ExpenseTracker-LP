@@ -84,9 +84,33 @@ export const setBudget = async (req, res) => {
 export const fetchBudget = async (req, res) => {
   try {
     let { userID } = req.params;
-    const data = await budgetModal.find({ userID }).sort({ year: 1 });
+    let budgetData = [];
+    let isNewYearCreated = false;
+    const currentYear = new Date().getFullYear();
+    budgetData = await budgetModal.find({ userID }).sort({ year: 1 });
 
-    res.status(200).json(data);
+    if (!budgetData.length) {
+      budgetData.push(insertDummyBudget());
+    }
+    const hasCurrentYear = budgetData.some(b => b.year === currentYear);
+    if (!hasCurrentYear) {
+      isNewYearCreated = true;
+      budgetData.push(insertDummyBudget());
+    }
+
+    const insertDummyBudget = async () =>
+      await budgetModal.create({
+        userID,
+        year: currentYear,
+        budgetList: [
+          {
+            month: new Date().getMonth(),
+            budget: 0,
+          },
+        ],
+      });
+
+    res.status(200).json({ data: budgetData, meta: { isNewYearCreated } });
   } catch (error) {
     console.error(error);
     return res

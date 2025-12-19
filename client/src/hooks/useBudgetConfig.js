@@ -6,6 +6,7 @@ import {
   selectBudgetData,
   selectBudgetList,
 } from "@/redux/selectors/budget-selector";
+import { selectBudgetNotification } from "@/redux/slices/notification-slice";
 
 import { useSelector } from "react-redux";
 
@@ -16,6 +17,7 @@ const useBudgetConfig = () => {
   const BudgetByMonth = useSelector(selectBudgetByMonth);
   const BudgetList = useSelector(selectBudgetList);
   const BudgetWithExpense = useSelector(BudgetExpenseComboOfSelectedYear);
+  const BudgetNotification = useSelector(selectBudgetNotification);
 
   //NOTE - creates a group of budget in month range
   const createBudgetRange = (data) => {
@@ -55,6 +57,7 @@ const useBudgetConfig = () => {
     BudgetError,
     BudgetInsertLoading,
     BudgetInsertError,
+    BudgetNotification,
   };
 };
 

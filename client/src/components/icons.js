@@ -18,7 +18,7 @@ import {
 } from "react-icons/fa";
 import { BsBarChartFill, BsFillSuitcase2Fill } from "react-icons/bs";
 
-import { IoFilter, IoAddCircle } from "react-icons/io5";
+import { IoFilter, IoAddCircle, IoWarning } from "react-icons/io5";
 
 import { ImParagraphLeft } from "react-icons/im";
 import { GiPayMoney, GiTakeMyMoney, GiReceiveMoney } from "react-icons/gi";
@@ -116,4 +116,5 @@ export const Icons = {
   filter_funnel: MdFilterAlt,
   goal: TbTargetArrow,
   handPeace: PiHandPeaceFill,
+  warning: IoWarning,
 };

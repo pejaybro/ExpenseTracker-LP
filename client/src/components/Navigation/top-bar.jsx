@@ -11,6 +11,7 @@ import SelectBar from "../selectFilter/SelectBar";
 import SelectCard from "../selectFilter/SelectCard";
 import Flexrow from "../section/flexrow";
 import { BiSolidBell } from "react-icons/bi";
+import TooltipStrip from "../strips/tooltip-strip";
 
 const style = "!text-12px w-max font-para2-m space-x-0.75 p-1";
 
@@ -119,6 +120,16 @@ export const GlobalFilter = () => {
     year,
     month,
   } = useFilterConfig();
+
+  if (!YearsList.length) {
+    return (
+      <>
+       <TooltipStrip content="No Data to Filter">
+        <Icons.filter_global className={cn("text-dark-a3 text-[16px]")} />
+        </TooltipStrip>
+      </>
+    );
+  }
 
   return (
     <>

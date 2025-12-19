@@ -29,8 +29,11 @@ import specely from "@/assets/specely.png";
 import NotificationsBlock from "./notifications-block";
 import { useState } from "react";
 import useBudgetConfig from "@/hooks/useBudgetConfig";
+import { useCheckViewport } from "@/hooks/useCheckViewport";
 
 function Dashboard({ activeBtn, children }) {
+  const { hide } = useCheckViewport();
+
   const navigate = useNavigate();
 
   const [isNotiOpen, setIsNotiOpen] = useState(false);
@@ -57,27 +60,27 @@ function Dashboard({ activeBtn, children }) {
     },
     {
       id: 2,
-      name: <span>Recurring Expense</span>,
-      icon: <Icons.repeat />,
-      link: PATH.repeat,
+      name: <span>Income</span>,
+      icon: <Icons.income />,
+      link: PATH.income,
     },
     {
       id: 3,
-      name: <span>Trip Expense</span>,
-      icon: <Icons.trip />,
-      link: PATH.trip,
-    },
-    {
-      id: 4,
       name: <span>Analysis</span>,
       icon: <Icons.analysis />,
       link: PATH.analysis,
     },
     {
+      id: 4,
+      name: <span>Recurring Expense</span>,
+      icon: <Icons.repeat />,
+      link: PATH.repeat,
+    },
+    {
       id: 5,
-      name: <span>Income</span>,
-      icon: <Icons.income />,
-      link: PATH.income,
+      name: <span>Trip Expense</span>,
+      icon: <Icons.trip />,
+      link: PATH.trip,
     },
     {
       id: 6,
@@ -93,14 +96,35 @@ function Dashboard({ activeBtn, children }) {
     },
   ];
 
-  const { Budget, BudgetByMonth } = useBudgetConfig();
-  let isAnyBudgetExist = BudgetByMonth.some((b) => b.amount > 0);
+  if (hide) {
+    return (
+      <Flexrow className="bg-dark-a1 font-para2-m min-h-screen w-full items-center justify-center">
+        <div className="border-slate-a8 bg-dark-a3 !text-slate-a1 max-w-[420px] rounded-lg border p-4 text-center">
+          <div className="text-warning mb-2 flex justify-center">
+            <Icons.warning className="text-32px text-yellow-300" />
+          </div>
+
+          <p className="text-warning text-18px">Screen size not supported</p>
+
+          <p className="text-14px mt-2">
+            Please use one of the following screen sizes to view this content:
+          </p>
+
+          <ul className="text-14px mt-3 space-y-1">
+            <li>• Desktop: minimum - 1024px w × 700px h</li>
+            <li>• Portrait mode: minimum - 800px w</li>
+            <li>• Landscape mode: minimum - 960px w</li>
+          </ul>
+        </div>
+      </Flexrow>
+    );
+  }
 
   return (
     <>
-      <Flexrow className="bg-dark-a0 justify-center">
+      <Flexrow className="bg-dark-a0 !text-slate-a1 justify-center">
         {/** ----- Main Body ---- */}
-        <Flexcol className="!text-slate-a1 h-screen max-w-[1600px] gap-2.5 p-5">
+        <Flexcol className="h-screen max-w-[1600px] gap-2.5 p-5">
           {/** ----- Top Bar ---- */}
           <Flexrow className={cn("!text-14px w-full gap-2.5")}>
             <Flexrow
@@ -175,13 +199,6 @@ function Dashboard({ activeBtn, children }) {
               {/* Scrollable content */}
               <div className="scrollBar absolute inset-0 z-20 overflow-y-auto">
                 <div className="p-16 pb-0">{children}</div>
-                <div className="relative flex w-full flex-col gap-1 overflow-hidden px-20 pt-20">
-                  <img
-                    src={specely}
-                    alt="logo"
-                    className="relative left-1/2 h-auto w-full max-w-[1100px] -translate-x-1/2"
-                  />
-                </div>
               </div>
             </div>
           </Flexrow>
@@ -200,9 +217,7 @@ function Dashboard({ activeBtn, children }) {
             <Flexrow
               className={"flex-1 basis-1 items-center gap-2.5 rounded-sm"}
             >
-              {(!Budget || Budget.length === 0 || !isAnyBudgetExist) && (
-                <AddBudget />
-              )}
+              <AddBudget />
 
               <AddExp />
               <AddInc />
@@ -222,125 +237,3 @@ function Dashboard({ activeBtn, children }) {
   );
 }
 export default Dashboard;
-
-{
-  /*
-
-
-  bg-[linear-gradient(to_right,#161616_0.5px,transparent_1px),linear-gradient(to_bottom,#161616_0.5px,transparent_1px)]
-  [background-size:18px_18px]
-  [box-shadow:0_0_8px_#e8e8e8] 
-  
-  
-  
-  <>
-      <div className="flex h-screen w-screen text-white">
-        <div className="bg-greyBlack flex w-1/6 flex-col p-5">
-          <div className="flex flex-col gap-1.5 py-10">
-            <div className="bg-exp-bmx-2 my-1 size-[4rem] rounded-[12px]"></div>
-            <button className="flex w-full items-center gap-2.5 rounded-md px-2 text-base">
-              <FaUser />
-              <span>codingtaxipj</span>
-            </button>
-            <button className="flex w-full items-center gap-2.5 rounded-md px-2 text-sm">
-              <span>prayasjadli18@gamil.com</span>
-            </button>
-          </div>
-          <div className="flex grow flex-col gap-2">
-            <button className="text-14px flex w-full items-center gap-2.5 rounded-md px-2 py-1 font-medium text-[#a6a6a6]">
-              <span>Menu</span>
-            </button>
-            <button
-              onClick={() => navigate(PATH.home)}
-              className={setStyle(PATH.home)}
-            >
-              
-              <span>Dashboard</span>
-            </button>
-            <button
-              onClick={() => navigate(PATH.expense)}
-              className={setStyle(PATH.expense)}
-            >
-              
-              <span>Expense</span>
-            </button>
-            <button
-              onClick={() => navigate(PATH.trip)}
-              className={setStyle(PATH.trip)}
-            >
-              
-              <span>Trip Expense</span>
-            </button>
-            <button
-              onClick={() => navigate(PATH.expenseAnalysis)}
-              className={setStyle(PATH.expenseAnalysis)}
-            >
-              <Icons.analysis />
-              <span>Expense Analysis</span>
-            </button>
-            <button
-              onClick={() => navigate(PATH.income)}
-              className={setStyle(PATH.income)}
-            >
-              
-              <span>Income</span>
-            </button>
-            <button
-              onClick={() => navigate(PATH.incomeAnalysis)}
-              className={setStyle(PATH.incomeAnalysis)}
-            >
-              <Icons.analysis />
-              <span>Income Analysis</span>
-            </button>
-
-            <button
-              onClick={() => navigate(PATH.budget)}
-              className={setStyle(PATH.budget)}
-            >
-              
-              <span>Budgeting</span>
-            </button>
-            <button
-              onClick={() => navigate(PATH.repeat)}
-              className={setStyle(PATH.repeat)}
-            >
-              
-              <span>Recurring Expenses</span>
-            </button>
-          </div>
-        </div>
-        <div className="bg-greyBlack flex w-full flex-col p-2.5">
-          <div className="flex cursor-default flex-row gap-2.5 px-1 pb-2.5 text-xs">
-            <div className="flex grow justify-start gap-2.5">
-              <div className="flex items-center gap-1 pl-0.5 text-sm">
-                <FaMapPin />
-                {activeBtn === PATH.home && <span>Dashboard</span>}
-                {activeBtn === PATH.expense && <span>Expense Data</span>}
-                {activeBtn === PATH.income && <span>Income Data</span>}
-                {activeBtn === PATH.budget && <span>Budgeting</span>}
-                {activeBtn === PATH.expenseAnalysis && (
-                  <span>Expense Data Analysis</span>
-                )}
-                {activeBtn === PATH.incomeAnalysis && (
-                  <span>Income Data Analysis</span>
-                )}
-              </div>
-            </div>
-            <div className="flex grow justify-end gap-2.5 pr-2">
-              <div className="flex items-center gap-2 rounded-sm p-0.5">
-                
-              </div>
-              <span className="border-r"></span>
-              <div className="flex items-center gap-2 rounded-sm p-0.5">
-                <FaClock />
-                <span> {time.format("hh:mm A")}</span>
-              </div>
-            </div>
-          </div>
-          <div className="bg-darkBlack [&::-webkit-scrollbar-thumb]:bg-91 h-full w-full overflow-y-auto rounded-lg px-14 py-14 [&::-webkit-scrollbar]:w-2.5 [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-track]:rounded-full [&::-webkit-scrollbar-track]:bg-transparent">
-            {children}
-          </div>
-        </div>
-      </div>
-    </> */
-}

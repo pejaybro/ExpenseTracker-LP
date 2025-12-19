@@ -6,12 +6,13 @@ import { ArrayCheck } from "@/components/utility";
 import { createSelector } from "@reduxjs/toolkit";
 import { selectCurrentFilter } from "../slices/filter-slice";
 import { TotalOfMonthOfSelectedYear } from "./total-selector";
+import { CurrentMonth, CurrentYear } from "@/utilities/calander-utility";
 
 const selectBudgetState = (state) => state.budget;
 
-export const selectBudgetData = createSelector([selectBudgetState], (budget) =>
-  ArrayCheck(budget.BudgetData),
-);
+  export const selectBudgetData = createSelector([selectBudgetState], (budget) =>
+    ArrayCheck(budget.BudgetData),
+  );
 
 export const selectBudgetList = createSelector(
   [selectBudgetData, selectCurrentFilter],
@@ -46,7 +47,15 @@ const getBudgetListOfYear = (data, year) => {
 };
 
 const createBudgetArray = (list = []) => {
-  if (!list.length) return [];
+  if (!list.length)
+    return [
+      {
+        year: CurrentYear(),
+        amount: 0,
+        month: CurrentMonth(),
+        created: null,
+      },
+    ];
   const year = list[0].year;
   const arr = [];
   let amount = 0;
@@ -58,13 +67,12 @@ const createBudgetArray = (list = []) => {
       created = matched.createdAt;
     }
     arr.push({
-      yera: year,
+      year: year,
       amount: amount,
       month: i,
       created: created,
     });
   }
-  
 
   return arr;
 };
@@ -73,7 +81,6 @@ export const BudgetExpenseComboOfSelectedYear = createSelector(
   [TotalOfMonthOfSelectedYear, selectBudgetByMonth],
   (expense, budget) => {
     if (!budget.length) return [];
-
 
     const arr = [];
 
