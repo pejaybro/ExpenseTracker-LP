@@ -45,6 +45,7 @@ const Form = ({
   newIncome,
   isExpense,
   isIncome,
+  className,
   isReccuring,
   isTrip,
   tripID,
@@ -176,7 +177,7 @@ const Form = ({
   /**==================================================================== */
 
   return (
-    <div className="text-14px flex-1 font-medium">
+    <div className={cn("text-14px", className)}>
       <form onSubmit={handleSubmit(onSubmit)}>
         {/* --- Form Switcher for Expense/Income --- */}
         {!isReccuring && !isTrip && newExpense && newIncome && (

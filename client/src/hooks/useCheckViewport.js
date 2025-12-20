@@ -1,9 +1,10 @@
 import { useEffect, useState } from "react";
 
 export const useCheckViewport = () => {
-  const [hide, setHide] = useState(() => window.innerHeight < 700);
+  const [hide, setHide] = useState(false);
 
   const checkViewport = () => {
+    setHide(window.innerHeight < 620);
     const width = window.innerWidth;
     const height = window.innerHeight;
     const isTouch = navigator.maxTouchPoints > 0;
@@ -13,7 +14,7 @@ export const useCheckViewport = () => {
 
     // DESKTOP (non-touch)
     if (!isTouch) {
-      if (width < 1024 || height < 700) {
+      if (width < 900 || height < 620) {
         shouldHide = true;
       }
     }
@@ -26,7 +27,7 @@ export const useCheckViewport = () => {
       }
 
       // Tablet - Landscape
-      else if (isLandscape && width < 960   ) {
+      else if (isLandscape && width < 960) {
         shouldHide = true;
       }
     }

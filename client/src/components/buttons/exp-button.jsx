@@ -135,9 +135,8 @@ const ExpButton = ({
               className,
             )}
           >
-              <Icons.add_list className="text-18px" />
+            <Icons.add_list className="text-18px" />
             <span className="text-14px">
-            
               {(setBudget_textbtn && "Set Budget") ||
                 (newBudget_textbtn && "New Budget") ||
                 (editBudget_textbtn && "Edit Budget")}

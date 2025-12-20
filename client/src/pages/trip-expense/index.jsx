@@ -99,12 +99,11 @@ const TripIndex = () => {
   if (!TripList || TripList.length === 0) {
     // This gives the user a clear message if there's nothing to show
     return (
-      <Flexcol>
-        <Flexrow className={"w-full"}>
-          <div className="text-dark-a0 flex h-[400px] w-full items-center justify-center rounded-lg bg-amber-400">
-            image here
-          </div>
-        </Flexrow>
+      <Flexcol className="m-auto max-w-[700px]">
+        <div className="text-dark-a0 flex h-[250px] w-[700px] items-center justify-center rounded-lg bg-amber-400">
+          image here
+        </div>
+
         <CreateTripForm />
       </Flexcol>
     );

@@ -59,7 +59,8 @@ export const fetchBudget = createAsyncThunk(
       if (notify) {
         createBudgetNotification(notify);
       }
-      return res.data;
+
+      return res?.data?.data;
     } catch (err) {
       return rejectWithValue(err.message);
     }

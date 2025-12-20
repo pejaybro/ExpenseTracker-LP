@@ -81,7 +81,6 @@ const IncomeIndex = () => {
     // This gives the user a clear message if there's nothing to show
     return (
       <Flexcol>
-        <SimplyManage />
         <NewIncome />
       </Flexcol>
     );

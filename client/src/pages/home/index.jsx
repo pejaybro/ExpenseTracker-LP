@@ -18,6 +18,8 @@ import specely from "@/assets/specely.png";
 import { Icons } from "@/components/icons";
 import NewExpense from "../expense/NewExpense";
 import NewIncome from "../income/NewIncome";
+import { NewBudget } from "../budget";
+import NewReccuringExpense from "../reccuring-expense/NewReccuringExpense";
 
 const HomeIndex = () => {
   const { RecentTransactionList, recentTransactionsLoading } =
@@ -41,12 +43,15 @@ const HomeIndex = () => {
   if (!RecentTransactionList || RecentTransactionList.length === 0) {
     // This gives the user a clear message if there's nothing to show
     return (
-      <Flexcol>
-        <WelcomeSection className="pb-0" />
-        <SimplyManage />
+      <Flexcol className="items-center gap-20">
+        <WelcomeSection className="m-auto justify-center pb-0" />
+        <div className="-my-10">
+          <TypewriterAni isDashboard />
+        </div>
         <NewExpense />
+        <NewBudget />
         <NewIncome />
-         <IconLibrary />
+        <IconLibrary />
       </Flexcol>
     );
   }
@@ -135,7 +140,7 @@ export const WelcomeSection = ({ className }) => {
 
 export const SimplyManage = () => {
   return (
-    <Flexrow className={"border-dark-a1 bg-dark-a0 rounded-lg border"}>
+    <Flexrow className={"border-dark-a4 bg-dark-a3 rounded-lg border"}>
       <div className="text-dark-a0 flex h-[200px] w-[350px] items-center justify-center rounded-lg bg-amber-400">
         image here
       </div>

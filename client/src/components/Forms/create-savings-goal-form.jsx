@@ -6,8 +6,9 @@ import ExpButton from "../buttons/exp-button";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { apiCLient } from "@/api/apiClient";
 import { toast } from "sonner";
+import { cn } from "@/lib/utils";
 
-const CreateSavingsGoalForm = () => {
+const CreateSavingsGoalForm = ({className}) => {
   const queryClient = useQueryClient();
   const createGoal = async (payload) => {
     const res = await apiCLient.post(`/saving-goal/create-goal`, payload);
@@ -47,7 +48,8 @@ const CreateSavingsGoalForm = () => {
   };
   return (
     <>
-      <form onSubmit={handleSubmit(onSubmit)}>
+      <div className={cn(className)}>
+        <form onSubmit={handleSubmit(onSubmit)}>
         {/** ====== Amount ===== */}
         <FormField>
           <FieldLabel iconColor={"text-exp-a1"} label="Goal Amount" />
@@ -126,6 +128,7 @@ const CreateSavingsGoalForm = () => {
           </ExpButton>
         </FormField>
       </form>
+      </div>
     </>
   );
 };

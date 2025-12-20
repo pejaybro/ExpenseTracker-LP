@@ -10,9 +10,9 @@ import { CurrentMonth, CurrentYear } from "@/utilities/calander-utility";
 
 const selectBudgetState = (state) => state.budget;
 
-  export const selectBudgetData = createSelector([selectBudgetState], (budget) =>
-    ArrayCheck(budget.BudgetData),
-  );
+export const selectBudgetData = createSelector([selectBudgetState], (budget) =>
+  ArrayCheck(budget.BudgetData),
+);
 
 export const selectBudgetList = createSelector(
   [selectBudgetData, selectCurrentFilter],

@@ -99,22 +99,22 @@ function Dashboard({ activeBtn, children }) {
   if (hide) {
     return (
       <Flexrow className="bg-dark-a1 font-para2-m min-h-screen w-full items-center justify-center">
-        <div className="border-slate-a8 bg-dark-a3 !text-slate-a1 max-w-[420px] rounded-lg border p-4 text-center">
-          <div className="text-warning mb-2 flex justify-center">
-            <Icons.warning className="text-32px text-yellow-300" />
-          </div>
+        <div className="border-slate-a8 bg-dark-a3 !text-slate-a1 flex flex-col items-center gap-5 rounded-lg border px-15 py-10">
+          <Icons.warning className="text-32px text-yellow-300" />
 
-          <p className="text-warning text-18px">Screen size not supported</p>
+          <p className="text-18px">Screen size not supported</p>
 
-          <p className="text-14px mt-2">
-            Please use one of the following screen sizes to view this content:
-          </p>
+          <p className="text-14px">Content only visible on following:</p>
 
-          <ul className="text-14px mt-3 space-y-1">
-            <li>• Desktop: minimum - 1024px w × 700px h</li>
-            <li>• Portrait mode: minimum - 800px w</li>
-            <li>• Landscape mode: minimum - 960px w</li>
+          <ul className="text-14px space-y-1 text-center">
+            <li>• Desktop: minimum - 900px w × 620px h</li>
+            <li>• Portrait (Tablet) : minimum - 800px w</li>
+            <li>• Landscape (Tablet) : minimum - 960px w</li>
+            <li>• Not Visible on Mobile Devicesj </li>
           </ul>
+          <p className="text-warning text-14px">
+            Not Optimized for Every Screen Size
+          </p>
         </div>
       </Flexrow>
     );
@@ -198,7 +198,7 @@ function Dashboard({ activeBtn, children }) {
             <div className="!text-slate-1 border-dark-a3 bg-dark-a1 relative flex-1 overflow-hidden rounded-md border">
               {/* Scrollable content */}
               <div className="scrollBar absolute inset-0 z-20 overflow-y-auto">
-                <div className="p-16 pb-0">{children}</div>
+                <div className="p-12">{children}</div>
               </div>
             </div>
           </Flexrow>
@@ -206,16 +206,12 @@ function Dashboard({ activeBtn, children }) {
 
           {/** ----- Bottom Bar ---- */}
           <Flexrow className={cn("!text-14px w-full gap-2.5")}>
+            <BudgetBarIndicator />
+
             <Flexrow
-              className={cn(
-                "items-center justify-start gap-2.5 rounded-sm px-4 py-1.5",
-                bgDarkA3,
-              )}
-            >
-              <BudgetBarIndicator />
-            </Flexrow>
-            <Flexrow
-              className={"flex-1 basis-1 items-center gap-2.5 rounded-sm"}
+              className={
+                "flex-1 items-center justify-center gap-2.5 rounded-sm"
+              }
             >
               <AddBudget />
 

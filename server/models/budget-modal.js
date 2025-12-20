@@ -33,6 +33,7 @@ const budgetSchema = new Schema(
     timestamps: true,
   }
 );
+budgetSchema.index({ userID: 1, year: 1 }, { unique: true });
 
 const budgetModal = mongoose.model("default-budget", budgetSchema);
 export { budgetModal };

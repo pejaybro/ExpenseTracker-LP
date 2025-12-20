@@ -37,7 +37,7 @@ const BudgetStrip = ({ isHome, className }) => {
       >
         <Flexrow
           className={cn(
-            "text-14px bg-dark-a3 shadow-dark-a1 mr-2 w-max flex-1 items-center gap-2.5 px-5 py-2 shadow-md font-para2-m ",
+            "text-14px bg-dark-a3 shadow-dark-a1 font-para2-m mr-2 w-max flex-1 items-center gap-2.5 px-5 py-2 shadow-md",
             "rounded-sm",
           )}
         >
@@ -52,9 +52,7 @@ const BudgetStrip = ({ isHome, className }) => {
               </Flexrow>
             </>
           )}
-          {(!Budget || budgetAmount <= 0) && (
-            <>{"No Monthly Budget is Exist"}</>
-          )}
+          {(!Budget || budgetAmount <= 0) && <>{"No Monthly Budget Exist"}</>}
         </Flexrow>
 
         {(!Budget || budgetAmount <= 0) && (

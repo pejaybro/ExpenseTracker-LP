@@ -7,7 +7,7 @@ import UserAvatar from "@/components/UserAvatar";
 const SettingIndex = () => {
   return (
     <>
-      <Flexcol>
+      <Flexcol className="text-14px m-auto max-w-[700px] gap-20">
         <Flexcol>
           <TitleSection title={"Change User Avatar"} />
           <UserAvatar isSettings />
@@ -44,7 +44,7 @@ const SettingIndex = () => {
         </Flexcol>
         <Flexcol>
           <TitleSection title={"Change Password"} />
-           <form>
+          <form>
             {/** ====== Username ===== */}
             <FormField>
               <FieldLabel iconColor={"text-exp-a1"} label="Current Password" />
@@ -58,7 +58,10 @@ const SettingIndex = () => {
 
             {/** ====== Email ===== */}
             <FormField>
-              <FieldLabel iconColor={"text-exp-a1"} label="Confirm New Password" />
+              <FieldLabel
+                iconColor={"text-exp-a1"}
+                label="Confirm New Password"
+              />
               <input className="border-dark-a3 bg-dark-a3 focus:bg-dark-a2 hover:bg-dark-a2 w-full rounded-sm border p-2 py-1 outline-none" />
             </FormField>
             <FormField className="flex-row justify-start">
@@ -69,7 +72,7 @@ const SettingIndex = () => {
               >
                 Update
               </ExpButton>
-                <ExpButton
+              <ExpButton
                 type="submit"
                 className={"text-dark-a1 bg-exp-a3"}
                 custom_textbtn
@@ -87,9 +90,10 @@ const SettingIndex = () => {
 export default SettingIndex;
 export const TitleSection = ({ title }) => {
   return (
-    <Flexcol className="gap-2">
-      <span className="font-para2-b text-24px">{title}</span>
-      <Flexrow className="bg-exp-a1 h-0.5 w-full rounded-full"></Flexrow>
+    <Flexcol className="border-slate-a4 gap-2 border-b-[1.25px] pb-2.5">
+      <span className="font-title text-slate-a4 text-24px tracking-wide">
+        {title}
+      </span>
     </Flexcol>
   );
 };

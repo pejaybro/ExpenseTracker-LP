@@ -40,7 +40,6 @@ const ReccuringExpenseIndex = () => {
     (state) => state.notifications?.RecurringNotifications,
   );
 
-
   const { RecTotal, GraphData } = useMemo(() => {
     const GraphData = RecurringData?.GraphData?.map((r) => ({
       indicator: getMonthName(r.month),
@@ -106,13 +105,11 @@ const ReccuringExpenseIndex = () => {
   //NOTE: 3. Handle the "no data" state
   if (!RecurringList || RecurringList.length === 0) {
     // This gives the user a clear message if there's nothing to show
-     return (
+    return (
       <Flexcol>
-       <SimplyManage />
         <NewReccuringExpense />
       </Flexcol>
     );
-   
   }
 
   // NOTE: 4. If all checks pass, render the main content

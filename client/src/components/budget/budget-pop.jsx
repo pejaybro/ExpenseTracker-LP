@@ -70,7 +70,7 @@ const BudgetPop = ({ children, isEdit, isNew }) => {
   return (
     <>
       <Drawer open={isOpen} onOpenChange={setIsOpen}>
-        <DrawerTrigger>{children}</DrawerTrigger>
+        <DrawerTrigger asChild>{children}</DrawerTrigger>
         <DrawerContent className={`from-dark-a5 to-dark-a3 bg-gradient-to-t`}>
           <DrawerHeader>
             {isEdit && (

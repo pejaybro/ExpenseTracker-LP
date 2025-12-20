@@ -33,7 +33,7 @@ const NotificationsBlock = ({ setIsNotiOpen, isNotiOpen }) => {
       className="data-[state=true]:animate-in data-[state=true]:fade-in data-[state=false]:animate-out data-[state=false]:fade-out absolute inset-0 z-[9999] flex justify-end bg-[#0505055c] p-2.5"
     >
       <Flexcol className="bg-dark-a1 border-dark-a3 text-slate-a1 font-para2-m h-full w-[350px] rounded-md border p-5">
-        <Flexrow className={"justify-between"}>
+        <Flexrow className={"justify-between border-b border-slate-a8 pb-2.5"}>
           <div>Notifications</div>
 
           <ExpButton
@@ -82,7 +82,7 @@ const NotificationsBlock = ({ setIsNotiOpen, isNotiOpen }) => {
           </>
         ) : (
           <Flexrow className={"text-slate-a6 !text-14px justify-center"}>
-            empty
+            No Notification
           </Flexrow>
         )}
       </Flexcol>

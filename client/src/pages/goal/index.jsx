@@ -80,26 +80,21 @@ const Index = () => {
     );
   }
 
+  if (!activeGoals.length && !completedGoals.length) {
+    return (
+      <Flexcol className={"m-auto max-w-[600px] items-center"}>
+        <div className="text-dark-a0 flex h-[250px] w-[600px] items-center justify-center rounded-lg bg-amber-400">
+          image here
+        </div>
+        <CreateSavingsGoalForm className="w-full flex-1" />
+      </Flexcol>
+    );
+  }
+
   return (
     <Flexcol>
-      {!goals.length && (
-        <Flexrow>
-          <div className="text-dark-a0 flex h-[250px] w-full items-center justify-center rounded-lg bg-amber-400">
-            image here
-          </div>
-        </Flexrow>
-      )}
-      <Flexrow>
-        <div className={"w-1/2"}>
-          <div className="text-dark-a0 flex h-full w-full items-center justify-center rounded-lg bg-amber-400">
-            image here
-          </div>
-        </div>
-        <div className="w-1/2">
-          <CreateSavingsGoalForm />
-        </div>
-      </Flexrow>
-      {goals.length > 0 && (
+      <CreateSavingsGoalForm className="w-full flex-1" />
+      {(activeGoals.length || completedGoals.length) && (
         <Flexrow>
           <ExpButton className={"bg-exp-a1"} custom_textbtn>
             Total Goals Completed : {completedGoals.length}
@@ -109,7 +104,7 @@ const Index = () => {
           </ExpButton>
         </Flexrow>
       )}
-      {currentPageItems_active.length > 0 && (
+      {currentPageItems_active?.length > 0 && (
         <>
           {currentPageItems_active?.map((g) => (
             <GoalCard key={g._id} data={g} />
