@@ -1,6 +1,5 @@
 import Flexrow from "@/components/section/flexrow";
 import TypewriterAni from "../../components/TypewriterAni";
-import { bgDarkA3 } from "@/global/style";
 import { cn } from "@/lib/utils";
 import { CurrentMonth, CurrentYear } from "@/utilities/calander-utility";
 import TotalCardForYear from "@/components/cards/total-card-for-year";
@@ -9,17 +8,12 @@ import TransactionListTable from "@/components/table/transaction-list-table";
 import useTransactionConfig from "@/hooks/useTransactionConfig";
 import Flexcol from "@/components/section/flexcol";
 import BudgetStrip from "@/components/strips/budget-strip";
-import useRecurringConfig from "@/hooks/useRecurringConfig";
-
-import { DualGraphCode } from "@/components/charts/dual-graph-code";
 import { DualGraphData } from "@/components/analysis/dual-graph-data";
 import { IconLibrary } from "@/components/IconLibearay";
-import specely from "@/assets/specely.png";
 import { Icons } from "@/components/icons";
 import NewExpense from "../expense/NewExpense";
 import NewIncome from "../income/NewIncome";
 import { NewBudget } from "../budget";
-import NewReccuringExpense from "../reccuring-expense/NewReccuringExpense";
 
 const HomeIndex = () => {
   const { RecentTransactionList, recentTransactionsLoading } =
@@ -57,70 +51,50 @@ const HomeIndex = () => {
   }
 
   return (
-    <>
-      {/*  <Flexrow
-        className={cn(
-          "!text-14px mb-5 w-full gap-2.5 rounded-sm border px-5 py-0.5",
-          bgDarkA3,
-        )}
-      >
-        <Flexrow className="w-1/2 justify-start">Card Section</Flexrow>
-        <Flexrow className="w-1/2 justify-end">FF</Flexrow>
-      </Flexrow> */}
-
+    <Flexcol className="gap-10">
+      {/** ====== Welcome Section ====== */}
       <WelcomeSection />
-      <SimplyManage />
 
-      <Flexrow className={"mb-5 flex-wrap"}>
-        <DualGraphData isDashboard />
-        <BudgetStrip className="w-full lg:flex-1 lg:basis-[280px]" />
-        <Flexrow className={"mb-20 flex-wrap"}>
-          <TotalCardForYear
-            className="w-full lg:flex-1 lg:basis-[280px]"
-            isExpense
-          />
-          <TotalCardForMonth
-            className="w-full lg:flex-1 lg:basis-[280px]"
-            isExpense
-            year={CurrentYear()}
-            month={CurrentMonth()}
-          />
-          <TotalCardForYear className="w-full lg:flex-1 lg:basis-[280px]" />
-          <TotalCardForMonth
-            className="w-full lg:flex-1 lg:basis-[280px]"
-            year={CurrentYear()}
-            month={CurrentMonth()}
-          />
-          <TotalCardForYear
-            isReccuring
-            className="w-full lg:flex-1 lg:basis-[280px]"
-          />
-          <TotalCardForMonth
-            isReccuring
-            className="w-full lg:flex-1 lg:basis-[280px]"
-            year={CurrentYear()}
-            month={CurrentMonth()}
-          />
-        </Flexrow>
-      </Flexrow>
-
-      <Flexrow className={"border-dark-a1 bg-dark-a0 mb-5 rounded-lg border"}>
-        <div className="text-dark-a0 flex h-[200px] w-[350px] items-center justify-center rounded-lg bg-amber-400">
-          image here
-        </div>
-        <div className="font-title text-36px flex items-center tracking-wide">
-          <span>Your Latest Transactions</span>
-        </div>
-      </Flexrow>
-      <Flexcol>
-        <TransactionListTable
-          isExpesne
-          isRecent
-          entries={RecentTransactionList ?? []}
+      {/** ====== Graph - Income & Expense ====== */}
+      <DualGraphData isDashboard />
+      {/** ====== Monthly Budget Strip ====== */}
+      <BudgetStrip />
+      {/** ====== Cards : Monhly & Yearly Transactions ====== */}
+      <Flexrow className={"flex-wrap"}>
+        <TotalCardForYear
+          className="w-full lg:flex-1 lg:basis-[280px]"
+          isExpense
         />
-      </Flexcol>
-      <IconLibrary />
-    </>
+        <TotalCardForMonth
+          className="w-full lg:flex-1 lg:basis-[280px]"
+          isExpense
+          year={CurrentYear()}
+          month={CurrentMonth()}
+        />
+        <TotalCardForYear className="w-full lg:flex-1 lg:basis-[280px]" />
+        <TotalCardForMonth
+          className="w-full lg:flex-1 lg:basis-[280px]"
+          year={CurrentYear()}
+          month={CurrentMonth()}
+        />
+        <TotalCardForYear
+          isReccuring
+          className="w-full lg:flex-1 lg:basis-[280px]"
+        />
+        <TotalCardForMonth
+          isReccuring
+          className="w-full lg:flex-1 lg:basis-[280px]"
+          year={CurrentYear()}
+          month={CurrentMonth()}
+        />
+      </Flexrow>
+      {/** ====== 10 Latest Transactions ====== */}
+      <TransactionListTable
+        isExpesne
+        isRecent
+        entries={RecentTransactionList ?? []}
+      />
+    </Flexcol>
   );
 };
 
@@ -128,7 +102,7 @@ export default HomeIndex;
 
 export const WelcomeSection = ({ className }) => {
   return (
-    <Flexrow className={cn("items-center gap-2 pb-5", className)}>
+    <Flexrow className={cn("items-center gap-2", className)}>
       <Icons.handPeace className="text-28px text-exp-a1" />
       <span className="font-title text-32px tracking-wide">
         Welcome, <span className="text-exp-a1">Prayas</span>
@@ -150,3 +124,15 @@ export const SimplyManage = () => {
     </Flexrow>
   );
 };
+
+/*  <Flexrow
+        className={cn(
+          "!text-14px mb-5 w-full gap-2.5 rounded-sm border px-5 py-0.5",
+          bgDarkA3,
+        )}
+      >
+        <Flexrow className="w-1/2 justify-start">Card Section</Flexrow>
+        <Flexrow className="w-1/2 justify-end">FF</Flexrow>
+      </Flexrow> 
+      
+       <SimplyManage />*/

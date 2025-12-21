@@ -138,7 +138,7 @@ const TripIndex = () => {
                 cardBg,
               )}
             >
-              <Flexrow className={"text-12px items-center font-medium"}>
+              <Flexrow className={"text-12px font-para2-m items-center"}>
                 <Flexrow className={"items-center gap-1.5"}>
                   <GraphTitleSquare className={"bg-trip-a1 size-3"} />
                   <span> Expensed : </span>
@@ -155,14 +155,14 @@ const TripIndex = () => {
                 </Flexrow>
               </Flexrow>
               <Flexrow
-                className={"text-22px items-center gap-2 py-2.5 font-medium"}
+                className={"text-22px font-para2-m items-center gap-2 py-2.5"}
               >
                 <Icons.trip className={"text-trip-a2"} />
                 <span>{truncate(trip.tripTitle)}</span>
               </Flexrow>
 
               <Flexrow>
-                <Flexcol className="text-12px justify-center gap-1 font-medium">
+                <Flexcol className="text-12px font-para2-m justify-center gap-1">
                   <Flexrow className="items-center gap-2">
                     <Icons.calander_date className={"text-trip-a2"} />
                     <span> Started On : </span>
@@ -259,7 +259,7 @@ export const deleteToast = (dispatch, ID, userID = 123456) => {
         )}
       >
         <Flexcol className="flex-1 gap-0">
-          <span className="font-medium">Delete Trip ?</span>
+          <span className="font-para2-m">Delete Trip ?</span>
           <span>Do you want to delete ?</span>
         </Flexcol>
 

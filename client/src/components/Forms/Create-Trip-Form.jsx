@@ -172,7 +172,7 @@ const CreateTripForm = () => {
             />
           )}
           <input
-            className="text-24px placeholder:text-slate-a1/70 border-slate-a2 focus:border-trip-a2 focus:ring-trip-a2 relative z-10 w-full border-b-1 px-1 py-1 font-bold outline-none"
+            className="text-24px placeholder:text-slate-a1/70 border-slate-a2 focus:border-trip-a2 focus:ring-trip-a2 font-para2-b relative z-10 w-full border-b-1 px-1 py-1 outline-none"
             type="text"
             {...register("tripTitle", { required: "* Trip title is required" })}
             onFocus={() => setIsTitleFocused(true)}
@@ -231,7 +231,7 @@ const CreateTripForm = () => {
                       <StepRing className={step >= s && "border-trip-a2"}>
                         <StepCircle
                           className={
-                            step >= s && "bg-trip-a2 text-dark-a2 font-medium"
+                            step >= s && "bg-trip-a2 text-dark-a2 font-para2-m"
                           }
                         >
                           {s}

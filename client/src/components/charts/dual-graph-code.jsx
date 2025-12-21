@@ -48,7 +48,7 @@ export const DualGraphCode = ({
 
   const myLabelFormatter = (value, payload) => {
     // Removed the color styling as it's ambiguous for the shared label
-    return <span className="font-medium">For : {value}</span>;
+    return <span className="font-para2-b">For : {value}</span>;
   };
 
   const myTooltipFormatter = (value, name, item, index, payload) => {
@@ -64,7 +64,7 @@ export const DualGraphCode = ({
           style={{ backgroundColor: indicatorColor }}
         />
         {/* Label and Value */}
-        <div className="text-slate-a1 flex flex-1 justify-between leading-none font-medium">
+        <div className="text-slate-a1 flex flex-1 justify-between leading-none font-para2-m">
           {/* Use 'name' passed by formatter, fallback to item.name */}
           <span className="pr-1">{name || item.name} : </span>
           {/* Format the value */}
@@ -76,7 +76,7 @@ export const DualGraphCode = ({
 
   return (
     <>
-      <Card className={cn("flex-1 gap-0.5 px-3 py-9", cardBgv2)}>
+      <Card className={cn("flex-1 gap-0.5 px-3 py-9 font-para2-r", cardBgv2)}>
         <CardHeader className="items-center pb-5 gap-1.25 pl-10">
           {chartInfo.title && (
             <CardTitle className={"!font-para2-r text-16px"}>{chartInfo.title}</CardTitle>

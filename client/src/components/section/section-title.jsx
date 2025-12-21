@@ -15,7 +15,7 @@ const SectionTitle = ({
           <Icons.window />
         </span>
 
-        <span className="min-w-fit pr-5 pl-2.5 font-medium"> {title}</span>
+        <span className="font-para2-m min-w-fit pr-5 pl-2.5"> {title}</span>
 
         <span className="h-[0.5px] w-full rounded-full bg-[#454545]"></span>
         <span className="pl-5">

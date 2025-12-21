@@ -12,6 +12,7 @@ import useTotalConfig from "@/hooks/useTotalConfig";
 import { CurrentMonth, CurrentYear } from "@/utilities/calander-utility";
 import { Progress } from "../ui/progress";
 import { bgDarkA3 } from "@/global/style";
+import { amountFloat } from "../utilityFilter";
 
 /**
  * ========================================================
@@ -45,14 +46,14 @@ export const BudgetBarIndicator = () => {
   return (
     <Flexrow
       className={cn(
-        "text-14px font-para2-m items-center justify-start gap-2.5 rounded-sm px-4 py-1.5",
+        "text-14px font-para2-m items-center justify-start gap-2 rounded-sm px-4 py-1.5",
         bgDarkA3,
       )}
     >
       <Icons.calc className="text-12px" />
-      <span>Budget</span>
+      <span>Monthly Budget</span>
       <VerticalDevider />
-      <span>Spent : Rs {exp}</span>
+      <span>Spent : Rs {amountFloat(exp)}</span>
 
       <Progress
         value={percent}
@@ -66,24 +67,24 @@ export const BudgetBarIndicator = () => {
           className="bg-bud-a1 h-full rounded-sm"
         />
       </div> */}
-      <span>Remaining : Rs {budgetRemaining}</span>
+      <span>Remaining : Rs {amountFloat(budgetRemaining)}</span>
     </Flexrow>
   );
 };
 
-export const AddExp = () => {
+export const AddExp = ({ className }) => {
   const { BudgetByMonth } = useBudgetConfig();
   const { FilterMonth } = useFilterConfig();
   const currentBudget = useMemo(
     () => BudgetByMonth?.find((b) => b.month === FilterMonth),
     [BudgetByMonth, FilterMonth],
   );
-  const className = currentBudget?.amount <= 0 ? "flex-1" : "w-max";
+  const style = currentBudget?.amount <= 0 ? "flex-1" : "w-max";
   const navigate = useNavigate();
   return (
     <ExpButton
       custom_textbtn
-      className={cn("text-dark-a1 bg-exp-a3 font-para2-m", className)}
+      className={cn("text-dark-a1 bg-exp-a3 font-para2-m", style, className)}
       onClick={() => navigate(PATH.addExpense)}
     >
       <Icons.add_list className="text-18px" />
@@ -91,19 +92,19 @@ export const AddExp = () => {
     </ExpButton>
   );
 };
-export const AddInc = () => {
+export const AddInc = ({ className }) => {
   const { BudgetByMonth } = useBudgetConfig();
   const { FilterMonth } = useFilterConfig();
   const currentBudget = useMemo(
     () => BudgetByMonth?.find((b) => b.month === FilterMonth),
     [BudgetByMonth, FilterMonth],
   );
-  const className = currentBudget?.amount <= 0 ? "flex-1" : "w-max";
+  const style = currentBudget?.amount <= 0 ? "flex-1" : "w-max";
   const navigate = useNavigate();
   return (
     <ExpButton
       custom_textbtn
-      className={cn("text-dark-a1 bg-inc-a2 font-para2-m", className)}
+      className={cn("text-dark-a1 bg-inc-a2 font-para2-m", style, className)}
       onClick={() => navigate(PATH.addIncome)}
     >
       <Icons.add_list className="text-18px" />

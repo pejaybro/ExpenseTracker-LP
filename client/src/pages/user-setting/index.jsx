@@ -1,5 +1,6 @@
 import ExpButton from "@/components/buttons/exp-button";
 import { FieldLabel, FormField } from "@/components/Forms/Form";
+import { IconLibrary } from "@/components/IconLibearay";
 import Flexcol from "@/components/section/flexcol";
 import Flexrow from "@/components/section/flexrow";
 import UserAvatar from "@/components/UserAvatar";
@@ -82,6 +83,7 @@ const SettingIndex = () => {
             </FormField>
           </form>
         </Flexcol>
+        <IconLibrary />
       </Flexcol>
     </>
   );

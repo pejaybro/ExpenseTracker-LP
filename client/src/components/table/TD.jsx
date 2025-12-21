@@ -5,7 +5,7 @@ const TD = ({ children, className = "", ...props }) => {
     <td
       {...props}
       className={cn(
-        `text-14px h-max border-b-br1 border-b px-1.5 py-2.5`,
+        `text-14px h-max border-dark-a5 border-b px-1.5 py-2.5`,
         className,
       )}
     >

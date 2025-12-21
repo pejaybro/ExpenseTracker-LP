@@ -212,16 +212,18 @@ const Form = ({
         {/* --- Amount Field --- */}
         <FormField>
           <FieldLabel iconColor={formLabelIconColor} label="Amount" />
-          <div className="border-slate-a7 inline-flex w-full items-center border-b-1 font-bold">
+          <div className="border-slate-a7 font-para2-b inline-flex w-full items-center border-b-1">
             <Icons.rupee className="text-18px" />
             <input
+              step="any"
+              min={0}
               className="inputType-number text-24px w-full rounded-md border-none px-3 py-1 outline-none"
               type="number"
               {...register("ofAmount", {
                 required: "* Amount is required",
                 valueAsNumber: true,
                 min: {
-                  value: 0.01,
+                  value: 0,
                   message: "* Amount must be greater than 0",
                 },
               })}
@@ -513,18 +515,22 @@ export const SelectDate = ({
 
 // --- Form Layout Components ---
 export const FormField = ({ children, className = "" }) => (
-  <div className={`flex flex-col gap-2 py-4 ${className}`}>{children}</div>
+  <div className={`font-para2-m flex flex-col gap-2 py-4 ${className}`}>
+    {children}
+  </div>
 );
 
 export const FieldLabel = ({ label, iconColor = "text-white" }) => (
-  <label className="inline-flex items-center gap-2">
+  <label className="font-para2-m inline-flex items-center gap-2">
     <Icons.formlabel className={iconColor} />
     {label}
   </label>
 );
 
 export const ErrorField = ({ error }) => (
-  <>{error && <p className="text-12px text-rr">{error.message}</p>}</>
+  <>
+    {error && <p className="text-12px text-rr font-para2-m">{error.message}</p>}
+  </>
 );
 
 // --- Helper for Recurring Status Logic ---
@@ -563,7 +569,7 @@ const confirmToast = (title, description, statusIfUnpaid) => {
   return new Promise((resolve) => {
     toast.custom((t) => (
       <div className="rounded-lg border bg-white p-4 shadow-lg">
-        <h4 className="font-bold">{title}</h4>
+        <h4 className="font-para2-b">{title}</h4>
         <p className="text-sm text-gray-600">{description}</p>
         <div className="mt-3 flex gap-2">
           <button

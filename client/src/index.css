@@ -3,6 +3,8 @@
 @source "../.flowbite-react/class-list.json";
 @import "tw-animate-css";
 
+
+
 @theme {
   --color-darkBlack: #0d0d0d;
   --color-greyBlack: #151515;

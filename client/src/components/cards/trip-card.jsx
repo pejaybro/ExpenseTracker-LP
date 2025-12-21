@@ -24,7 +24,7 @@ const TripCard = ({ list }) => {
                 {moment(trip.endsOn).format("DD MMM, YYYY")}
               </Flexrow>
             </Flexrow>
-            <Flexrow className={"text-18px items-center gap-2 font-medium"}>
+            <Flexrow className={"text-18px font-para2-m items-center gap-2"}>
               <Icons.trip className={"text-trip"} />
               <span>{truncate(trip.tripTitle)}</span>
             </Flexrow>

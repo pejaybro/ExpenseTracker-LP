@@ -10,7 +10,7 @@ const TotalCard = ({ date, total, footerText, headText, color, className }) => {
     <>
       <Flexcol
         className={cn(
-          "text-[14px] min-h-[10rem] w-[20rem] justify-normal gap-2 p-5",
+          "min-h-[10rem]  justify-normal gap-2 p-5 text-[14px]",
           cardBg,
           className,
         )}
@@ -27,12 +27,12 @@ const TotalCard = ({ date, total, footerText, headText, color, className }) => {
           </Flexrow>
         </Flexrow>
         {/** ===== middle section ===== */}
-        <Flexrow className="text-32px items-center gap-0.5 font-para2-bb">
+        <Flexrow className="text-32px font-para2-bb items-center gap-0.5">
           <Icons.rupee />
           {amountFloat(total)}
         </Flexrow>
         {/** ===== bottom section ===== */}
-        <Flexrow className={"py-1 font-para2-r"}>{footerText}</Flexrow>
+        <Flexrow className={"font-para2-r py-1"}>{footerText}</Flexrow>
       </Flexcol>
     </>
   );

@@ -31,7 +31,7 @@ const BudgetStrip = ({ isHome, className }) => {
     <>
       <Flexrow
         className={cn(
-          "text-slate-a1 w-max cursor-default items-center gap-2",
+          "text-slate-a1 w-full cursor-default items-center gap-2",
           className,
         )}
       >

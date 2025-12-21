@@ -26,7 +26,7 @@ const MonthCalander = ({ isExpense, list }) => {
   ];
 
   return (
-    <div className="!text-14px w-max font-medium">
+    <div className="!text-14px font-para2-m flex w-full max-w-[300px] shrink-0 flex-col">
       <Flexrow className="mb-4 items-center gap-2 rounded-md">
         <Icons.calander_date
           className={`${isExpense ? "text-exp-a1" : "text-inc-a2"} text-16px`}

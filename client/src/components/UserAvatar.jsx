@@ -183,7 +183,7 @@ const UserAvatar = ({ isSettings }) => {
 
   return (
     <>
-      <Flexrow className={"flex-wrap items-end "}>
+      <Flexrow className={"flex-wrap items-end"}>
         <Avatar
           className={cn(
             "m-2 size-[60px] cursor-default rounded-md",
@@ -255,7 +255,7 @@ const UserAvatar = ({ isSettings }) => {
 
             {/* Controls */}
             <div className="w-full">
-              <label htmlFor="zoom" className="text-sm font-medium">
+              <label htmlFor="zoom" className="font-para2-m text-sm">
                 Zoom
               </label>
               <Slider
@@ -268,7 +268,7 @@ const UserAvatar = ({ isSettings }) => {
               />
             </div>
             <div className="w-full">
-              <label htmlFor="rotate" className="text-sm font-medium">
+              <label htmlFor="rotate" className="font-para2-m text-sm">
                 Rotate
               </label>
               <Slider

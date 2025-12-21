@@ -63,7 +63,7 @@ const MaxCategorySection = ({ isExpense }) => {
         <Flexrow className={cn("flex-wrap gap-2 p-8", cardBgv2)}>
           {isExpense && (
             <>
-              <Flexrow className="items-center gap-2 pb-2.5 font-medium">
+              <Flexrow className="font-para2-m items-center gap-2 pb-2.5">
                 <span className="text-16px">
                   <Icons.checkCircle className={cn(txtColor)} />
                 </span>
@@ -77,7 +77,7 @@ const MaxCategorySection = ({ isExpense }) => {
                   <Flexrow
                     key={idx}
                     className={cn(
-                      "text-14px !text-slate-a3 border-slate-a7 w-max cursor-pointer items-center gap-2 rounded-sm border px-2.5 py-1 font-medium",
+                      "text-14px !text-slate-a3 border-slate-a7 font-para2-m w-max cursor-pointer items-center gap-2 rounded-sm border px-2.5 py-1",
                     )}
                   >
                     <span className="text-14px">
@@ -99,7 +99,7 @@ const MaxCategorySection = ({ isExpense }) => {
             </>
           )}
 
-          <Flexrow className="items-center gap-2 pt-5 pb-2.5 font-medium">
+          <Flexrow className="font-para2-m items-center gap-2 pt-5 pb-2.5">
             <span className="text-16px">
               <Icons.checkCircle className={cn(txtColor)} />
             </span>
@@ -111,7 +111,7 @@ const MaxCategorySection = ({ isExpense }) => {
               <Flexrow
                 key={idx}
                 className={cn(
-                  "text-14px !text-slate-a3 border-slate-a7 w-max cursor-pointer items-center gap-2 rounded-sm border px-2.5 py-1 font-medium",
+                  "text-14px !text-slate-a3 border-slate-a7 font-para2-m w-max cursor-pointer items-center gap-2 rounded-sm border px-2.5 py-1",
                 )}
               >
                 <span>

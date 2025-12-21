@@ -1,5 +1,5 @@
 import moment from "moment";
-import { useEffect, useMemo, useState } from "react";
+import { useState } from "react";
 
 //Shacdn-UI
 
@@ -10,14 +10,6 @@ import {
   PaginationNext,
   PaginationPrevious,
 } from "@/components/ui/pagination";
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-  DialogFooter,
-  DialogDescription,
-} from "@/components/ui/dialog";
 
 import IconCircle from "@/components/IconCircle";
 
@@ -27,13 +19,7 @@ import TooltipStrip from "@/components/strips/tooltip-strip";
 
 import Flexcol from "@/components/section/flexcol";
 import { amountFloat } from "@/components/utilityFilter";
-import {
-  expenseCategories,
-  getPrimeCategories,
-  getPrimeColor,
-  getSubOfPrime,
-  incomeCategories,
-} from "@/global/categories";
+import { getPrimeColor } from "@/global/categories";
 
 import { cn } from "@/lib/utils";
 import { toast } from "sonner";
@@ -42,10 +28,7 @@ import { useDispatch } from "react-redux";
 import { deleteExpense, deleteIncome } from "@/redux/slices/transaction-slice";
 import { cardBg } from "@/global/style";
 import ExpButton from "../buttons/exp-button";
-import { DialogClose } from "@radix-ui/react-dialog";
-import { useForm, Controller } from "react-hook-form";
-import { ErrorField, FieldLabel, FormField, SelectDate } from "../Forms/Form";
-import SelectFilter from "../selectFilter/SelectFilter";
+
 import TransactionEditForm from "../Forms/transaction-edit-form";
 
 const TransactionListTable = ({ isRecent, isExpesne, isIncome, entries }) => {
@@ -72,7 +55,7 @@ const TransactionListTable = ({ isRecent, isExpesne, isIncome, entries }) => {
           )}
         >
           <Flexcol className="flex-1 gap-0">
-            <span className="font-medium">Delete Expense ?</span>
+            <span className="font-para2-m">Delete Expense ?</span>
             <span>Do you want to delete ?</span>
           </Flexcol>
 
@@ -133,11 +116,19 @@ const TransactionListTable = ({ isRecent, isExpesne, isIncome, entries }) => {
       <Flexcol className="cursor-default">
         {currentPageItems.map((data) => (
           <TooltipStrip
+            fill={
+              data.isTypeExpense
+                ? "bg-exp-a4 fill-exp-a4 "
+                : "bg-inc-a4 fill-inc-a4 "
+            }
+            className={data.isTypeExpense ? "bg-exp-a4" : "bg-inc-a4"}
             key={data._id}
-            content={data.isNote ? data.isNote : "No Transaction Note Given"}
+            content={
+              data.isNote !== null ? data.isNote : "No Transaction Note Given"
+            }
           >
             {/** ======== main rectangle box ======== */}
-            <Flexrow className={cn("px-5 py-2.5", cardBg)}>
+            <div className={cn("flex w-full gap-5 px-5 py-2.5", cardBg)}>
               <Flexrow className="w-max items-center">
                 <IconCircle
                   bgColor={data.primeCategory}
@@ -200,7 +191,7 @@ const TransactionListTable = ({ isRecent, isExpesne, isIncome, entries }) => {
                   />
                 </TooltipStrip>
               </Flexrow>
-            </Flexrow>
+            </div>
           </TooltipStrip>
         ))}
       </Flexcol>
@@ -263,7 +254,7 @@ export default TransactionListTable;
                       setIcon={data.subCategory}
                     />
                   </TD>
-                  <TD className="font-medium">{data.subCategory}</TD>
+                  <TD className="font-para2-m">{data.subCategory}</TD>
                   <TD>
                     <button className="text-12px text-dim border-br2 rounded-sm border px-2 py-1.25 leading-none">
                       {data.primeCategory}
@@ -286,7 +277,7 @@ export default TransactionListTable;
                     </TooltipStrip>
                   </TD>
                   <TD>
-                    <Flexrow className="items-center justify-end !gap-1.5 font-medium">
+                    <Flexrow className="items-center justify-end !gap-1.5 font-para2-m">
                       <Icons.rupee /> <span>{data.ofAmount}</span>
                     </Flexrow>
                   </TD>

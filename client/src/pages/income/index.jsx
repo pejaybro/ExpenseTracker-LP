@@ -30,6 +30,7 @@ import SelectCard from "@/components/selectFilter/SelectCard";
 import SelectFilter from "@/components/selectFilter/SelectFilter";
 import { cn } from "@/lib/utils";
 import { SimplyManage } from "../home";
+import { AddInc } from "@/components/Navigation/bottom-bar";
 
 const IncomeIndex = () => {
   const navigate = useNavigate();
@@ -88,22 +89,29 @@ const IncomeIndex = () => {
 
   // NOTE: 4. If all checks pass, render the main content
   return (
-    <>
-      <Flexcol className="gap-8">
-        <Flexrow className="items-center justify-center gap-10">
-          <Flexcol className="w-max">
-            <TotalCardForYear year={CurrentYear()} />
-            <TotalCardForMonth year={CurrentYear()} month={CurrentMonth()} />
-          </Flexcol>
+    <Flexcol className="gap-10">
+      {/** ====== Cards : Monhly & Yearly Transactions || Calander ====== */}
+      <Flexrow className="items-stretch justify-center gap-10">
+        <Flexcol className="w-max justify-between">
+          <TotalCardForYear
+            className={"w-full max-w-[350px] min-w-[350px] shrink-0"}
+            year={CurrentYear()}
+          />
+          <TotalCardForMonth
+            className={"w-full max-w-[350px] min-w-[350px] shrink-0"}
+            year={CurrentYear()}
+            month={CurrentMonth()}
+          />
+        </Flexcol>
+        <Flexcol className="w-max">
           <MonthCalander list={IncomeList ?? []} />
-        </Flexrow>
-        <Flexrow className="items-center justify-evenly px-5">
-          <BudgetStrip />
-          <ExpButton addIncome />
-        </Flexrow>
-      </Flexcol>
-
-      <Flexcol className="gap-2.5 pt-20">
+          <AddInc className={"w-full"} />
+        </Flexcol>
+      </Flexrow>
+      {/** ====== Income Graph ====== */}
+      <LinearGraphData isIncome />
+      {/** ====== Transaction Filter ====== */}
+      <Flexcol className="gap-2.5">
         <Flexrow>
           <SelectBar className={"bg-inc-a3 text-dark-a3 w-max gap-1.25"}>
             <span>
@@ -161,14 +169,24 @@ const IncomeIndex = () => {
           </Flexrow>
         )}
       </Flexcol>
+      {/** ====== Transaction List ====== */}
       <TransactionListTable isIncome entries={FilteredIncome ?? []} />
-      <Flexcol className="pt-20">
-        <LinearGraphData isIncome />
-      </Flexcol>
+    </Flexcol>
+  );
+};
+
+export default IncomeIndex;
+
+/**!SECTION
+ * 
+ * 
+ * 
+ * 
+ *  <Flexcol className="pt-20"></Flexcol>
       <Flexcol className="pt-20">
         <SectionTitle title="Top 5 Maximum Expense Categories" isIncome />
         <MaxCategorySection />
-        <Flexrow className="text-14px items-center justify-end pt-5 font-medium">
+        <Flexrow className="text-14px items-center justify-end pt-5 font-para2-m">
           <h4>For Detailed Income Analysis</h4>
           <ExpButton
             custom_textbtn
@@ -179,8 +197,4 @@ const IncomeIndex = () => {
           </ExpButton>
         </Flexrow>
       </Flexcol>
-    </>
-  );
-};
-
-export default IncomeIndex;
+ */

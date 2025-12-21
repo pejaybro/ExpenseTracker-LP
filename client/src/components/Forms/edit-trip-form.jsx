@@ -108,7 +108,7 @@ const EditTripForm = ({ tripDetails, onClose, setEditingTripDetails }) => {
           <div className="grid grid-cols-[1fr_2fr] gap-x-4 gap-y-3 py-4 pt-8">
             <FieldLabel label="Trip Title" iconColor={iconColor} />
             <input
-              className="text-24px placeholder:text-slate-a1/70 border-slate-a2 focus:border-trip-a2 focus:ring-trip-a2 relative z-10 w-full border-b-1 px-1 py-1 font-bold outline-none"
+              className="text-24px placeholder:text-slate-a1/70 border-slate-a2 focus:border-trip-a2 focus:ring-trip-a2 font-para2-b relative z-10 w-full border-b-1 px-1 py-1 outline-none"
               type="text"
               {...register("tripTitle", {
                 required: "* Trip title is required",

@@ -242,6 +242,7 @@ export const insertRecurringExpense = async (req, res) => {
       };
       const newExpense = new expenseModal(expenseData);
       savedExpense = await newExpense.save({ session });
+      await insertTotal(savedExpense, session);
     }
 
     // If everything succeeded, commit the transaction

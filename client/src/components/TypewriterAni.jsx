@@ -48,7 +48,7 @@ const TypewriterAni = ({
         </div>
       )}
       {isTrip && (
-        <div className={cn("text-24px !text-slate-a1 absolute font-bold")}>
+        <div className={cn("text-24px !text-slate-a1 font-para2-b absolute")}>
           <span className=""> {PreText} </span>
           <span className="text-trip-a3">{currentText}</span>
           <span className="cursor border-r-slate-a1 border-r-[1px] pl-[0.5px]"></span>

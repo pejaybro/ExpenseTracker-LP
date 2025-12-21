@@ -4,18 +4,14 @@ import Flexrow from "../section/flexrow";
 
 const SelectCard = ({
   title,
-  children,
-  isExpense,
-  isReccuring,
-  isTrip,
-  noIcon,
+  children,  
   titleClass,
   className,
 }) => {
   return (
     <>
       <Flexrow
-        className={cn("!text-14px font-para2-b items-center gap-2", className)}
+        className={cn("!text-14px font-para2-m items-center gap-2", className)}
       >
         {title && <span className={cn("w-max",titleClass)}>{title}</span>}
         {children}

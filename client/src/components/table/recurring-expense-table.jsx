@@ -49,7 +49,7 @@ const RecurringExpenseTable = ({ entries }) => {
           )}
         >
           <Flexcol className="flex-1 gap-0">
-            <span className="font-medium">Delete Recurring Expense ?</span>
+            <span className="font-para2-m">Delete Recurring Expense ?</span>
             <span>Do you want to delete ?</span>
           </Flexcol>
 
@@ -104,12 +104,12 @@ const RecurringExpenseTable = ({ entries }) => {
       <Flexcol className="cursor-default">
         {currentPageItems.map((data) => (
           <TooltipStrip
+          fill={"bg-rep-a3 fill-rep-a3 "}
+          className={"bg-rep-a3"}
             key={data._id}
             content={data.isNote ? data.isNote : "No Transaction Note Given"}
           >
-            {/** ======== main rectangle box ======== */}
-
-            <Flexrow className={cn("px-5 py-2.5", cardBg)}>
+            <div className={cn("flex w-full gap-5 px-5 py-2.5", cardBg)}>
               <Flexrow className="w-max items-center">
                 <IconCircle
                   className={"!text-24px rounded-lg"}
@@ -118,8 +118,8 @@ const RecurringExpenseTable = ({ entries }) => {
                 />
               </Flexrow>
               <Flexcol className="gap-0.5">
-                <div className="text-22px font-medium">{data.subCategory}</div>
-                <Flexrow className="text-12px w-max gap-2.5">
+                <div className="text-22px font-para2-b">{data.subCategory}</div>
+                <Flexrow className="text-12px font-para2-r w-max gap-2.5">
                   <Flexrow className={"w-max items-center gap-1.25"}>
                     <span
                       className="size-3 rounded-xs"
@@ -145,7 +145,7 @@ const RecurringExpenseTable = ({ entries }) => {
                   </Flexrow>
                 </Flexrow>
               </Flexcol>
-              <Flexrow className="text-28px w-max items-center gap-1.25 pl-2 font-bold">
+              <Flexrow className="text-28px font-para2-bb w-max items-center gap-1.25 pl-2">
                 <Icons.rupee className="text-18px" />
                 {amountFloat(data.ofAmount)}
               </Flexrow>
@@ -166,7 +166,7 @@ const RecurringExpenseTable = ({ entries }) => {
                   />
                 </TooltipStrip>
               </Flexrow>
-            </Flexrow>
+            </div>
           </TooltipStrip>
         ))}
       </Flexcol>

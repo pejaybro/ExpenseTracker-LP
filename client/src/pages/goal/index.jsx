@@ -234,7 +234,7 @@ export const GoalCard = ({ data }) => {
         )}
       >
         <Flexcol className="flex-1 gap-0">
-          <span className="font-medium">Set Complete?</span>
+          <span className="font-para2-m">Set Complete?</span>
           <span>Do you want to set this goal as complete ?</span>
         </Flexcol>
         <Flexrow className="w-max justify-end gap-2">
@@ -270,7 +270,7 @@ export const GoalCard = ({ data }) => {
         )}
       >
         <Flexcol className="flex-1 gap-0">
-          <span className="font-medium">Delete Goal?</span>
+          <span className="font-para2-m">Delete Goal?</span>
           <span>are you sure want to delete goal?</span>
         </Flexcol>
         <Flexrow className="w-max justify-end gap-2">

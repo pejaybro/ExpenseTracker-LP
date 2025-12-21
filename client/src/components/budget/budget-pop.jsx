@@ -94,7 +94,7 @@ const BudgetPop = ({ children, isEdit, isNew }) => {
                     htmlFor="Budget Amount"
                     label="Budget Amount"
                   />
-                  <Flexrow className="items-center gap-0 border-b-1 border-white font-bold">
+                  <Flexrow className="font-para2-b items-center gap-0 border-b-1 border-white">
                     <Icons.rupee className="text-[18px]" />
                     <input
                       className="inputType-number text-24px w-full rounded-md border-none px-3 py-1 outline-none"

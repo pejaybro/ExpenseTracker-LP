@@ -68,33 +68,37 @@ export const Index = () => {
     sub: SubCategory.expenses,
   };
   return (
-    <>
-      <Flexcol>
-        <Flexrow className={"flex-wrap"}>
-          <TotalCardForYear
-            className="w-full lg:flex-1 lg:basis-[280px]"
-            isExpense
-          />
-          <TotalCardForMonth
-            className="w-full lg:flex-1 lg:basis-[280px]"
-            isExpense
-            year={CurrentYear()}
-            month={CurrentMonth()}
-          />
-          <TotalCardForYear className="w-full lg:flex-1 lg:basis-[280px]" />
-          <TotalCardForMonth
-            className="w-full lg:flex-1 lg:basis-[280px]"
-            year={CurrentYear()}
-            month={CurrentMonth()}
-          />
-        </Flexrow>
-        <LinearGraphData graphHeightClass="max-h-[350px]" isExpense />
-        <LinearGraphData graphHeightClass="max-h-[350px]" isIncome />
-        <DualGraphData isDashboard />
-        <ComboTable isAnalysis data={IncomeExpenseCombo} />
-        <PieGraphCode graphInfo={graphInfo} />
-        <IncomeCategoryAnalysis />
-      </Flexcol>
-    </>
+    <Flexcol className="gap-10">
+      {/** ====== Cards : Monhly & Yearly Transactions || Calander ====== */}
+      <Flexrow className={"w-full flex-wrap"}>
+        <TotalCardForYear
+          className="w-full lg:flex-1 lg:basis-[280px]"
+          isExpense
+        />
+        <TotalCardForMonth
+          className="w-full lg:flex-1 lg:basis-[280px]"
+          isExpense
+          year={CurrentYear()}
+          month={CurrentMonth()}
+        />
+        <TotalCardForYear className="w-full lg:flex-1 lg:basis-[280px]" />
+        <TotalCardForMonth
+          className="w-full lg:flex-1 lg:basis-[280px]"
+          year={CurrentYear()}
+          month={CurrentMonth()}
+        />
+      </Flexrow>
+      {/** ====== Expense Graph ====== */}
+      <LinearGraphData graphHeightClass="max-h-[350px]" isExpense />
+      {/** ====== Income Graph ====== */}
+      <LinearGraphData graphHeightClass="max-h-[350px]" isIncome />
+      {/** ====== Dual Graph : Income & Expense ====== */}
+      <DualGraphData isDashboard />
+      {/** ====== Table : Income & Expense Transcation - difference ====== */}
+      <ComboTable isAnalysis data={IncomeExpenseCombo} />
+      {/** ====== Expense Category Graph ====== */}
+      <PieGraphCode graphInfo={graphInfo} />
+      <IncomeCategoryAnalysis />
+    </Flexcol>
   );
 };

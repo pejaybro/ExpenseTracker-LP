@@ -162,7 +162,7 @@ const TransactionEditForm = ({
       <DialogContent className="bg-dark-a3 border-dark-a4 min-w-[650px] p-8 [&>button]:hidden">
         <form
           onSubmit={handleSubmit(onSubmit)}
-          className="!text-14px text-slate-a1 font-medium"
+          className="!text-14px text-slate-a1 font-para2-m"
         >
           <DialogHeader>
             <DialogTitle>Edit Transaction</DialogTitle>
@@ -234,8 +234,6 @@ const TransactionEditForm = ({
               rules={{ required: "Category is required" }}
               render={({ field }) => (
                 <>
-                  
-
                   <SelectFilter
                     placeholder="Select Sub Category"
                     className="bg-dark-a1 w-full"
@@ -280,8 +278,6 @@ const TransactionEditForm = ({
                           key={type}
                           className={"w-max items-center gap-2"}
                         >
-                         
-
                           <Checkbox
                             className="data-[state=checked]:bg-rep-a3 border-slate-a7 hover:cursor-pointer"
                             // 1. Read from field.value

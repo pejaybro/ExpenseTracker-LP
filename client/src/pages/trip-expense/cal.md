@@ -21,7 +21,7 @@ const daysInMonth = [
 {moment().format("MMMM, YYYY")}
 </Flexrow>
 
-<div className="!text-14px w-max font-medium">
+<div className="!text-14px w-max font-para2-m">
 {/_ Days Header _/}
 <div className="from-gradBot to-gradTop shadow-shadowBlack border-br1 mb-2 grid grid-cols-7 rounded-md border bg-gradient-to-t px-2">
 {daysOfWeek.map((day) => (

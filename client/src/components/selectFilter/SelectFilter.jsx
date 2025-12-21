@@ -20,11 +20,13 @@ const SelectFilter = ({
   itemClass,
   isMonth,
   value,
+  style,
 }) => {
   return (
     <>
       <Select value={String(value)} onValueChange={onValueChange}>
         <SelectTrigger
+          style={style}
           className={cn(
             "bg-dark-a3 !text-12px text-slate-a1 data-[placeholder]:text-slate-1 [&_svg:not([class*='text-'])]:text-slate-1 font-para2-m min-w-50 rounded-sm border-0 focus-visible:ring-[0px] data-[size=default]:h-7 [&_svg]:opacity-100",
             className,
@@ -43,7 +45,7 @@ const SelectFilter = ({
             list.map((item) => (
               <SelectItem
                 key={item.id}
-                value={item.categoryName}
+                value={item.primeName}
                 className={cn(
                   "bg-dark-a3 !text-slate-1 text-12px data-[highlighted]:bg-dark-a6 flex-inline font-para2-m mb-1 gap-2",
                   itemClass,
@@ -53,11 +55,11 @@ const SelectFilter = ({
                   className="flex h-3 w-3 shrink-0 rounded-xs"
                   style={{
                     backgroundColor: expenseCategories.find(
-                      (e) => e.title === item.categoryName,
+                      (e) => e.title === item.primeName,
                     )?.color,
                   }}
                 />
-                {item.categoryName}
+                {item.primeName}
               </SelectItem>
             ))}
           {!isChart &&

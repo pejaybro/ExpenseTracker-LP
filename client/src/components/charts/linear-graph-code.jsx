@@ -5,8 +5,7 @@ import {
   XAxis,
   LabelList,
   AreaChart,
-  Area,
-  YAxis,
+  Area,  
 } from "recharts";
 
 import {
@@ -26,9 +25,7 @@ import {
 import { Icons } from "../icons";
 import { amountFloat } from "../utilityFilter";
 import { cn } from "@/lib/utils";
-import { bgDarkA3, cardBgv2 } from "@/global/style";
-import Flexrow from "../section/flexrow";
-import { Numeral } from "numeral";
+import {  cardBgv2 } from "@/global/style";
 
 export const LinearGraphCode = ({
   graphHeightClass,
@@ -56,7 +53,7 @@ export const LinearGraphCode = ({
 
   const myLabelFormatter = (value, payload) => {
     return (
-      <span style={{ color: color }} className="font-medium">
+      <span style={{ color: color }} className="font-para2-b">
         For : {value}
       </span>
     );
@@ -71,7 +68,7 @@ export const LinearGraphCode = ({
           style={{ backgroundColor: color }}
         />
         {/* Label and Value */}
-        <div className="text-slate-a1 flex flex-1 justify-between leading-none font-medium">
+        <div className="text-slate-a1 flex flex-1 justify-between leading-none font-para2-m">
           <span className="pr-1">{item.name || name} : </span>
           <span>{amountFloat(value)}</span>
         </div>
@@ -80,8 +77,8 @@ export const LinearGraphCode = ({
   };
 
   return (
-    <>
-      <Card className={cn("flex-1 gap-0.5 px-3 py-9", cardBgv2)}>
+    
+      <Card className={cn("flex-1 gap-0.5 px-3 py-9 font-para2-r" , cardBgv2)}>
         <CardHeader className="items-center gap-1.25 pb-5 pl-10">
           {chartInfo.title && (
             <CardTitle className={"font-para2-r text-[15.5px]"}>
@@ -95,13 +92,15 @@ export const LinearGraphCode = ({
           )}
         </CardHeader>
 
-        <CardContent className="flex-1 pb-0">
+        <CardContent className="flex-1 pb-0 ">
           <ChartContainer
             config={chartConfig}
-            className={cn("max-h-[350px] w-full", graphHeightClass)}
+            className={cn("max-h-[350px] w-full ", graphHeightClass)}
+            
           >
             {isArea && (
               <AreaChart
+           
                 accessibilityLayer
                 data={chartData}
                 margin={{
@@ -120,12 +119,14 @@ export const LinearGraphCode = ({
                   className="[&_.recharts-cartesian-axis-tick_text]:fill-slate-a4"
                   tickFormatter={(value) => value}
                   interval={"preserveStartEnd"}
+                 
                 />
 
                 <ChartTooltip
                   cursor={false}
                   content={
                     <ChartTooltipContent
+                   
                       className={"bg-dark-a1.2 border-dark-a6"}
                       formatter={myTooltipFormatter}
                       hideIndicator={false}
@@ -194,6 +195,6 @@ export const LinearGraphCode = ({
           </CardFooter>
         )}
       </Card>
-    </>
+   
   );
 };

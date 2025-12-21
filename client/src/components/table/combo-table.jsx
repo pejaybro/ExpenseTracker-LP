@@ -1,10 +1,6 @@
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useState } from "react";
 
-import {
-  amountFloat,
-  amountInteger,
-  amountSignedFloat,
-} from "../utilityFilter";
+import { amountFloat, amountSignedFloat } from "../utilityFilter";
 import { Icons } from "../icons";
 import Flexrow from "../section/flexrow";
 import TH from "./TH";
@@ -22,8 +18,6 @@ import {
 } from "../ui/pagination";
 
 export const ComboTable = ({ data, isBudgeting, isAnalysis }) => {
- 
-
   const headderRow =
     (isBudgeting && (
       <>
@@ -36,7 +30,7 @@ export const ComboTable = ({ data, isBudgeting, isAnalysis }) => {
     )) ||
     (isAnalysis && (
       <>
-        <TH className="pr-15">Of</TH>
+        <TH className="pr-15">Month</TH>
         <TH className="pr-5">Income</TH>
         <TH className="pr-5">Expense</TH>
         <TH className="pr-5">Difference</TH>
@@ -56,10 +50,10 @@ export const ComboTable = ({ data, isBudgeting, isAnalysis }) => {
     (isBudgeting && "text-bud-a1") || (isAnalysis && "text-exp-a1");
   return (
     <>
-      <Flexrow className={cn("overflow-hidden", cardBgv2, "bg-dark-a1.2")}>
+      <Flexrow className={cn("overflow-hidden font-para2-m", cardBgv2, "bg-dark-a1.2")}>
         <table className="w-full">
           <thead>
-            <tr className="bg-dark-a5 text-slate-a1">
+            <tr className="bg-dark-a5 text-slate-a1 ">
               <TH className="w-0 px-5">
                 <Icons.checkCircle className={cn("text-14px", txtStyle)} />
               </TH>

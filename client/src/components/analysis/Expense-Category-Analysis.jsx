@@ -97,7 +97,7 @@ const ExpenseCategoryAnalysis = () => {
         </Flexrow>
         <Flexrow>
           <Flexcol className={cn("text-slate-a1 gap-2 p-10 px-12", cardBgv2)}>
-            <Flexrow className="items-center gap-2 font-medium">
+            <Flexrow className="font-para2-m items-center gap-2">
               <GraphTitleSquare className={"bg-exp-a1"} />
               Prime Category - {year}
               <Icons.checkCircle className="text-exp-a3 ml-2" />
@@ -159,7 +159,7 @@ const ExpenseCategoryAnalysis = () => {
               cardBgv2,
             )}
           >
-            <Flexrow className="items-center gap-2 font-medium">
+            <Flexrow className="font-para2-m items-center gap-2">
               <GraphTitleSquare className={"bg-exp-a1"} />
               Sub Categories
             </Flexrow>
@@ -173,7 +173,7 @@ const ExpenseCategoryAnalysis = () => {
                 <Flexrow
                   key={idx}
                   className={cn(
-                    "text-14px !text-slate-a3 border-slate-a7 w-max cursor-pointer items-center gap-2 rounded-sm border px-2.5 py-1 font-medium",
+                    "text-14px !text-slate-a3 border-slate-a7 font-para2-m w-max cursor-pointer items-center gap-2 rounded-sm border px-2.5 py-1",
                   )}
                 >
                   <Icons.checkCircle className={"text-exp-a3"} />
@@ -186,7 +186,7 @@ const ExpenseCategoryAnalysis = () => {
                 </Flexrow>
               </>
             ))}
-            <Flexrow className={"items-center gap-2 pt-6 font-medium"}>
+            <Flexrow className={"font-para2-m items-center gap-2 pt-6"}>
               <Icons.checkCircle className="text-exp-a1 !text-14px" />
               Total
               <Flexrow className={"w-max items-center gap-0.5"}>

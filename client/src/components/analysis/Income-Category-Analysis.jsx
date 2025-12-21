@@ -1,16 +1,10 @@
-import React, { useState } from "react";
 import Flexcol from "../section/flexcol";
-import { CurrentYear } from "@/utilities/calander-utility";
+
 import Flexrow from "../section/flexrow";
-import SelectBar from "../selectFilter/SelectBar";
-import SelectCard from "../selectFilter/SelectCard";
-import SelectFilter from "../selectFilter/SelectFilter";
-import Boxcard from "../section/boxcard";
+
 import { GraphTitleSquare } from "./linear-graph-data";
-import FlexrowStrip from "../strips/flexrow-strip";
 import { Icons } from "../icons";
 import useTotalConfig from "@/hooks/useTotalConfig";
-import HorizontalDivider from "../strips/horizontal-divider";
 import { amountFloat } from "../utilityFilter";
 import { cardBgv2 } from "@/global/style";
 import { cn } from "@/lib/utils";
@@ -41,7 +35,7 @@ const IncomeCategoryAnalysis = () => {
 
   const myLabelFormatter = (value, payload) => {
     return (
-      <span style={{ color: color }} className="font-medium">
+      <span style={{ color: color }} className="font-para2-b">
         For : {value}
       </span>
     );
@@ -56,7 +50,7 @@ const IncomeCategoryAnalysis = () => {
           style={{ backgroundColor: color }}
         />
         {/* Label and Value */}
-        <div className="text-slate-a1 flex flex-1 justify-between leading-none font-medium">
+        <div className="text-slate-a1 flex flex-1 justify-between leading-none font-para2-m">
           <span className="pr-1">{item.name || name} : </span>
           <span>{amountFloat(value)}</span>
         </div>
@@ -67,7 +61,7 @@ const IncomeCategoryAnalysis = () => {
   return (
     <>
       <Flexcol className={cn("text-slate-a1 gap-2 p-10 px-12", cardBgv2)}>
-        <Flexrow className="items-center gap-2 font-medium">
+        <Flexrow className="items-center gap-2 font-para2-b">
           <GraphTitleSquare className={"bg-inc-a2"} />
           <span className="pr-2">{GraphTitle} </span>
           <span className="text-14px">
@@ -77,10 +71,10 @@ const IncomeCategoryAnalysis = () => {
           Rs.
           <span className="text-inc-a3">{amountFloat(TitleTotal?.i)}</span>
         </Flexrow>
-        <Flexrow className={"!text-14px items-center gap-2 pb-2"}>
+        <Flexrow className={"!text-14px items-center font-para2-r gap-2 pb-2"}>
           Total Earning per Sub-Category of Income
         </Flexrow>
-        <Flexrow className={"pb-5"} >
+        <Flexrow className={"pb-5"}>
           <CardContent className="flex-1 p-0">
             <ChartContainer
               config={chartConfig}
@@ -130,12 +124,12 @@ const IncomeCategoryAnalysis = () => {
             </ChartContainer>
           </CardContent>
         </Flexrow>
-        <Flexrow className={"flex-wrap gap-2.5"}>
+        <Flexrow className={"flex-wrap gap-2.5 font-para2-b"}>
           {FilteredZerosSubCategory.income.map((sc, idx) => (
             <Flexrow
               key={sc.id}
               className={cn(
-                "text-14px !text-slate-a3 border-slate-a7 w-max cursor-pointer items-center gap-2 rounded-sm border px-2.5 py-1 font-medium",
+                "text-14px !text-slate-a3 border-slate-a7 w-max cursor-pointer items-center gap-2 rounded-sm border px-2.5 py-1 ",
               )}
             >
               <span className="text-14px">
@@ -152,7 +146,7 @@ const IncomeCategoryAnalysis = () => {
             </Flexrow>
           ))}
         </Flexrow>
-        <Flexrow className={"!text-14px items-center gap-2 pt-5"}>
+        <Flexrow className={"!text-14px items-center font-para2-r text-slate-a4 gap-2 pt-5"}>
           <Icons.textline />
           {GraphFootText}
         </Flexrow>

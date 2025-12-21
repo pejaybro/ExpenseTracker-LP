@@ -371,7 +371,7 @@ export const selectedPrimeCategoryTotal = createSelector(
     // --- FINAL MAPPING making array of obj ---
     const finalData = expenseCategories.map((category) => {
       return {
-        categoryName: category.title,
+        primeName: category.title,
         amount: categoryTotals[category.title] || 0,
       };
     });

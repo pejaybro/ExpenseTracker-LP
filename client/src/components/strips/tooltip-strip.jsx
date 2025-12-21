@@ -5,15 +5,26 @@ import {
 } from "@/components/ui/tooltip";
 import { cn } from "@/lib/utils";
 
-const TooltipStrip = ({ children, content = "Tooltip Text", className }) => {
+const TooltipStrip = ({
+  children,
+  fill,
+  content = "Tooltip Text",
+  className,
+}) => {
   return (
     <Tooltip>
       <TooltipTrigger asChild>{children}</TooltipTrigger>
+
       <TooltipContent
-        fill="fill-white bg-white"
-        className={cn("font-14 bg-white text-black", className)}
+        side="top"
+        fill={fill}
+        sideOffset={6}
+        className={cn(
+          "bg-slate-a1 text-14px text-dark-a2 font-para2-b rounded-md px-2 py-1 shadow-md",
+          className,
+        )}
       >
-        <p>{content}</p>
+        {content}
       </TooltipContent>
     </Tooltip>
   );

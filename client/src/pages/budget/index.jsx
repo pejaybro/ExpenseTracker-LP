@@ -28,6 +28,7 @@ import { DualGraphCode } from "@/components/charts/dual-graph-code";
 import { GraphTitleSquare } from "@/components/analysis/linear-graph-data";
 import { useMemo } from "react";
 import BudgetStrip from "@/components/strips/budget-strip";
+import TooltipStrip from "@/components/strips/tooltip-strip";
 
 const BudgetIndex = () => {
   //NOTE - BUDGET CONFIG
@@ -72,11 +73,11 @@ const BudgetIndex = () => {
       <>
         <Flexrow className={"w-max items-center gap-1.25"}>
           <GraphTitleSquare className={cn("bg-bud-a1")} />
-          <span className="mr-5">Budget Vs Expense {bugetYearTotal}</span>
+          <span className="mr-5">Budget Vs Expense </span>
         </Flexrow>
       </>
     ),
-    subtext: "Tracking Monthly",
+    subtext: "Tracking monthly expenses over budget",
     footertext: "Showing record of each month.",
   };
 
@@ -95,7 +96,7 @@ const BudgetIndex = () => {
           )}
         >
           <Flexcol className="flex-1 gap-0">
-            <span className="font-medium">Delete Budget ?</span>
+            <span className="font-para2-m">Delete Budget ?</span>
             <span>Do you want to delete ?</span>
           </Flexcol>
 
@@ -176,14 +177,16 @@ const BudgetIndex = () => {
       <Flexrow>
         <Flexcol className="items-center">
           <ActiveBudgetCard />
-          <Flexrow className="justify-center">
-            <ExpButton as="div" newBudget_textbtn />
-            <ExpButton as="div" editBudget_textbtn />
-            <ExpButton
-              onClick={handleDeleteBudget}
-              className={"bg-error-a1 text-slate-a1"}
-              delete_iconbtn
-            />
+          <Flexrow className="justify-between gap-2.5">
+            <ExpButton className={"flex-1"} as="div" newBudget_textbtn />
+            <ExpButton className={"flex-1"} as="div" editBudget_textbtn />
+            <TooltipStrip content="Delete Current Budget">
+              <ExpButton
+                onClick={handleDeleteBudget}
+                className={"bg-error-a1 text-slate-a1"}
+                delete_iconbtn
+              />
+            </TooltipStrip>
           </Flexrow>
         </Flexcol>
         <Flexcol className="items-center">
