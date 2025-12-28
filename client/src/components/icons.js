@@ -55,7 +55,13 @@ import {
   IoMdAdd,
 } from "react-icons/io";
 
-import { RiDeleteBin5Fill, RiEdit2Fill, RiGlobalFill } from "react-icons/ri";
+import {
+  RiDeleteBin5Fill,
+  RiEdit2Fill,
+  RiGlobalFill,
+  RiEyeFill,
+  RiEyeOffFill,
+} from "react-icons/ri";
 import { PiListFill, PiHandPeaceFill } from "react-icons/pi";
 
 export const Icons = {
@@ -115,4 +121,6 @@ export const Icons = {
   location: MdLocationPin,
   people_group: FaUserGroup,
   double_arrow_right: MdOutlineDoubleArrow,
+  eye_open: RiEyeFill,
+  eye_close: RiEyeOffFill,
 };

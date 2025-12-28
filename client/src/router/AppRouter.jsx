@@ -22,11 +22,15 @@ import Setting from "@/pages/user-setting/setting.jsx";
 import SettingIndex from "@/pages/user-setting/index.jsx";
 import Goal from "@/pages/goal/goal.jsx";
 import GoalIndex from "@/pages/goal/index.jsx";
+import Login from "@/pages/login-signup/login.jsx";
+import Signup from "@/pages/login-signup/sign-up.jsx";
 
 const AppRouter = () => {
   return (
     <Routes>
       <Route path="/" element={<Navigate to={PATH.home} />} />
+      <Route path="/login" element={<Login />}></Route>
+      <Route path="/signup" element={<Signup />}></Route>
       <Route path={PATH.home} element={<Home />}>
         <Route index element={<HomeIndex />} />
         {formRoutes()}

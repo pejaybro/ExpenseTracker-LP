@@ -14,6 +14,8 @@ const PATH = {
   addTripExpense: "add-trip-expense",
   setting: "/settings",
   goal: "/goal",
+  login: "/login",
+  signup: "/signup",
 };
 
 export { PATH };

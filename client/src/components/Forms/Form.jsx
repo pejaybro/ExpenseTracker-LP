@@ -515,7 +515,7 @@ export const SelectDate = ({
 
 // --- Form Layout Components ---
 export const FormField = ({ children, className = "" }) => (
-  <div className={`font-para2-m flex flex-col gap-2 py-4 ${className}`}>
+  <div className={cn(`font-para2-m flex flex-col gap-2 py-4`, className)}>
     {children}
   </div>
 );
