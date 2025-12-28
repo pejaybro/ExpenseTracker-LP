@@ -115,42 +115,45 @@ const ReccuringExpenseIndex = () => {
   // NOTE: 4. If all checks pass, render the main content
 
   return (
-    <>
-      <Flexcol className="gap-8">
-        <Flexrow className={"rounded-lg"}>
-          <div className="text-dark-a0 flex max-h-full min-h-[200px] w-[350px] items-center justify-center rounded-lg bg-amber-400">
-            image here
-          </div>
-          <div className="flex flex-col justify-center">
-            {/*  <MonthCalander isExpense list={ExpenseList ?? []} /> */}
-            <span className="font-title text-36px tracking-wide">
-              Create Recurring Expense
-            </span>
-            <ExpButton className={"max-w-[240px]"} addReccuring />
-          </div>
-        </Flexrow>
-        <Flexrow className="flex-wrap justify-center">
-          <TotalCardForYear
-            className="w-full lg:flex-1 lg:basis-[280px]"
-            isReccuring
-            year={CurrentYear()}
-          />
-          <TotalCardForMonth
-            className="w-full lg:flex-1 lg:basis-[280px]"
-            isReccuring
-            year={CurrentYear()}
-            month={CurrentMonth()}
-          />
-        </Flexrow>
-
-        <LinearGraphCode
-          graphHeightClass="max-h-[350px]"
-          graphInfo={graphInfo}
-          chartInfo={chartInfo}
+    <Flexcol className="gap-8">
+      {/** ====== Header Card ====== */}
+      <Flexrow className={"rounded-lg"}>
+        <div className="text-dark-a0 flex max-h-full min-h-[200px] w-[350px] items-center justify-center rounded-lg bg-amber-400">
+          image here
+        </div>
+        <div className="flex flex-col justify-center">
+          {/*  <MonthCalander isExpense list={ExpenseList ?? []} /> */}
+          <span className="font-title text-36px tracking-wide">
+            Create Recurring Expense
+          </span>
+          <ExpButton className={"max-w-[240px]"} addReccuring />
+        </div>
+      </Flexrow>
+      {/** ====== Total Card ====== */}
+      <Flexrow className="flex-wrap justify-center">
+        <TotalCardForYear
+          className="w-full lg:flex-1 lg:basis-[280px]"
+          isReccuring
+          year={CurrentYear()}
         />
-        <RecurringExpenseTable entries={RecurringList ?? []} />
-      </Flexcol>
-    </>
+        <TotalCardForMonth
+          className="w-full lg:flex-1 lg:basis-[280px]"
+          isReccuring
+          year={CurrentYear()}
+          month={CurrentMonth()}
+        />
+      </Flexrow>
+      {/** ====== Recurring Graph ====== */}
+      <LinearGraphCode
+        graphHeightClass="max-h-[350px]"
+        graphInfo={graphInfo}
+        chartInfo={chartInfo}
+      />
+      {/** ====== Recurring Transaction List ====== */}
+      <SectionTitle title="Recurring Transactions" />
+
+      <RecurringExpenseTable entries={RecurringList ?? []} />
+    </Flexcol>
   );
 };
 

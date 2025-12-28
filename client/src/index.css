@@ -3,8 +3,6 @@
 @source "../.flowbite-react/class-list.json";
 @import "tw-animate-css";
 
-
-
 @theme {
   --color-darkBlack: #0d0d0d;
   --color-greyBlack: #151515;
@@ -151,55 +149,6 @@
 }
 
 @font-face {
-  font-family: "Lato-Black";
-  src: url("../src/assets/Fonts/lato/Lato-Black.ttf") format("truetype");
-}
-
-@font-face {
-  font-family: "Lato-BlackItalic";
-  src: url("../src/assets/Fonts/lato/Lato-BlackItalic.ttf") format("truetype");
-}
-
-@font-face {
-  font-family: "Lato-Bold";
-  src: url("../src/assets/Fonts/lato/Lato-Bold.ttf") format("truetype");
-}
-
-@font-face {
-  font-family: "Lato-BoldItalic";
-  src: url("../src/assets/Fonts/lato/Lato-BoldItalic.ttf") format("truetype");
-}
-
-@font-face {
-  font-family: "Lato-Italic";
-  src: url("../src/assets/Fonts/lato/Lato-Italic.ttf") format("truetype");
-}
-
-@font-face {
-  font-family: "Lato-Light";
-  src: url("../src/assets/Fonts/lato/Lato-Light.ttf") format("truetype");
-}
-
-@font-face {
-  font-family: "Lato-LightItalic";
-  src: url("../src/assets/Fonts/lato/Lato-LightItalic.ttf") format("truetype");
-}
-
-@font-face {
-  font-family: "Lato-Regular";
-  src: url("../src/assets/Fonts/lato/Lato-Regular.ttf") format("truetype");
-}
-
-@font-face {
-  font-family: "Lato-Thin";
-  src: url("../src/assets/Fonts/lato/Lato-Thin.ttf") format("truetype");
-}
-
-@font-face {
-  font-family: "Lato-ThinItalic";
-  src: url("../src/assets/Fonts/lato/Lato-ThinItalic.ttf") format("truetype");
-}
-@font-face {
   font-family: "Sink";
   src: url("../src/assets/Fonts/sink/Sink.ttf") format("truetype");
 }
@@ -253,19 +202,28 @@
   font-style: italic;
 }
 
+@font-face {
+  font-family: "ComicRelief-Bold";
+  src: url("../src/assets/Fonts/comic/ComicRelief-Bold.ttf") format("truetype");
+  font-weight: 700;
+}
+
+@font-face {
+  font-family: "ComicRelief-Regular";
+  src: url("../src/assets/Fonts/comic/ComicRelief-Regular.ttf")
+    format("truetype");
+  font-weight: 400;
+}
+
 @theme {
   --font-title: "Sink";
-  --font-para-r: "Lato-Regular";
   --font-para2-r: "Barlow-Regular";
-  --font-para-l: "Lato-Light";
   --font-para2-l: "Barlow-Light";
   --font-para2-m: "Barlow-Medium";
   --font-para2-b: "Barlow-SemiBold";
   --font-para2-bb: "Barlow-Bold";
-  --font-para-i: "Lato-Italic";
-  --font-para-b: "Lato-Bold";
-  --font-para-bb: "Lato-Black";
-  --font-para-ib: "Lato-BoldItalic";
+  --font-comic-r: "ComicRelief-Regular";
+  --font-comic-b: "ComicRelief-Bold";
 }
 
 @custom-variant dark (&:is(.dark *));

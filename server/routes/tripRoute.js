@@ -2,6 +2,7 @@ import express from "express";
 import {
   deleteTrip,
   fetchTrip,
+  fetchTripDeatils,
   insertTrip,
   updateTrip,
 } from "../controllers/trip-controller.js";
@@ -10,6 +11,7 @@ import { tripValidation } from "../middlewares/trip-validation.js";
 const tripRouter = express.Router();
 
 tripRouter.get("/get-trip/:userID", fetchTrip);
+tripRouter.get("/get-trip-details/:tripId", fetchTripDeatils);
 
 tripRouter.post(
   "/add-trip",

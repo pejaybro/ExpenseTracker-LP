@@ -26,6 +26,7 @@ import TotalCardForYear from "@/components/cards/total-card-for-year";
 import TotalCardForMonth from "@/components/cards/total-card-for-month";
 import { CurrentMonth, CurrentYear } from "@/utilities/calander-utility";
 import { AddExp } from "@/components/Navigation/bottom-bar";
+import SectionTitle from "@/components/section/section-title";
 
 const ExpenseIndex = () => {
   /** =========== Transaction Config =========== */
@@ -109,6 +110,7 @@ const ExpenseIndex = () => {
       {/** ====== Expense Graph ====== */}
       <LinearGraphData isExpense />
       {/** ====== Transaction Filter ====== */}
+      <SectionTitle title="Expense Transactions" />
       <Flexcol className="gap-2.5">
         <Flexrow>
           <SelectBar className={"bg-exp-a3 text-dark-a3 gap-1.25"}>

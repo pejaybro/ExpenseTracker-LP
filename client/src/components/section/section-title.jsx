@@ -1,31 +1,19 @@
-import { Icons } from "../icons";
+import { cn } from "@/lib/utils";
+import Flexrow from "./flexrow";
+import HorizontalDivider from "../strips/horizontal-divider";
 
-const SectionTitle = ({
-  title,
-  isAnalysis,
-  isExpense,
-  isIncome,
-  isBudget,
-  isTrip,
-}) => {
+const SectionTitle = ({ title, className }) => {
   return (
     <>
-      <div className="text-14px flex flex-row items-center pb-5">
-        <span>
-          <Icons.window />
-        </span>
-
-        <span className="font-para2-m min-w-fit pr-5 pl-2.5"> {title}</span>
-
-        <span className="h-[0.5px] w-full rounded-full bg-[#454545]"></span>
-        <span className="pl-5">
-          {isAnalysis && <Icons.analysis />}
-          {isExpense && <Icons.expense />}
-          {isIncome && <Icons.income />}
-          {isBudget && <Icons.calc />}
-          {isTrip && <Icons.trip />}
-        </span>
-      </div>
+      <Flexrow
+        className={cn(
+          "font-title items-center gap-2.5 text-[32px] tracking-wide",
+          className,
+        )}
+      >
+        {title && <span>{title}</span>}
+        <HorizontalDivider className={"h-[2px] flex-1"} />
+      </Flexrow>
     </>
   );
 };

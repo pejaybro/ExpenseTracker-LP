@@ -70,6 +70,7 @@ export const Index = () => {
   return (
     <Flexcol className="gap-10">
       {/** ====== Cards : Monhly & Yearly Transactions || Calander ====== */}
+      <SectionTitle title="Total Cards" />
       <Flexrow className={"w-full flex-wrap"}>
         <TotalCardForYear
           className="w-full lg:flex-1 lg:basis-[280px]"
@@ -89,15 +90,26 @@ export const Index = () => {
         />
       </Flexrow>
       {/** ====== Expense Graph ====== */}
+      <SectionTitle title="Expense Graph" />
       <LinearGraphData graphHeightClass="max-h-[350px]" isExpense />
       {/** ====== Income Graph ====== */}
+      <SectionTitle title="Income Graph" />
+
       <LinearGraphData graphHeightClass="max-h-[350px]" isIncome />
       {/** ====== Dual Graph : Income & Expense ====== */}
+      <SectionTitle title="Income-Expense Dual Graph" />
+
       <DualGraphData isDashboard />
       {/** ====== Table : Income & Expense Transcation - difference ====== */}
+      <SectionTitle title="Income-Expense Data Table" />
+
       <ComboTable isAnalysis data={IncomeExpenseCombo} />
       {/** ====== Expense Category Graph ====== */}
+      <SectionTitle title="Expense Category Chart" />
+
       <PieGraphCode graphInfo={graphInfo} />
+      <SectionTitle title="Income Catrgory Graph" />
+
       <IncomeCategoryAnalysis />
     </Flexcol>
   );

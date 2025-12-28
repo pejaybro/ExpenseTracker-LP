@@ -10,10 +10,7 @@ const useTripConfig = () => {
   const { TripLoading, TripError, CreateTripLoading, CreateTripError } =
     useSelector((state) => state.trip);
   const FilteredTripSummary = useSelector(selectTripSummary);
-  const AllTripSummary = useSelector(selectAllTripsSummary);
-
-  
-
+  const AllTripSummary = useSelector(selectAllTripsSummary);  
   const getTripDetails = (id) => TripList?.find((t) => t._id === id);
 
   return {

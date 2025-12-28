@@ -29,6 +29,7 @@ import { GraphTitleSquare } from "@/components/analysis/linear-graph-data";
 import { useMemo } from "react";
 import BudgetStrip from "@/components/strips/budget-strip";
 import TooltipStrip from "@/components/strips/tooltip-strip";
+import SectionTitle from "@/components/section/section-title";
 
 const BudgetIndex = () => {
   //NOTE - BUDGET CONFIG
@@ -173,7 +174,7 @@ const BudgetIndex = () => {
   }
   // NOTE: 4. If all checks pass, render the main content
   return (
-    <>
+    <Flexcol className="gap-8">
       <Flexrow>
         <Flexcol className="items-center">
           <ActiveBudgetCard />
@@ -193,17 +194,19 @@ const BudgetIndex = () => {
           <BudgetTable />
         </Flexcol>
       </Flexrow>
-      <Flexrow className={"mt-5"}>
+      <SectionTitle title="Budget-Expenses Graph" />
+
+    
         <DualGraphCode
           isBudgetExpenseCombo
           graphInfo={DashboardGraphInfo}
           chartInfo={chartInfo}
         />
-      </Flexrow>
-      <Flexrow className={"mt-5"}>
+     <SectionTitle title="Monthly Budget-Expenses Data Table" />
+    
         <ComboTable data={BudgetWithExpense} isBudgeting />
-      </Flexrow>
-    </>
+      
+    </Flexcol>
   );
 };
 

@@ -111,6 +111,7 @@ const IncomeIndex = () => {
       {/** ====== Income Graph ====== */}
       <LinearGraphData isIncome />
       {/** ====== Transaction Filter ====== */}
+      <SectionTitle title="Income Transactions" />
       <Flexcol className="gap-2.5">
         <Flexrow>
           <SelectBar className={"bg-inc-a3 text-dark-a3 w-max gap-1.25"}>

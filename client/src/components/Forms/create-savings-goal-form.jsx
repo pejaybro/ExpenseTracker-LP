@@ -10,6 +10,7 @@ import { cn } from "@/lib/utils";
 
 const CreateSavingsGoalForm = ({ className }) => {
   const queryClient = useQueryClient();
+
   const createGoal = async (payload) => {
     const res = await apiCLient.post(`/saving-goal/create-goal`, payload);
     return res.data;
@@ -123,16 +124,6 @@ const CreateSavingsGoalForm = ({ className }) => {
               custom_textbtn
             >
               Add Now
-            </ExpButton>
-            <ExpButton
-              onClick={() => {
-                reset();
-              }}
-              type="button"
-              className={"bg-error-a1"}
-              custom_textbtn
-            >
-              Cancel
             </ExpButton>
           </FormField>
         </form>

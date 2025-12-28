@@ -14,6 +14,8 @@ import { Icons } from "@/components/icons";
 import NewExpense from "../expense/NewExpense";
 import NewIncome from "../income/NewIncome";
 import { NewBudget } from "../budget";
+import HorizontalDivider from "@/components/strips/horizontal-divider";
+import SectionTitle from "@/components/section/section-title";
 
 const HomeIndex = () => {
   const { RecentTransactionList, recentTransactionsLoading } =
@@ -89,6 +91,9 @@ const HomeIndex = () => {
         />
       </Flexrow>
       {/** ====== 10 Latest Transactions ====== */}
+
+      <SectionTitle title="Recent Transactions" />
+
       <TransactionListTable
         isExpesne
         isRecent

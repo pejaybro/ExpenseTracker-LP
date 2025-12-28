@@ -113,21 +113,21 @@ const TripIndex = () => {
 
   return (
     <>
-      <Flexcol>
-        <Flexrow className={"rounded-lg"}>
-          <div className="text-dark-a0 flex max-h-full min-h-[200px] w-[350px] items-center justify-center rounded-lg bg-amber-400">
+      <Flexcol className="gap-8">
+        {/** ====== Top Section ====== */}
+        <Flexcol className="m-auto max-w-[700px]">
+          <div className="text-dark-a0 flex h-[250px] w-[700px] items-center justify-center rounded-lg bg-amber-400">
             image here
           </div>
-          <div className="flex flex-1 flex-col justify-center">
-            {/*  <MonthCalander isExpense list={ExpenseList ?? []} /> */}
-            <CreateTripForm />
-          </div>
-        </Flexrow>
-        <Flexrow className={cn("!text-14px mt-5 w-full gap-2.5")}>
-          <span className="font-title text-[32px] tracking-wide">
-            Your Amazing Adventures Catalog{" "}
-          </span>
-        </Flexrow>
+
+          <CreateTripForm />
+        </Flexcol>
+
+        {/** ====== Title for Trips ====== */}
+
+        <SectionTitle title="Your Adventure's Log" />
+
+        {/** ====== Trip Cards ====== */}
 
         <Flexrow className={"flex-wrap justify-center gap-5"}>
           {currentPageItems.map((trip) => (
@@ -138,12 +138,12 @@ const TripIndex = () => {
                 cardBg,
               )}
             >
+              {/** ====== spent and travel destination  ====== */}
               <Flexrow className={"text-12px font-para2-m items-center"}>
-                <Flexrow className={"items-center gap-1.5"}>
-                  <GraphTitleSquare className={"bg-trip-a1 size-3"} />
-                  <span> Expensed : </span>
+                <Flexrow className={"items-center gap-1"}>
+                  <span> Spent : </span>
                   <Icons.rupee className={"text-trip-a2"} />
-                  <span>{5000}</span>
+                  <span>{amountFloat(trip.tripTotal)}</span>
                 </Flexrow>
                 <Flexrow className={"items-center justify-end gap-1.5"}>
                   {trip.tripType === 0 ? (
@@ -154,43 +154,35 @@ const TripIndex = () => {
                   {trip.tripType === 0 ? "Domestic" : "Abroad"}
                 </Flexrow>
               </Flexrow>
+
+              {/** ====== Trip title  ====== */}
               <Flexrow
-                className={"text-22px font-para2-m items-center gap-2 py-2.5"}
+                className={
+                  "text-22px font-para2-m cursor-default items-center gap-2 py-2.5"
+                }
               >
                 <Icons.trip className={"text-trip-a2"} />
                 <span>{truncate(trip.tripTitle)}</span>
               </Flexrow>
 
               <Flexrow>
+                {/** ====== Duration Dates ====== */}
                 <Flexcol className="text-12px font-para2-m justify-center gap-1">
                   <Flexrow className="items-center gap-2">
                     <Icons.calander_date className={"text-trip-a2"} />
-                    <span> Started On : </span>
+                    <span> From : </span>
                     <span> {moment(trip.startOn).format("DD MMM, YYYY")}</span>
                   </Flexrow>
                   <Flexrow className="items-center gap-2">
                     <Icons.calander_date className={"text-trip-a2"} />
-                    <span> Ended On : </span>
+                    <span> To : </span>
                     <span> {moment(trip.endsOn).format("DD MMM, YYYY")}</span>
                   </Flexrow>
                 </Flexcol>
 
+                {/** ====== Buttons ====== */}
                 <Flexrow className={"w-max items-center justify-end gap-2"}>
-                  <TooltipStrip content="Delete Trip">
-                    <ExpButton
-                      delete_iconbtn
-                      onClick={() => deleteToast(dispatch, trip._id)}
-                      className={"bg-error-a1 text-slate-a1 !text-18px"}
-                    />
-                  </TooltipStrip>
-                  <ExpButton
-                    className={"bg-trip-a3 text-dark-a2 !text-18px"}
-                    custom_iconbtn
-                    custom_toolContent={"View Trip"}
-                    onClick={() => navigate(trip._id)}
-                  >
-                    <Icons.view />
-                  </ExpButton>
+                  {/** ====== Add Trip Expense : Btn ====== */}
                   <ExpButton
                     className={"bg-trip-a3 text-dark-a2 !text-18px"}
                     custom_iconbtn
@@ -203,11 +195,30 @@ const TripIndex = () => {
                   >
                     <Icons.add_list />
                   </ExpButton>
+                  {/** ====== View : Btn ====== */}
+                  <ExpButton
+                    className={"bg-trip-a3 text-dark-a2 !text-18px"}
+                    custom_iconbtn
+                    custom_toolContent={"View Trip"}
+                    onClick={() => navigate(trip._id)}
+                  >
+                    <Icons.view />
+                  </ExpButton>
+                  {/** ====== Delete : Btn ====== */}
+                  <TooltipStrip content="Delete Trip">
+                    <ExpButton
+                      delete_iconbtn
+                      onClick={() => deleteToast(dispatch, trip._id)}
+                      className={"bg-error-a1 text-slate-a1 !text-18px"}
+                    />
+                  </TooltipStrip>
                 </Flexrow>
               </Flexrow>
             </Flexcol>
           ))}
         </Flexrow>
+
+        {/** ====== Bottom Pagination ====== */}
         <Pagination className="py-4">
           <PaginationContent>
             <PaginationItem>

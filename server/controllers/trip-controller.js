@@ -1,4 +1,7 @@
-import { generateTripPlaceholderSummary } from "../ai-services/genai/trip-summary.js";
+import {
+  generateTripPlaceholderSummary,
+  generateTripSummary,
+} from "../ai-services/genai/trip-summary.js";
 import { tripModal } from "../models/trip-modal.js";
 import { generateDataHash } from "../utils/hashUtils.js";
 import mongoose from "mongoose";
@@ -12,15 +15,18 @@ const insertTrip = async (req, res) => {
     const newTrip = new tripModal(data);
     //await newTrip.save();
     const placeholderText = await generateTripPlaceholderSummary(newTrip);
+    const initialHash = generateDataHash({
+      tripTitle: newTrip.tripTitle,
+      startOn: newTrip.startOn,
+      endsOn: newTrip.endsOn,
+      tripType: newTrip.tripType,
+      travelType: newTrip.travelType,
+      ofGroup: newTrip.ofGroup,
+      abroadInfo: newTrip.abroadInfo,
+      tripTotal: newTrip.tripTotal,
+    });
 
-    console.log("Placeholder Generated text", placeholderText);
-
-    const initialData = {
-      tripDetails: newTrip.toObject(),
-      expenses: [], // Important: Use an empty array since no expenses exist yet
-    };
-    const initialHash = generateDataHash(initialData);
-    newTrip.tripSummary = placeholderText ?? "Not Generated";
+    newTrip.tripSummary = placeholderText;
     newTrip.tripHashData = initialHash;
     await newTrip.save();
 
@@ -52,6 +58,47 @@ const fetchTrip = async (req, res) => {
     return res
       .status(500)
       .json({ message: error.message || "Failed to fetch Trip data" });
+  }
+};
+
+export const fetchTripDeatils = async (req, res) => {
+  try {
+    const { tripId } = req.params;
+    if (!mongoose.Types.ObjectId.isValid(tripId)) {
+      return res.status(400).json({ message: "Invalid Trip ID" });
+    }
+    const trip = await tripModal.findById(tripId);
+    if (!trip) {
+      return res.status(404).json({ message: "Trip not found" });
+    }
+
+    if (trip.tripTotal > 0) {
+      const newHash = generateDataHash({
+        tripTitle: trip.tripTitle,
+        startOn: trip.startOn,
+        endsOn: trip.endsOn,
+        tripType: trip.tripType,
+        travelType: trip.travelType,
+        ofGroup: trip.ofGroup,
+        abroadInfo: trip.abroadInfo ?? null,
+        tripTotal: trip.tripTotal,
+      });
+      if (newHash !== trip.tripHashData) {
+        const newSummary = await generateTripSummary(trip);
+        trip.tripSummary = newSummary;
+        trip.tripHashData = newHash;
+        await trip.save();
+      }
+    }
+
+    // check hash
+
+    return res.status(200).json(trip);
+  } catch (error) {
+    console.error("Fetch Trip Deatils Error:", error);
+    return res
+      .status(500)
+      .json({ message: error.message || "Failed to fetch Trip Details data" });
   }
 };
 
@@ -117,36 +164,47 @@ export const deleteTrip = async (req, res) => {
 };
 
 export const updateTrip = async (req, res) => {
-  const session = await mongoose.startSession();
   try {
-    session.startTransaction();
     const data = req.body;
+
+    const existingTrip = await tripModal.findOne({
+      userID: data.userID,
+      _id: data._id,
+    });
+    if (!existingTrip) {
+      return res.status(404).json({ message: "Trip not found to update." });
+    }
+
+    if (
+      existingTrip.tripTotal <= 0 &&
+      typeof data.tripTitle === "string" &&
+      data.tripTitle.trim() !== existingTrip.tripTitle.trim()
+    ) {
+      const placeholderText = await generateTripPlaceholderSummary(data);
+      data.tripSummary = placeholderText;
+    }
+
     const updatedTrip = await tripModal.findOneAndUpdate(
       {
         userID: data.userID,
         _id: data._id,
       },
       { $set: data },
-      { new: true, runValidators: true, timestamps: true, session: session }
+      { new: true, runValidators: true, timestamps: true }
     );
 
     if (!updatedTrip) {
-      // Abort the transaction before sending the response
-      await session.abortTransaction();
       return res.status(404).json({ message: "Trip not found to update." });
     }
 
-    // Send success response
-    await session.commitTransaction();
+    console.log("trip details", updateTrip);
+
     res.status(201).json(updatedTrip);
   } catch (error) {
-    await session.abortTransaction();
     console.error("Update Trip Error:", error);
     return res
       .status(500)
       .json({ message: error.message || "Failed to Update Trip" });
-  } finally {
-    session.endSession();
   }
 };
 

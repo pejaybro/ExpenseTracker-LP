@@ -168,8 +168,15 @@ const TransactionListTable = ({ isRecent, isExpesne, isIncome, entries }) => {
                 </Flexrow>
               </Flexcol>
               <Flexrow className="text-28px font-para2-bb w-max items-center gap-1.25">
-                <Icons.rupee className="text-18px" />
-                {amountFloat(data.ofAmount)}
+                {!data.ofTrip?.abroadInfo?.currencyCode && (
+                  <Icons.rupee className="text-18px" />
+                )}
+                <span> {amountFloat(data.ofAmount)}</span>
+                {data.ofTrip?.abroadInfo?.currencyCode && (
+                  <span className="text-16px font-para2-m">
+                    {data.ofTrip?.abroadInfo?.currencyCode}
+                  </span>
+                )}
               </Flexrow>
               <Flexrow className="w-max items-center gap-2.5">
                 <TooltipStrip content="Edit Record">

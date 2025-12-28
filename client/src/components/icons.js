@@ -4,8 +4,9 @@ import {
   MdDelete,
   MdCancel,
   MdSpaceDashboard,
-  MdEditNote,
   MdFilterAlt,
+  MdLocationPin,
+  MdOutlineDoubleArrow,
 } from "react-icons/md";
 import {
   FaCalendar,
@@ -13,7 +14,6 @@ import {
   FaCalculator,
   FaCalendarDay,
   FaCarSide,
-  FaEdit,
   FaShare,
 } from "react-icons/fa";
 import { BsBarChartFill, BsFillSuitcase2Fill } from "react-icons/bs";
@@ -28,6 +28,7 @@ import {
   FaIndianRupeeSign,
   FaRegWindowMaximize,
   FaPlaneDeparture,
+  FaUserGroup,
 } from "react-icons/fa6";
 
 import {
@@ -54,13 +55,7 @@ import {
   IoMdAdd,
 } from "react-icons/io";
 
-import {
-  RiAddFill,
-  RiDeleteBin5Fill,
-  RiEdit2Fill,
-  RiExternalLinkFill,
-  RiGlobalFill,
-} from "react-icons/ri";
+import { RiDeleteBin5Fill, RiEdit2Fill, RiGlobalFill } from "react-icons/ri";
 import { PiListFill, PiHandPeaceFill } from "react-icons/pi";
 
 export const Icons = {
@@ -117,4 +112,7 @@ export const Icons = {
   goal: TbTargetArrow,
   handPeace: PiHandPeaceFill,
   warning: IoWarning,
+  location: MdLocationPin,
+  people_group: FaUserGroup,
+  double_arrow_right: MdOutlineDoubleArrow,
 };

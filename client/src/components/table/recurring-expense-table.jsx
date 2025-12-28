@@ -104,8 +104,8 @@ const RecurringExpenseTable = ({ entries }) => {
       <Flexcol className="cursor-default">
         {currentPageItems.map((data) => (
           <TooltipStrip
-          fill={"bg-rep-a3 fill-rep-a3 "}
-          className={"bg-rep-a3"}
+            fill={"bg-rep-a3 fill-rep-a3 "}
+            className={"bg-rep-a3"}
             key={data._id}
             content={data.isNote ? data.isNote : "No Transaction Note Given"}
           >

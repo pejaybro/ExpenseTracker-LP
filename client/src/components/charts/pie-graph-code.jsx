@@ -137,7 +137,7 @@ export const PieGraphCode = ({
           className="h-2.5 w-2.5 shrink-0 rounded-[2px]"
           style={{ backgroundColor: indicatorColor }}
         />
-        <div className="text-slate-a1 flex flex-1 justify-between gap-2 leading-none font-para2-m">
+        <div className="text-slate-a1 font-para2-m flex flex-1 justify-between gap-2 leading-none">
           <span className="pr-1">{name} : </span>
           <span>{amountFloat(value)}</span>
         </div>
@@ -246,9 +246,8 @@ export const PieGraphCode = ({
               />
               <SelectCard className={"font-para2-r"} title={" Breakdown for"}>
                 <SelectFilter
-                 className={"bg-dark-a2"}
-               
-                 contentClass={"bg-dark-a2"}
+                  className={"bg-dark-a2 border-slate-a8 border"}
+                  contentClass={"bg-dark-a2"}
                   onValueChange={handleSelectChange}
                   value={activeEntry?.primeName}
                   list={chartData}

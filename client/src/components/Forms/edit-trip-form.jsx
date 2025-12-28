@@ -25,9 +25,11 @@ import { toast } from "sonner";
 import { updateTripDetails } from "@/redux/slices/trip-slice";
 import moment from "moment";
 import { useDispatch } from "react-redux";
+import { useQueryClient } from "@tanstack/react-query";
 
 const EditTripForm = ({ tripDetails, onClose, setEditingTripDetails }) => {
   const dispatch = useDispatch();
+  const queryClient = useQueryClient();
   const {
     register,
     handleSubmit,
@@ -56,7 +58,10 @@ const EditTripForm = ({ tripDetails, onClose, setEditingTripDetails }) => {
     data.startOn = moment(data.startOn).toISOString();
     data.endsOn = moment(data.endsOn).toISOString();
     try {
-      const result = dispatch(updateTripDetails({ data })).unwrap();
+      const result = await dispatch(updateTripDetails({ data })).unwrap();
+      queryClient.invalidateQueries({
+        queryKey: ["trip", result._id],
+      });
       setEditingTripDetails(null);
       toast.success("Transaction Added!", {
         description: `Trip Updated Successfully!`,

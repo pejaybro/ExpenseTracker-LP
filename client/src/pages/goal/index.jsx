@@ -20,6 +20,12 @@ import {
   PaginationPrevious,
 } from "@/components/ui/pagination";
 import { Spinner } from "flowbite-react";
+import { getDate } from "@/utilities/calander-utility";
+import moment from "moment";
+import HorizontalDivider from "@/components/strips/horizontal-divider";
+import VerticalDevider from "@/components/strips/vertical-devider";
+import { amountFloat } from "@/components/utilityFilter";
+const style = "!text-12px bg-exp-a3 text-dark-a3 px-3 w-max font-para2-b";
 
 const Index = () => {
   const {
@@ -54,6 +60,8 @@ const Index = () => {
     end_completed,
   );
   const totalPages_comleted = Math.ceil(completedGoals.length / ITEMS_PER_PAGE);
+
+  const [showForm, setShowForm] = useState(false);
 
   // NOTE: 1. Handle the loading state first
   if (isLoading) {
@@ -92,38 +100,69 @@ const Index = () => {
   }
 
   return (
-    <Flexcol>
-      <CreateSavingsGoalForm className="w-full flex-1" />
+    <Flexcol className="gap-8">
+      {/** ====== Banner Image ====== */}
+      <div className="text-dark-a0 flex h-[250px] w-full max-w-[1100px] items-center justify-center rounded-lg bg-amber-400">
+        image here
+      </div>
+
+      {/** ====== Buttons and Goals Progress Counter ====== */}
+
       {(activeGoals.length || completedGoals.length) && (
         <Flexrow>
-          <ExpButton className={"bg-exp-a1"} custom_textbtn>
-            Total Goals Completed : {completedGoals.length}
+          <ExpButton className={cn(style)} custom_textbtn>
+            <Icons.goal />
+            Goals Completed : {completedGoals.length}
           </ExpButton>
-          <ExpButton className={"bg-exp-a1"} custom_textbtn>
-            Total Active Completed : {activeGoals.length}
+          <ExpButton className={cn(style, "bg-inc-a3")} custom_textbtn>
+            <Icons.goal />
+            Goals Active : {activeGoals.length}
+          </ExpButton>
+          <ExpButton
+            custom_textbtn
+            onClick={() => setShowForm(!showForm)}
+            className={cn(
+              style,
+              "flex-1",
+              showForm && "bg-error-a1 text-slate-a1",
+            )}
+          >
+            {showForm ? "Close Form" : "Create New Goal"}
           </ExpButton>
         </Flexrow>
       )}
+
+      {/** ====== Create Goal Form ====== */}
+      {showForm && <CreateSavingsGoalForm className="w-full flex-1" />}
+
+      {/** ====== Active Goals List ====== */}
       {currentPageItems_active?.length > 0 && (
-        <>
+        <Flexcol>
+          <span className="font-title text-[32px] tracking-wide">
+            Active Goals
+          </span>
           {currentPageItems_active?.map((g) => (
             <GoalCard key={g._id} data={g} />
           ))}
 
           <CustomPagination page={page_active} totalPages={totalPages_active} />
-        </>
+        </Flexcol>
       )}
 
+      {/** ====== Completed Goals List ====== */}
       {currentPageItems_comleted.length > 0 && (
-        <>
+        <Flexcol>
+          <span className="font-title text-[32px] tracking-wide">
+            Completed Goals
+          </span>
           {currentPageItems_comleted?.map((g) => (
-            <GoalCard key={g._id} data={g} />
+            <GoalCard isCompleted key={g._id} data={g} />
           ))}
           <CustomPagination
             page={page_comleted}
             totalPages={totalPages_comleted}
           />
-        </>
+        </Flexcol>
       )}
     </Flexcol>
   );
@@ -137,10 +176,11 @@ export const fetchSavingGoals = async () => {
   return res.data; // this is what useQuery receives
 };
 
-export const GoalCard = ({ data }) => {
+export const GoalCard = ({ data, isCompleted }) => {
   const { log } = data;
-  const latestAmount = log[log?.length - 1]?.amount;
-  const previousAmount = log[log?.length - 2]?.amount ?? 0;
+  const latestAmount = log.reduce((sum, l) => sum + l.amount, 0);
+  const previousAmount =
+    log.length > 1 ? latestAmount - log[log.length - 1]?.amount : 0;
   const progress = Math.min((latestAmount / data.ofAmount) * 100, 100);
 
   const queryClient = useQueryClient();
@@ -302,74 +342,201 @@ export const GoalCard = ({ data }) => {
     updateMutation.mutate(data);
   };
 
+  const completedDate = data.log[data.log.length - 1]?.createdAt;
+
   return (
     <>
-      <Flexcol className="bg-dark-a3 font-para2-m my-5 gap-2.5 rounded-md p-5">
+      <Flexcol className="bg-dark-a3 font-para2-m gap-4 rounded-md p-5">
         <Flexrow className={"justify-between"}>
-          <div className="font-para2-b text-20px"> {data.title}</div>
-          <ExpButton
-            type="button"
-            onClick={() => handleGoalDelete(data)}
-            className={"bg-error-a1 text-12px p-2"}
-            delete_iconbtn
-          />
+          <div className="font-para2-b text-20px inline-flex items-center gap-1">
+            <Icons.goal className="text-16px" /> {data.title}
+          </div>
+          {!isCompleted && (
+            <ExpButton
+              type="button"
+              onClick={() => handleGoalDelete(data)}
+              className={"bg-error-a1 text-12px p-2"}
+              delete_iconbtn
+            />
+          )}
         </Flexrow>
 
-        <Flexrow className={"justify-between"}>
-          <div>
-            Goal Achieved : {previousAmount} || {latestAmount}
-          </div>
-          <div>Goal Target : {data.ofAmount}</div>
-        </Flexrow>
+        {!isCompleted && (
+          <Flexrow className={"text-12px items-center justify-between"}>
+            <ExpButton
+              custom_textbtn
+              className="border-slate-a3 items-center gap-2 border"
+            >
+              <span>Achieved </span>
+              <span>: </span>
+              {amountFloat(previousAmount)}
+              {latestAmount !== -1 && (
+                <>
+                  <Icons.double_arrow_right className="text-exp-a3" />
+                  {amountFloat(latestAmount)}
+                </>
+              )}
+            </ExpButton>
+
+            <ExpButton
+              custom_textbtn
+              className="border-slate-a3 items-center gap-2 border"
+            >
+              <span>Target : </span> {amountFloat(data.ofAmount)}
+              <VerticalDevider />
+              <span>Pending : </span>{" "}
+              {amountFloat(data.ofAmount - latestAmount)}
+            </ExpButton>
+          </Flexrow>
+        )}
+
         <Progress
           value={progress}
-          className={"bg-slate-a8 [&>div]:bg-exp-a1 h-4"}
+          className={cn(
+            "bg-slate-a8 [&>div]:bg-exp-a1 h-4",
+            isCompleted && "[&>div]:bg-inc-a1",
+          )}
         />
-        <form
-          onSubmit={handleSubmit(onSubmit)}
-          className="flex h-full items-center gap-2"
-        >
-          <input
-            className="inputType-number text-14px border-dark-a5 bg-dark-a2 w-full flex-1 rounded-md border px-3 py-1 outline-none"
-            type="number"
-            {...register("updatedAmount", {
-              required: "* Amount is required",
-              valueAsNumber: true,
-              min: {
-                value: 0,
-                message: "* Amount must be positive",
-              },
-              max: {
-                value: data.ofAmount,
-                message: "* Amount must be below or equal to goal amount",
-              },
-              onBlur: (e) => {
-                if (!e.target.value) {
-                  clearErrors("updatedAmount");
-                }
-              },
-            })}
-            placeholder="Update Goal Amount"
-          />
+        {isCompleted && (
+          <Flexrow className={"gap-2"}>
+            <ExpButton
+              custom_textbtn
+              className={cn(
+                "!text-12px border-exp-a3 bg-exp-a3/8 fon-para2-m text-salte-a3 cursor-default border",
+              )}
+            >
+              <Icons.goal />
+              Goal Target : {data.ofAmount}
+            </ExpButton>
+            <ExpButton
+              custom_textbtn
+              className={cn(
+                "!text-12px border-inc-a3 bg-inc-a3/8 fon-para2-m text-slate-a3 cursor-default border",
+              )}
+            >
+              <Icons.goal />
+              Created : {getDate(data.startDate)}
+            </ExpButton>
+            <ExpButton
+              custom_textbtn
+              className={cn(
+                "!text-12px border-inc-a3 bg-inc-a3/8 fon-para2-m text-slate-a3 cursor-default border",
+              )}
+            >
+              <Icons.goal />
+              Completed : {getDate(completedDate)}
+            </ExpButton>
+            {!moment(data.startDate).isSame(data.endDate, "day") && (
+              <ExpButton
+                custom_textbtn
+                className={cn(
+                  "!text-12px border-exp-a3 bg-exp-a3/8 fon-para2-m text-slate-a3 cursor-default border",
+                )}
+              >
+                <Icons.goal />
+                Deadline : {getDate(data.endDate)}
+              </ExpButton>
+            )}
+            <ExpButton
+              type="button"
+              onClick={() => handleGoalDelete(data)}
+              className={"bg-error-a1/9 border-error-a1 text-12px border p-2"}
+              delete_iconbtn
+            />
+          </Flexrow>
+        )}
 
-          <ExpButton
-            type="submit"
-            className={"text-dark-a1 bg-exp-a3 !text-12px !h-full"}
-            custom_textbtn
-          >
-            Add Now
-          </ExpButton>
+        {!isCompleted && (
+          <Flexcol className="gap-4">
+            <form
+              onSubmit={handleSubmit(onSubmit)}
+              className="flex h-full items-center gap-2"
+            >
+              <input
+                className="inputType-number text-14px border-dark-a5 bg-dark-a2 w-full flex-1 rounded-md border px-3 py-1 outline-none"
+                type="number"
+                min="0"
+                step="any"
+                {...register("updatedAmount", {
+                  required: "* Amount is required",
+                  valueAsNumber: true,
+                  min: {
+                    value: 0,
+                    message: "* Amount must be positive",
+                  },
+                  max: {
+                    value: data.ofAmount,
+                    message: "* Amount must be below or equal to goal amount",
+                  },
+                  onBlur: (e) => {
+                    if (!e.target.value) {
+                      clearErrors("updatedAmount");
+                    }
+                  },
+                })}
+                placeholder="Update Goal Amount"
+              />
 
-          <ExpButton
-            type="button"
-            onClick={() => handleGoalComplete(data)}
-            className={"text-dark-a1 bg-inc-a3 !text-12px !h-full"}
-            custom_textbtn
-          >
-            Set Complete
-          </ExpButton>
-        </form>
-        <ErrorField error={errors.updatedAmount} />
+              <ExpButton
+                type="submit"
+                className={"text-dark-a1 bg-exp-a3 !text-12px !h-full"}
+                custom_textbtn
+              >
+                Add Now
+              </ExpButton>
+
+              <ExpButton
+                type="button"
+                onClick={() => handleGoalComplete(data)}
+                className={"text-dark-a1 bg-inc-a3 !text-12px !h-full"}
+                custom_textbtn
+              >
+                Set Complete
+              </ExpButton>
+            </form>
+            <ErrorField error={errors.updatedAmount} />
+            <Flexrow className="text-slate-a4 !text-12px font-para2-m items-center justify-start gap-2 px-1">
+              <Icons.calander_date />
+              {!moment(data.startDate).isSame(data.endDate, "day") && (
+                <>
+                  <span>Your Goal Deadline</span>
+                  <span>-</span>
+                  {getDate(data.endDate, "DD MMM , YY")}
+                  <VerticalDevider />
+                  {moment(data.endDate)
+                    .startOf("day")
+                    .diff(moment().startOf("day"), "days") > 0 && (
+                    <>
+                      <span>Days Remining</span>
+                      <span>-</span>
+                      {moment(data.endDate)
+                        .startOf("day")
+                        .diff(moment().startOf("day"), "days") + 1}
+                    </>
+                  )}
+                  {moment(data.endDate)
+                    .startOf("day")
+                    .diff(moment().startOf("day"), "days") === 0 && (
+                    <span>Today is Last Day</span>
+                  )}
+                  {moment(data.endDate)
+                    .startOf("day")
+                    .diff(moment().startOf("day"), "days") < 0 && (
+                    <>
+                      <span>Days over deadline</span>
+                      <span>-</span>
+                      {amountFloat(
+                        moment(data.endDate)
+                          .startOf("day")
+                          .diff(moment().startOf("day"), "days"),
+                      )}
+                    </>
+                  )}
+                </>
+              )}
+            </Flexrow>
+          </Flexcol>
+        )}
       </Flexcol>
     </>
   );
