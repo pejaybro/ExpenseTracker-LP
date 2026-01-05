@@ -6,11 +6,11 @@ import mongoose from "mongoose";
 const Schema = mongoose.Schema;
 const expenseSchema = new Schema(
   {
-    userID: {
-      type: Number,
-      required: true,
+    userId: {
+      type: Schema.Types.ObjectId,
+      ref: "User",
       index: true,
-      unique: false,
+      require: true,
     },
     isTypeExpense: {
       type: Boolean,
@@ -77,11 +77,11 @@ const expenseSchema = new Schema(
 
 const incomeSchema = new Schema(
   {
-    userID: {
-      type: Number,
-      required: true,
+    userId: {
+      type: Schema.Types.ObjectId,
+      ref: "User",
       index: true,
-      unique: false,
+      require: true,
     },
     isTypeExpense: {
       type: Boolean,
@@ -119,11 +119,11 @@ const incomeSchema = new Schema(
 
 const recurringExpSchema = new Schema(
   {
-    userID: {
-      type: Number,
-      required: true,
+    userId: {
+      type: Schema.Types.ObjectId,
+      ref: "User",
       index: true,
-      unique: false,
+      require: true,
     },
     isTypeExpense: {
       type: Boolean,

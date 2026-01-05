@@ -46,7 +46,7 @@ const TransactionListTable = ({ isRecent, isExpesne, isIncome, entries }) => {
   const dispatch = useDispatch();
 
   const [selectedTransaction, setSelectedTransaction] = useState(null);
-  const deleteToast = (ID, userID = 123456) => {
+  const deleteToast = (ID) => {
     return new Promise((resolve) => {
       toast.custom((t) => (
         <Flexrow
@@ -68,11 +68,11 @@ const TransactionListTable = ({ isRecent, isExpesne, isIncome, entries }) => {
                   const result =
                     (isExpesne &&
                       (await dispatch(
-                        deleteExpense({ expID: ID, userID }),
+                        deleteExpense({ expID: ID }),
                       ).unwrap())) ||
                     (isIncome &&
                       (await dispatch(
-                        deleteIncome({ incID: ID, userID }),
+                        deleteIncome({ incID: ID }),
                       ).unwrap()));
                   toast.dismiss(t.id);
                   toast.success("Transaction Deleted !", {

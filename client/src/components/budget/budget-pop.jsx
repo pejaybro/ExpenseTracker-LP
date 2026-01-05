@@ -26,7 +26,6 @@ const BudgetPop = ({ children, isEdit, isNew }) => {
   const [isOpen, setIsOpen] = useState(false);
 
   //NOTE default userID
-  const userID = 123456;
   const year = CurrentYear();
   const month = CurrentMonth();
 
@@ -38,7 +37,6 @@ const BudgetPop = ({ children, isEdit, isNew }) => {
     formState: { errors },
   } = useForm({
     defaultValues: {
-      userID: userID,
       year: year,
       month: month,
     },

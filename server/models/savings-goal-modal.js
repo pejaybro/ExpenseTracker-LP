@@ -18,11 +18,11 @@ const goalLog = new Schema(
 
 const goalSchema = new Schema(
   {
-    userID: {
-      type: Number,
-      required: true,
+    userId: {
+      type: Schema.Types.ObjectId,
+      ref: "User",
       index: true,
-      unique: false,
+      require: true,
     },
     log: {
       type: [goalLog],

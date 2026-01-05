@@ -11,10 +11,10 @@ import { updateTripTotal } from "./trip-controller.js";
  * @see fetchTotal - fetches the total DB data
  */
 
-export const insertTotal = async (entry, session) => {
+export const insertTotal = async (userId,entry, session) => {
   try {
     const {
-      userID,
+      
       isTypeExpense,
       ofAmount,
       onDate,
@@ -27,11 +27,11 @@ export const insertTotal = async (entry, session) => {
 
     // --- Step 1: Upsert the main document and increment the top-level total ---
     await totalModal.updateOne(
-      { userID, year, isTypeExpense },
+      { userId, year, isTypeExpense },
       {
         $inc: { total: ofAmount },
         $setOnInsert: {
-          userID,
+          userId,
           year,
           isTypeExpense,
           monthList: [],
@@ -45,7 +45,7 @@ export const insertTotal = async (entry, session) => {
     // --- Step 2: Handle the 'monthList' update ---
     // First, try to increment the total if the month already exists.
     const monthUpdateResult = await totalModal.updateOne(
-      { userID, year, isTypeExpense, "monthList.month": month },
+      { userId, year, isTypeExpense, "monthList.month": month },
       { $inc: { "monthList.$.total": ofAmount } },
       { session }
     );
@@ -53,7 +53,7 @@ export const insertTotal = async (entry, session) => {
     // If nothing was updated, it means the month didn't exist. Now, we push it.
     if (monthUpdateResult.modifiedCount === 0) {
       await totalModal.updateOne(
-        { userID, year, isTypeExpense },
+        { userId, year, isTypeExpense },
         { $push: { monthList: { month, total: ofAmount } } },
         { session }
       );
@@ -61,14 +61,14 @@ export const insertTotal = async (entry, session) => {
 
     // --- Step 3: Handle the 'primeList' update (repeat the pattern) ---
     const primeUpdateResult = await totalModal.updateOne(
-      { userID, year, isTypeExpense, "primeList.name": primeCategory },
+      { userId, year, isTypeExpense, "primeList.name": primeCategory },
       { $inc: { "primeList.$.total": ofAmount } },
       { session }
     );
 
     if (primeUpdateResult.modifiedCount === 0) {
       await totalModal.updateOne(
-        { userID, year, isTypeExpense },
+        { userId, year, isTypeExpense },
         { $push: { primeList: { name: primeCategory, total: ofAmount } } },
         { session }
       );
@@ -76,14 +76,14 @@ export const insertTotal = async (entry, session) => {
 
     // --- Step 4: Handle the 'subList' update (repeat the pattern) ---
     const subUpdateResult = await totalModal.updateOne(
-      { userID, year, isTypeExpense, "subList.subName": subCategory },
+      { userId, year, isTypeExpense, "subList.subName": subCategory },
       { $inc: { "subList.$.total": ofAmount } },
       { session }
     );
 
     if (subUpdateResult.modifiedCount === 0) {
       await totalModal.updateOne(
-        { userID, year, isTypeExpense },
+        { userId, year, isTypeExpense },
         {
           $push: {
             subList: {
@@ -104,10 +104,9 @@ export const insertTotal = async (entry, session) => {
   }
 };
 
-export const decrementTotal = async (entry, session) => {
+export const decrementTotal = async (userId,entry, session) => {
   try {
-    const {
-      userID,
+    const {      
       isTypeExpense,
       ofAmount,
       onDate,
@@ -121,7 +120,7 @@ export const decrementTotal = async (entry, session) => {
 
     // 1. Find the document within the transaction
     const doc = await totalModal
-      .findOne({ userID, year, isTypeExpense })
+      .findOne({ userId, year, isTypeExpense })
       .session(session);
     // If there's no document to update, we can safely exit.
     if (!doc) {
@@ -153,7 +152,10 @@ export const decrementTotal = async (entry, session) => {
 
     if (doc.total === 0) {
       // If the grand total is now zero, delete the entire document for that year.
-      await totalModal.deleteOne({ _id: doc._id }, { session });
+      await totalModal.deleteOne(
+        { userId, _id: doc._id },
+        { session }
+      );
       console.log("Yearly total document was empty and has been deleted.");
     } else {
       // Otherwise, just save the updates.
@@ -170,14 +172,8 @@ export const decrementTotal = async (entry, session) => {
 
 export const fetchTotal = async (req, res) => {
   try {
-    let { userID } = req.params;
-    userID = parseInt(userID, 10);
-    if (isNaN(userID)) {
-      return res
-        .status(400)
-        .json({ message: "Invalid userID format. Must be a number." });
-    }
-    const data = await totalModal.find({ userID });
+    const userId = req.user.id;
+    const data = await totalModal.find({ userId });
     res.status(200).json(data);
   } catch (error) {
     console.error(error);

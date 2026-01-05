@@ -40,7 +40,7 @@ const RecurringExpenseTable = ({ entries }) => {
   const [selectedTransaction, setSelectedTransaction] = useState(null);
   const dispatch = useDispatch();
 
-  const deleteToast = (ID, userID = 123456) => {
+  const deleteToast = (ID) => {
     return new Promise((resolve) => {
       toast.custom((t) => (
         <Flexrow
@@ -60,7 +60,7 @@ const RecurringExpenseTable = ({ entries }) => {
               onClick={async () => {
                 try {
                   const result = await dispatch(
-                    deleteRecurringExpense({ recExpID: ID, userID }),
+                    deleteRecurringExpense({ recExpID: ID }),
                   ).unwrap();
                   toast.dismiss(t.id);
                   toast.success("Recurring Entry Deleted !", {

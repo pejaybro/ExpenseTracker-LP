@@ -1,7 +1,7 @@
 import {
   generateTripPlaceholderSummary,
   generateTripSummary,
-} from "../ai-services/genai/trip-summary.js";
+} from "../services/genai/trip-summary.js";
 import { tripModal } from "../models/trip-modal.js";
 import { generateDataHash } from "../utils/hashUtils.js";
 import mongoose from "mongoose";
@@ -9,7 +9,8 @@ import { deleteTripExpenses } from "./transaction-controller.js";
 
 const insertTrip = async (req, res) => {
   try {
-    const data = req.body;
+    const userId = req.user.id;
+    const data = { userId, ...req.body };
 
     // Create a new Trip entry using your trip model
     const newTrip = new tripModal(data);
@@ -42,16 +43,9 @@ const insertTrip = async (req, res) => {
 
 const fetchTrip = async (req, res) => {
   try {
-    let { userID } = req.params;
-    userID = parseInt(userID, 10);
-    if (isNaN(userID)) {
-      return res
-        .status(400)
-        .json({ message: "Invalid userID format. Must be a number." });
-    }
-
+    const userId = req.user.id;
     // Fetch trips for the given user, sorted by trip created date (latest first)
-    const data = await tripModal.find({ userID }).sort({ createdAt: -1 });
+    const data = await tripModal.find({ userId }).sort({ createdAt: -1 });
     res.status(200).json(data);
   } catch (error) {
     console.error("Fetch Trip Error:", error);
@@ -63,11 +57,12 @@ const fetchTrip = async (req, res) => {
 
 export const fetchTripDeatils = async (req, res) => {
   try {
+    const userId = req.user.id;
     const { tripId } = req.params;
     if (!mongoose.Types.ObjectId.isValid(tripId)) {
       return res.status(400).json({ message: "Invalid Trip ID" });
     }
-    const trip = await tripModal.findById(tripId);
+    const trip = await tripModal.findOne({ userId, _id: tripId });
     if (!trip) {
       return res.status(404).json({ message: "Trip not found" });
     }
@@ -104,10 +99,11 @@ export const fetchTripDeatils = async (req, res) => {
 
 const updateTripTotal = async (type, entry, session) => {
   try {
-    const { userID, ofAmount, ofTrip } = entry;
-    const tripData = await tripModal
-      .findOne({ userID, _id: ofTrip })
-      .session(session);
+    const { userId, ofAmount, ofTrip } = entry;
+    const tripData = await tripModal.findOne(
+      { userId, _id: ofTrip },
+      { session }
+    );
     if (!tripData) {
       throw new Error("Trip not found");
     }
@@ -129,15 +125,11 @@ export const deleteTrip = async (req, res) => {
   const session = await mongoose.startSession();
   try {
     session.startTransaction();
-    const { userID, tripId } = req.params;
-    if (!userID || !tripId) {
-      return res
-        .status(400)
-        .json({ message: "userID and tripId are required" });
-    }
+    const userId = req.user.id;
+    const { tripId } = req.params;
     const trip = await tripModal.findOneAndDelete(
       {
-        userID,
+        userId,
         _id: tripId,
       },
       { session }
@@ -146,7 +138,7 @@ export const deleteTrip = async (req, res) => {
       await session.abortTransaction();
       return res.status(400).json({ message: "No Trip Found to delete." });
     }
-    const count = await deleteTripExpenses(tripId, userID, session);
+    const count = await deleteTripExpenses(tripId, userId, session);
     await session.commitTransaction();
     res.status(200).json({
       count: count,
@@ -168,7 +160,7 @@ export const updateTrip = async (req, res) => {
     const data = req.body;
 
     const existingTrip = await tripModal.findOne({
-      userID: data.userID,
+      userId: data.userId,
       _id: data._id,
     });
     if (!existingTrip) {
@@ -186,7 +178,7 @@ export const updateTrip = async (req, res) => {
 
     const updatedTrip = await tripModal.findOneAndUpdate(
       {
-        userID: data.userID,
+        userId: data.userId,
         _id: data._id,
       },
       { $set: data },

@@ -2,7 +2,8 @@ import { savingsGoalModal } from "../models/savings-goal-modal.js";
 
 export const createGoal = async (req, res) => {
   try {
-    const data = req.body;
+    const userId = req.user.id;
+    const data = { userId, ...req.body };
     const goal = new savingsGoalModal(data);
     const savedGoal = await goal.save();
     return res.status(201).json(savedGoal);
@@ -21,15 +22,9 @@ export const createGoal = async (req, res) => {
 
 export const fetchGoal = async (req, res) => {
   try {
-    let { userID } = req.params;
-    userID = parseInt(userID, 10);
-    if (isNaN(userID)) {
-      return res
-        .status(400)
-        .json({ message: "Invalid userID format. Must be a number." });
-    }
+    const userId = req.user.id;
     const data = await savingsGoalModal
-      .find({ userID })
+      .find({ userId })
       .sort({ isCompleted: 1, createdAt: -1 });
     res.status(200).json(data);
   } catch (error) {
@@ -42,14 +37,20 @@ export const fetchGoal = async (req, res) => {
 
 export const updateGoal = async (req, res) => {
   try {
+    const userId = req.user.id;
     const { _id, updatedAmount, isCompleted } = req.body;
 
     const update = { $push: { log: { amount: updatedAmount } } };
     if (isCompleted) update.$set = { isCompleted: true };
 
-    const updatedGoal = await savingsGoalModal.findByIdAndUpdate(_id, update, {
-      new: true,
-    });
+    const updatedGoal = await savingsGoalModal.findByIdAndUpdate(
+      userId,
+      _id,
+      update,
+      {
+        new: true,
+      }
+    );
 
     res.status(200).json(updatedGoal);
   } catch (error) {
@@ -62,9 +63,13 @@ export const updateGoal = async (req, res) => {
 
 export const deleteGoal = async (req, res) => {
   try {
+    const userId = req.user.id;
     const { _id } = req.body;
 
-    const deletedGoal = await savingsGoalModal.findByIdAndDelete(_id);
+    const deletedGoal = await savingsGoalModal.findOneAndDelete({
+      userId,
+      _id,
+    });
 
     res.status(200).json(deletedGoal);
   } catch (error) {

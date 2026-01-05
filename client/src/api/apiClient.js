@@ -8,21 +8,51 @@ export const apiCLient = axios.create({
   },
 });
 
+/* ---------------------------------------------------
+   REQUEST INTERCEPTOR
+   - Automatically attach JWT token (if present)
+--------------------------------------------------- */
+apiCLient.interceptors.request.use(
+  (config) => {
+    const token = localStorage.getItem("token");
+
+    if (token) {
+      config.headers.Authorization = `Bearer ${token}`;
+    }
+
+    return config;
+  },
+  (error) => Promise.reject(error),
+);
+
+/* ---------------------------------------------------
+   RESPONSE INTERCEPTOR
+   - Centralized error handling
+   - Keeps your existing clean error messages
+--------------------------------------------------- */
 apiCLient.interceptors.response.use(
   (response) => response,
   (err) => {
     let errorMsg = "An Unknown Error Occurred";
+
     if (err.code === "ECONNABORTED") {
       errorMsg = "Server timed out. Please try again.";
     } else if (err.response) {
-      errorMsg = err.response.data.message || "A server error occurred.";
+      // backend-sent error message
+      errorMsg = err.response.data?.message || "A server error occurred.";
+
+      // OPTIONAL: auto-logout on auth failure
+      if (err.response.status === 401) {
+        localStorage.removeItem("token");
+        localStorage.removeItem("user");
+      }
     } else if (err.request) {
       errorMsg =
         "No response from server. Please check your network connection.";
     } else {
       errorMsg = err.message;
     }
-    // This is crucial: we return a rejected promise with the clean error message
+
     return Promise.reject(new Error(errorMsg));
   },
 );

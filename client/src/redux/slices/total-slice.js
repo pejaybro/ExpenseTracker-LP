@@ -7,13 +7,13 @@ const initialState = {
   TotalError: null,
 };
 
-const userID = "123456";
+
 
 export const fetchTotal = createAsyncThunk(
   "total/fetchTotal",
   async (_, { rejectWithValue }) => {
     try {
-      const res = await apiCLient.get(`/total/get-total/${userID}`);
+      const res = await apiCLient.get(`/total/get-total`);
       return res.data;
     } catch (err) {
       // 'err.message' is now the clean string from our interceptor.

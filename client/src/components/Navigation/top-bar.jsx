@@ -12,6 +12,10 @@ import SelectCard from "../selectFilter/SelectCard";
 import Flexrow from "../section/flexrow";
 import { BiSolidBell } from "react-icons/bi";
 import TooltipStrip from "../strips/tooltip-strip";
+import { useNavigate } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { clearUser } from "@/redux/slices/user-slice";
+import { PATH } from "@/router/routerConfig";
 
 const style = "!text-12px w-max font-para2-m space-x-0.75 p-1";
 
@@ -62,13 +66,25 @@ export const PageTitle = ({ nav, activeBtn }) => {
 };
 
 export const UserLogout = () => {
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
+
+  const handleLogout = () => {
+    // remove auth data
+    localStorage.removeItem("token");
+    dispatch(clearUser());
+
+    // optional: clear any cached state if needed later
+    // queryClient.clear(); (if using react-query)
+    navigate(PATH.login, { replace: true });
+  };
+
   return (
     <ExpButton
+      type="button"
+      onClick={handleLogout}
       custom_textbtn
-      className={cn(
-        style,
-        "text-14px hover:bg-dark-a5 w-full justify-start px-2",
-      )}
+      className={cn("text-14px hover:bg-dark-a5 w-full justify-start px-2")}
     >
       <FaPowerOff />
       Logout
@@ -124,8 +140,8 @@ export const GlobalFilter = () => {
   if (!YearsList.length) {
     return (
       <>
-       <TooltipStrip content="No Data to Filter">
-        <Icons.filter_global className={cn("text-dark-a3 text-[16px]")} />
+        <TooltipStrip content="No Data to Filter">
+          <Icons.filter_global className={cn("text-dark-a3 text-[16px]")} />
         </TooltipStrip>
       </>
     );

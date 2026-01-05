@@ -11,9 +11,13 @@ import { useState } from "react";
 import { ErrorField, FormField } from "@/components/Forms/Form";
 import { Icons } from "@/components/icons";
 import ExpButton from "@/components/buttons/exp-button";
+import { apiCLient } from "@/api/apiClient";
+import { useDispatch } from "react-redux";
+import { setUser } from "@/redux/slices/user-slice";
 
 const Login = () => {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
   const [showPassword, setShowPassword] = useState(false);
   const {
     register,
@@ -21,9 +25,22 @@ const Login = () => {
     formState: { errors },
   } = useForm();
 
-  const onSubmit = (data) => {
-    console.log("Login Data:", data);
+  const onSubmit = async (data) => {
+    try {
+      const res = await apiCLient.post("/user/login", {
+        identifier: data.identifier, // email or username
+        password: data.password,
+      });
+      console.log("Login success");
+
+      localStorage.setItem("token", res.data.token);
+      dispatch(setUser(res.data.user));
+      navigate(PATH.home, { replace: true });
+    } catch (error) {
+      console.error("Login failed:", error);
+    }
   };
+
   const inputStyle =
     "border-dark-a3 bg-dark-a1 focus:bg-dark-a1 hover:bg-dark-a1 w-full rounded-md border p-2.5 outline-none";
 

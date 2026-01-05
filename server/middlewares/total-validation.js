@@ -4,34 +4,45 @@
 
 import { body, validationResult } from "express-validator";
 const totalValidation = [
-  body("userID").isInt().withMessage("userID must be an integer"),
-  body("year").isInt().withMessage("Enter a valid year"),
+  // vailidate year
+  body("year").isInt().withMessage("Enter a valid year").toInt(),
+
+  // vailidate is exp or inc
   body("isTypeExpense")
-    .notEmpty()
-    .withMessage("isTypeExpense Type Cannot be Empty")
     .isBoolean()
     .withMessage("isTypeExpense Type must be boolen"),
-  body("total").isNumeric().withMessage("Total must be a number"),
 
+  // vailidate total in all year
+  body("total")
+    .isFloat({ min: 0 })
+    .withMessage("Total must be a positive number")
+    .toFloat(),
+
+  ,
   // Validate monthList array
   body("monthList").isArray().withMessage("monthList must be an array"),
   body("monthList.*.month")
     .isInt({ min: 0, max: 11 })
-    .withMessage("monthList.month must be between 0 and 11"),
+    .withMessage("month must be between 0 and 11")
+    .toInt(),
   body("monthList.*.total")
-    .isNumeric()
-    .withMessage("monthList.total must be a number"),
+    .isFloat({ min: 0 })
+    .withMessage("month total must be a positive number")
+    .toFloat(),
 
   // Validate primeList array
   body("primeList").isArray().withMessage("primeList must be an array"),
   body("primeList.*.name")
     .isString()
+    .trim()
     .notEmpty()
     .withMessage("primeList.name is required"),
   body("primeList.*.total")
-    .isNumeric()
-    .withMessage("primeList.total must be a number"),
+    .isFloat({ min: 0 })
+    .withMessage("primeList.total must be a number")
+    .toFloat(),
 
+  ,
   // Validate subList array
   body("subList").isArray().withMessage("subList must be an array"),
   body("subList.*.primeName")
@@ -43,8 +54,9 @@ const totalValidation = [
     .notEmpty()
     .withMessage("subList.subName is required"),
   body("subList.*.total")
-    .isNumeric()
-    .withMessage("subList.total must be a number"),
+    .isFloat({ min: 0 })
+    .withMessage("subList.total must be a number")
+    .toFloat(),
 
   // Middleware function to check validation errors
   (req, res, next) => {

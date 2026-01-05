@@ -70,7 +70,7 @@ const Form = ({
     formState: { errors },
   } = useForm({
     defaultValues: {
-      userID: 123456,
+  
       isTypeExpense: !!(isReccuring || isTrip || isExpense),
       isTripExpense: !!isTrip,
       isRecurringExpense: !!isReccuring,

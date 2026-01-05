@@ -5,40 +5,18 @@
 import { body, validationResult } from "express-validator";
 
 export const NewBudget = [
-  body("userID")
-    .exists()
-    .withMessage("userID is required")
-    .notEmpty()
-    .withMessage("userID cannot be empty")
-    .isNumeric()
-    .withMessage("userID must be a number"),
-
   // year must exist, not empty, numeric, and >= 2000
-  body("year")
-    .exists()
-    .withMessage("year is required")
-    .notEmpty()
-    .withMessage("year cannot be empty"),
+  body("year").isInt().withMessage("year cannot be empty").toInt(),
   // Validate each item inside budgetList
   body("month")
-    .exists()
-    .withMessage("month is required in each budget entry")
-    .notEmpty()
-    .withMessage("month cannot be empty in budget entry")
     .isInt({ min: 0, max: 11 })
-    .withMessage("month must be between 1 and 12"),
-
+    .withMessage("month must be between 1 and 12")
+    .toInt(),
+  // budget amount validation
   body("amount")
-    .exists()
-    .withMessage("budget amount is required")
-    .notEmpty()
-    .withMessage("budget amount cannot be empty")
-    .isInt({ min: 0 })
-    .withMessage("budget amount must be a number")
-    .custom(value => value >= 0)
-    .withMessage("budget amount must be a positive number"),
-
-  
+    .isFloat({ min: 0 })
+    .withMessage("budget amount must be a positive number")
+    .toFloat(),
 
   // Middleware function to check validation errors
   (req, res, next) => {

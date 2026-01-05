@@ -10,14 +10,25 @@ const profileStorage = multer.diskStorage({
   },
   // 'filename' determines the name of the file inside the destination folder.
   filename: (req, file, cb) => {
-    // We create a unique filename to prevent overwrites.
-    // e.g., avatar-1678886400000-123456789.jpeg
-    const uniqueSuffix = Date.now() + "-" + Math.round(Math.random() * 1e9);
-    const extension = path.extname(file.originalname);
-    cb(null, "avatar-" + uniqueSuffix + extension);
+    // req.user.id comes from JWT protect middleware
+    const ext = path.extname(file.originalname);
+    const filename = `${req.user.id}${ext}`;
+    cb(null, filename);
   },
 });
 
 // We initialize Multer with our storage configuration.
 // This 'upload' constant can now be imported and used in any route that needs to handle file uploads.
-export const upload = multer({ storage: profileStorage });
+
+export const upload = multer({
+  storage: profileStorage,
+  limits: {
+    fileSize: 2 * 1024 * 1024, // 2MB
+  },
+  fileFilter: (req, file, cb) => {
+    if (!file.mimetype.startsWith("image/")) {
+      return cb(new Error("Only image files are allowed"));
+    }
+    cb(null, true);
+  },
+});

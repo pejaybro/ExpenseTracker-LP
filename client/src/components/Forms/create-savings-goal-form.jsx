@@ -23,7 +23,6 @@ const CreateSavingsGoalForm = ({ className }) => {
     formState: { errors, isSubmitting },
   } = useForm({
     defaultValues: {
-      userID: 123456,
       startDate: new Date(),
       log: [],
     },

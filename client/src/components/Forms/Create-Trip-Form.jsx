@@ -45,7 +45,7 @@ const CreateTripForm = () => {
     formState: { errors, isSubmitting },
   } = useForm({
     defaultValues: {
-      userID: 123456,
+    
       tripType: 0,
       travelType: 0,
       abroadInfo: null,

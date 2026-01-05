@@ -2,10 +2,11 @@ import { budgetModal } from "../models/budget-modal.js";
 
 export const deleteBudget = async (req, res) => {
   try {
-    const { userID, year, month, amount } = req.body;
+    const userId = req.user.id;
+    const { year, month, amount } = req.body;
 
     const result = await budgetModal.updateOne(
-      { userID, year, "budgetList.month": month },
+      { userId, year, "budgetList.month": month },
       {
         $set: {
           "budgetList.$.budget": amount,
@@ -15,7 +16,7 @@ export const deleteBudget = async (req, res) => {
 
     if (result.modifiedCount === 0) {
       await budgetModal.updateOne(
-        { userID, year },
+        { userId, year },
         {
           $push: {
             budgetList: { month, budget: amount },
@@ -24,7 +25,7 @@ export const deleteBudget = async (req, res) => {
       );
     }
     const updatedBudgetData = await budgetModal
-      .find({ userID })
+      .find({ userId })
       .sort({ year: 1 });
     return res.status(200).json(updatedBudgetData);
   } catch (error) {
@@ -36,11 +37,12 @@ export const deleteBudget = async (req, res) => {
 };
 export const setBudget = async (req, res) => {
   try {
-    const { userID, year, month, amount } = req.body;
+    const userId = req.user.id;
+    const { year, month, amount } = req.body;
 
     // First, try to update an existing month in the budgetList array
     const result = await budgetModal.updateOne(
-      { userID, year, "budgetList.month": month },
+      { userId, year, "budgetList.month": month },
       {
         $set: {
           "budgetList.$.budget": amount,
@@ -52,7 +54,7 @@ export const setBudget = async (req, res) => {
     if (result.modifiedCount === 0) {
       // So, we push it. We use upsert:true to also create the yearly doc if it doesn't exist.
       await budgetModal.updateOne(
-        { userID, year },
+        { userId, year },
         {
           $push: {
             budgetList: { month, budget: amount },
@@ -65,7 +67,7 @@ export const setBudget = async (req, res) => {
     // After the update, re-fetch the entire budget data to send back to the client
     // for a consistent optimistic update.
     const updatedBudgetData = await budgetModal
-      .find({ userID })
+      .find({ userId })
       .sort({ year: 1 });
     return res.status(200).json(updatedBudgetData);
   } catch (error) {
@@ -82,16 +84,15 @@ export const setBudget = async (req, res) => {
  */
 export const fetchBudget = async (req, res) => {
   try {
-    let { userID } = req.params;
+    const userId = req.user.id;
     let budgetData = [];
     let isNewYearCreated = false;
     const currentYear = new Date().getFullYear();
-    budgetData = await budgetModal.find({ userID }).sort({ year: 1 });
-
+    budgetData = await budgetModal.find({ userId }).sort({ year: 1 });
 
     const insertDummyBudget = async () =>
       await budgetModal.create({
-        userID,
+        userId,
         year: currentYear,
         budgetList: [
           {

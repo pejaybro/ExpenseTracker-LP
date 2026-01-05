@@ -13,11 +13,11 @@ const budgetlist = new Schema(
 );
 const budgetSchema = new Schema(
   {
-    userID: {
-      type: Number,
-      required: true,
+    userId: {
+      type: Schema.Types.ObjectId,
+      ref: "User",
       index: true,
-      unique: false,
+      require: true,
     },
     year: {
       type: Number,
@@ -33,7 +33,7 @@ const budgetSchema = new Schema(
     timestamps: true,
   }
 );
-budgetSchema.index({ userID: 1, year: 1 }, { unique: true });
+budgetSchema.index({ userId: 1, year: 1 }, { unique: true });
 
 const budgetModal = mongoose.model("default-budget", budgetSchema);
 export { budgetModal };

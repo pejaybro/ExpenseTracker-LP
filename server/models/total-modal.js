@@ -28,11 +28,11 @@ const subList = new Schema(
 );
 const totalSchema = new Schema(
   {
-    userID: {
-      type: Number,
-      required: true,
+    userId: {
+      type: Schema.Types.ObjectId,
+      ref: "User",
       index: true,
-      unique: false,
+      require: true,
     },
     year: {
       type: Number,
@@ -57,7 +57,7 @@ const totalSchema = new Schema(
     timestamps: true,
   }
 );
-totalSchema.index({ userID: 1, year: 1, isTypeExpense: 1 }, { unique: true });
+totalSchema.index({ userId: 1, year: 1, isTypeExpense: 1 }, { unique: true });
 
 const totalModal = mongoose.model("default-total", totalSchema);
 export { totalModal };

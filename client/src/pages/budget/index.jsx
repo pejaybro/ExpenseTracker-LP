@@ -84,7 +84,7 @@ const BudgetIndex = () => {
 
   const handleDeleteBudget = () => {
     const data = {
-      userID: 123456,
+   
       year: CurrentYear(),
       month: CurrentMonth(),
       amount: 0,

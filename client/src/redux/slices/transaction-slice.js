@@ -1,6 +1,5 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { fetchTotal } from "./total-slice";
-import { fetchMM } from "./minmax-slice";
 import { apiCLient } from "@/api/apiClient";
 import { deleteTrip } from "./trip-slice";
 import CryptoJS from "crypto-js";
@@ -61,10 +60,8 @@ const initialState = {
  ** ===================== important documentation =====================
  ** every insert and delete will call for below functions
  * @see fetchTotal - will fetch the Total DB
- * @see fetchMM - will fetch the Min Max DB
  */
 
-const userID = 123456;
 
 /**
  ** ===================== EXPENSE =====================
@@ -78,7 +75,7 @@ export const fetchExpense = createAsyncThunk(
   "transaction/fetchExpense",
   async (_, { rejectWithValue }) => {
     try {
-      const res = await apiCLient.get(`/transaction/get-expense/${userID}`);
+      const res = await apiCLient.get(`/transaction/get-expense`);
       return res.data;
     } catch (err) {
       // 'err.message' is now the clean string from our interceptor.
@@ -99,7 +96,7 @@ export const insertExpense = createAsyncThunk(
       }
 
       dispatch(fetchTotal());
-      dispatch(fetchMM());
+     
 
       return res.data;
     } catch (err) {
@@ -128,14 +125,14 @@ export const updateExpense = createAsyncThunk(
 
 export const deleteExpense = createAsyncThunk(
   "transaction/deleteExpense",
-  async ({ userID, expID }, { dispatch, rejectWithValue }) => {
+  async ({  expID }, { dispatch, rejectWithValue }) => {
     try {
       const res = await apiCLient.delete(
-        `/transaction/delete-expense/${userID}/${expID}`,
+        `/transaction/delete-expense/${expID}`,
       );
 
       dispatch(fetchTotal());
-      dispatch(fetchMM());
+     
 
       return res.data;
     } catch (err) {
@@ -157,7 +154,7 @@ export const fetchIncome = createAsyncThunk(
   "transaction/fetchIncome",
   async (_, { rejectWithValue }) => {
     try {
-      const res = await apiCLient.get(`/transaction/get-income/${userID}`);
+      const res = await apiCLient.get(`/transaction/get-income`);
       return res.data;
     } catch (err) {
       return rejectWithValue(err.message);
@@ -172,7 +169,7 @@ export const insertIncome = createAsyncThunk(
       const res = await apiCLient.post(`/transaction/add-income`, data);
 
       dispatch(fetchTotal());
-      dispatch(fetchMM());
+    
 
       return res.data;
     } catch (err) {
@@ -200,14 +197,14 @@ export const updateIncome = createAsyncThunk(
 
 export const deleteIncome = createAsyncThunk(
   "transaction/deleteIncome",
-  async ({ userID, incID }, { dispatch, rejectWithValue }) => {
+  async ({incID }, { dispatch, rejectWithValue }) => {
     try {
       const res = await apiCLient.delete(
-        `/transaction/delete-income/${userID}/${incID}`,
+        `/transaction/delete-income/${incID}`,
       );
 
       dispatch(fetchTotal());
-      dispatch(fetchMM());
+     
 
       return res.data;
     } catch (err) {
@@ -229,7 +226,7 @@ export const fetchRecurringExpense = createAsyncThunk(
     try {
       let StoredHash;
       const res = await apiCLient.get(
-        `/transaction/get-recurring-expense/${userID}`,
+        `/transaction/get-recurring-expense`,
       );
       const incomingHash = CryptoJS.SHA256(JSON.stringify(res.data)).toString();
       const root = localStorage.getItem("persist:notifications");
@@ -264,7 +261,7 @@ export const insertRecurringExpense = createAsyncThunk(
 
       if (newExpense) {
         dispatch(fetchTotal());
-        dispatch(fetchMM());
+       
       }
       return res.data; // This will be { newRecurringExpense, newExpense }
     } catch (err) {
@@ -293,10 +290,10 @@ export const updateRecurringExpense = createAsyncThunk(
 
 export const deleteRecurringExpense = createAsyncThunk(
   "transaction/deleteRecurringExpense",
-  async ({ userID, recExpID }, { dispatch, rejectWithValue }) => {
+  async ({  recExpID }, { dispatch, rejectWithValue }) => {
     try {
       const res = await apiCLient.delete(
-        `/transaction/delete-recurring-expense/${userID}/${recExpID}`,
+        `/transaction/delete-recurring-expense/${recExpID}`,
       );
 
       dispatch(fetchRecurringExpense());

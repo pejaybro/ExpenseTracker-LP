@@ -1,64 +1,65 @@
 import { body, validationResult } from "express-validator";
 
 export const goalValivation = [
+  // title validation
   body("title")
-    .exists({ checkFalsy: true })
-    .withMessage("title is required")
     .isString()
-    .withMessage("title must be a string")
     .trim()
+    .notEmpty()
+    .withMessage("title is required")
     .isLength({ min: 1, max: 200 })
-    .withMessage("title length must be 1-200 characters"),
+    .withMessage("title length must be 1–200 characters"),
+  // goal amount validation
   body("ofAmount")
-    .exists()
-    .withMessage("ofAmount is required")
-    .bail()
     .isFloat({ min: 0 })
-    .withMessage("ofAmount must be a positive number"),
+    .withMessage("ofAmount must be a positive number")
+    .toFloat(),
+  // is completed or active validation
   body("isCompleted")
     .optional()
     .isBoolean()
     .withMessage("isCompleted must be a boolean"),
-
+  // start goal on validation
   body("startDate")
-    .exists()
-    .withMessage("startDate is required")
-    .bail()
     .isISO8601()
-
     .withMessage("startDate must be a valid ISO8601 date"),
-
+  // end goal on validation
   body("endDate")
     .optional({ nullable: true })
     .isISO8601()
-
     .withMessage("endDate must be a valid ISO8601 date")
-    .bail()
     .custom((value, { req }) => {
       if (!value) return true;
       const start = new Date(req.body.startDate);
-      if (!(start instanceof Date) || Number.isNaN(start.getTime()))
+      const end = new Date(value);
+      if (Number.isNaN(start.getTime())) {
         throw new Error("startDate is invalid");
-      if (new Date(value) <= start)
+      }
+      if (end <= start) {
         throw new Error("endDate must be after startDate");
+      }
       return true;
     }),
+  // list of entries made in goal validation
   body("log")
     .optional()
     .isArray()
     .withMessage("log must be an array")
-    .bail()
     .custom(arr => {
-      if (!Array.isArray(arr)) return false;
       for (const item of arr) {
-        if (typeof item !== "object" || item === null) return false;
-        if (!("amount" in item)) return false;
-        const n = Number(item.amount);
-        if (Number.isNaN(n) || n < 0) return false;
+        if (typeof item !== "object" || item === null) {
+          throw new Error("each log entry must be an object");
+        }
+        if (!("amount" in item)) {
+          throw new Error("each log entry must contain amount");
+        }
+        const amount = Number(item.amount);
+        if (Number.isNaN(amount) || amount < 0) {
+          throw new Error("log.amount must be a number >= 0");
+        }
       }
       return true;
-    })
-    .withMessage("each log entry must contain an amount >= 0"),
+    }),
   (req, res, next) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {

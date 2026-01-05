@@ -261,7 +261,7 @@ export default TripIndex;
 
 const truncate = (str) => (str.length > 24 ? str.slice(0, 24) + "..." : str);
 
-export const deleteToast = (dispatch, ID, userID = 123456) => {
+export const deleteToast = (dispatch, ID) => {
   return new Promise((resolve) => {
     toast.custom((t) => (
       <Flexrow
@@ -281,7 +281,7 @@ export const deleteToast = (dispatch, ID, userID = 123456) => {
             onClick={async () => {
               try {
                 const { trip, count } = await dispatch(
-                  deleteTrip({ tripId: ID, userID }),
+                  deleteTrip({ tripId: ID }),
                 ).unwrap();
 
                 toast.dismiss(t.id);

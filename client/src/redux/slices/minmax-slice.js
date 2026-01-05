@@ -12,13 +12,13 @@ const initialState = {
   MinMaxError: null,
 };
 
-const userID = 123456;
+
 
 export const fetchMM = createAsyncThunk(
   "budget/fetchMM",
   async (_, { rejectWithValue }) => {
     try {
-      const res = await apiCLient.get(`/minmax/get-data/${userID}`);
+      const res = await apiCLient.get(`/minmax/get-data`);
       return res.data;
     } catch (err) {
       // 'err.message' is now the clean string from our interceptor.

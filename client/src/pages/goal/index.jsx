@@ -171,8 +171,7 @@ const Index = () => {
 export default Index;
 
 export const fetchSavingGoals = async () => {
-  const userID = 123456;
-  const res = await apiCLient.get(`/saving-goal/get-goal/${userID}`);
+  const res = await apiCLient.get(`/saving-goal/get-goal`);
   return res.data; // this is what useQuery receives
 };
 
@@ -217,7 +216,6 @@ export const GoalCard = ({ data, isCompleted }) => {
       });
       queryClient.invalidateQueries({ queryKey: ["saving-goal"] });
       reset({
-        userID: 123456,
         _id: data._id,
       });
     },
@@ -256,7 +254,7 @@ export const GoalCard = ({ data, isCompleted }) => {
     formState: { errors, isSubmitting },
   } = useForm({
     defaultValues: {
-      userID: 123456,
+      
       _id: data._id,
     },
   });

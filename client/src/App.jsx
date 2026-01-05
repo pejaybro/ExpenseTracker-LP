@@ -1,9 +1,9 @@
 import { AppRouter } from "@/router/AppRouter";
 import { Toaster } from "sonner";
-import useInitalLoad from "./hooks/useInitalLoad";
+import useAuthBootstrap from "./hooks/useAuthBootstrap";
 
 const App = () => {
-  useInitalLoad();
+  useAuthBootstrap();
   return (
     <>
       <Toaster position="top-center" richColors /> {/* Add this line */}

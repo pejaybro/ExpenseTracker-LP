@@ -6,9 +6,10 @@ import {
   recurringExpModal,
 } from "../models/transaction-modal.js";
 import { decrementTotal, insertTotal } from "./total-controller.js";
-import { updateMinMax } from "./minmax-controller.js";
+
 import moment from "moment";
 import { updateTripTotal } from "./trip-controller.js";
+import { totalModal } from "../models/total-modal.js";
 
 /**
  * *==================== FETCH Functions ====================
@@ -22,17 +23,10 @@ import { updateTripTotal } from "./trip-controller.js";
 
 export const fetchExpense = async (req, res) => {
   try {
-    let { userID } = req.params;
-    userID = parseInt(userID, 10);
-    if (isNaN(userID)) {
-      return res
-        .status(400)
-        .json({ message: "Invalid userID format. Must be a number." });
-    }
-
+    const userId = req.user.id;
     const data = await expenseModal.aggregate([
       // Stage 1: Find all the expenses for the user
-      { $match: { userID } },
+      { $match: { userId } },
       // Stage 2: Sort them by date, just like before
       { $sort: { onDate: -1 } },
       // Stage 3: JOIN with the 'trips' collection
@@ -74,7 +68,7 @@ export const fetchExpense = async (req, res) => {
       {
         $project: {
           // Keep all original expense fields
-          userID: 1,
+          userId: 1,
           isTypeExpense: 1,
           ofAmount: 1,
           isNote: 1,
@@ -101,14 +95,8 @@ export const fetchExpense = async (req, res) => {
 
 export const fetchIncome = async (req, res) => {
   try {
-    let { userID } = req.params;
-    userID = parseInt(userID, 10);
-    if (isNaN(userID)) {
-      return res
-        .status(400)
-        .json({ message: "Invalid userID format. Must be a number." });
-    }
-    const data = await incomeModal.find({ userID }).sort({ onDate: -1 });
+    const userId = req.user.id;
+    const data = await incomeModal.find({ userId }).sort({ onDate: -1 });
     res.status(200).json(data);
   } catch (error) {
     console.error(error);
@@ -120,14 +108,8 @@ export const fetchIncome = async (req, res) => {
 
 export const fetchRecurringExpense = async (req, res) => {
   try {
-    let { userID } = req.params;
-    userID = parseInt(userID, 10);
-    if (isNaN(userID)) {
-      return res
-        .status(400)
-        .json({ message: "Invalid userID format. Must be a number." });
-    }
-    const data = await recurringExpModal.find({ userID }).sort({ onDate: -1 });
+    const userId = req.user.id;
+    const data = await recurringExpModal.find({ userId }).sort({ onDate: -1 });
     res.status(200).json(data);
   } catch (error) {
     console.error(error);
@@ -147,29 +129,48 @@ export const fetchRecurringExpense = async (req, res) => {
 export const insertExpense = async (req, res) => {
   const session = await mongoose.startSession();
   try {
+    // start session
     session.startTransaction();
-    const data = req.body;
 
+    // creating new expense
+    const userId = req.user.id;
+    const data = {
+      userId,
+      ...req.body,
+    };
     const newExpense = new expenseModal(data);
-
     const savedEntry = await newExpense.save({ session });
+
+    // updating total
     await insertTotal(savedEntry, session);
 
-    if (savedEntry.isTripExpense === true)
-      await updateTripTotal(1, savedEntry, session);
-    if (savedEntry.isRecurringExpense === true)
-      await recurringExpModal
-        .findOneAndUpdate(
-          {
-            _id: savedEntry.ofRecurring,
-          },
-          {
-            $set: {
-              isReccuringStatus: 0,
-            },
-          }
-        )
-        .session(session);
+    // updating trip total
+    if (savedEntry.isTripExpense === true) {
+      const tripUpdated = await updateTripTotal(1, savedEntry, session);
+      if (!tripUpdated) {
+        throw new Error("Trip not found or does not belong to user");
+      }
+    }
+
+    // updating trip total
+    if (savedEntry.isRecurringExpense === true) {
+      const recurringUpdated = await recurringExpModal.findOneAndUpdate(
+        {
+          _id: savedEntry.ofRecurring,
+          userId, // 🔐 enforce ownership
+        },
+        {
+          $set: { isReccuringStatus: 0 },
+        },
+        { session }
+      );
+
+      if (!recurringUpdated) {
+        throw new Error(
+          "Recurring expense not found or does not belong to user"
+        );
+      }
+    }
 
     // If everything succeeded, commit
     await session.commitTransaction();
@@ -191,11 +192,22 @@ export const insertExpense = async (req, res) => {
 export const insertIncome = async (req, res) => {
   const session = await mongoose.startSession();
   try {
+    // start session
     session.startTransaction();
-    const data = req.body;
+
+    // creating new income
+    const userId = req.user.id;
+    const data = {
+      userId,
+      ...req.body,
+    };
     const newIncome = new incomeModal(data);
     const savedEntry = await newIncome.save({ session });
+
+    // updating total
     await insertTotal(savedEntry, session);
+
+    // saved income
     await session.commitTransaction();
     res.status(201).json(savedEntry);
   } catch (error) {
@@ -215,8 +227,14 @@ export const insertIncome = async (req, res) => {
 export const insertRecurringExpense = async (req, res) => {
   const session = await mongoose.startSession();
   try {
+    // start session
     session.startTransaction();
-    const data = req.body;
+    // creating new income
+    const userId = req.user.id;
+    const data = {
+      userId,
+      ...req.body,
+    };
 
     // Operation 1: Create the recurring expense
     const newRecurring = new recurringExpModal(data);
@@ -228,7 +246,7 @@ export const insertRecurringExpense = async (req, res) => {
     if (savedRecurringExpense.isReccuringStatus === 0) {
       // Assuming 0 means PAID
       const expenseData = {
-        userID: savedRecurringExpense.userID,
+        userId: savedRecurringExpense.userId,
         isTypeExpense: savedRecurringExpense.isTypeExpense,
         isNote: savedRecurringExpense.isNote,
         primeCategory: savedRecurringExpense.primeCategory,
@@ -242,6 +260,7 @@ export const insertRecurringExpense = async (req, res) => {
       };
       const newExpense = new expenseModal(expenseData);
       savedExpense = await newExpense.save({ session });
+      // update total
       await insertTotal(savedExpense, session);
     }
 
@@ -277,11 +296,14 @@ export const insertRecurringExpense = async (req, res) => {
 export const deleteExpense = async (req, res) => {
   const session = await mongoose.startSession();
   try {
+    // start session
     session.startTransaction();
-    const { userID, expID } = req.params;
+    const userId = req.user.id;
+    const { expID } = req.params;
+
     // --- Operation 1: Delete the expense ---
     const expData = await expenseModal.findOneAndDelete(
-      { userID, _id: expID },
+      { userId, _id: expID },
       { session }
     );
     // Handle "not found" inside the transaction
@@ -292,7 +314,7 @@ export const deleteExpense = async (req, res) => {
     }
     // --- Operation 2: Decrement the totals ---
     await decrementTotal(expData, session);
-    await updateMinMax(expData, session);
+
     await session.commitTransaction();
     res.status(200).json(expData);
   } catch (error) {
@@ -309,11 +331,13 @@ export const deleteExpense = async (req, res) => {
 export const deleteIncome = async (req, res) => {
   const session = await mongoose.startSession();
   try {
+    // start session
     session.startTransaction();
-    const { userID, incID } = req.params;
+    const userId = req.user.id;
+    const { incID } = req.params;
     // --- Operation 1: Delete the income ---
     const incData = await incomeModal.findOneAndDelete(
-      { userID, _id: incID },
+      { userId, _id: incID },
       { session }
     );
     // Handle "not found" inside the transaction
@@ -323,7 +347,7 @@ export const deleteIncome = async (req, res) => {
       return res.status(404).json({ message: "Income not found." });
     }
     // --- Operation 2: Decrement the totals ---
-    await decrementTotal(incData, session);
+    await decrementTotal(userId, incData, session);
     await session.commitTransaction();
     res.status(200).json(incData);
   } catch (error) {
@@ -338,39 +362,132 @@ export const deleteIncome = async (req, res) => {
 };
 
 export const deleteRecurringExpense = async (req, res) => {
-  const session = await mongoose.startSession();
   try {
-    session.startTransaction();
-    const { userID, recExpID } = req.params;
+    const userId = req.user.id;
+    const { recExpID } = req.params;
     // --- Operation 1: Delete the recurring expense ---
     const recData = await recurringExpModal.findOneAndDelete(
-      { userID, _id: recExpID },
+      { userId, _id: recExpID },
       { session }
     );
     // Handle "not found" inside the transaction
     if (!recData) {
       // Abort the process before sending the response
-      await session.abortTransaction();
+
       return res.status(404).json({ message: "Recurring Expense not found." });
     }
-    await session.commitTransaction();
+
     res.status(200).json(recData);
   } catch (error) {
-    await session.abortTransaction();
     console.error("Delete Recurring Expense Entry aborted:", error);
     return res.status(500).json({
       message: error.message || "Failed to Delete Recurring Expense Entry",
     });
-  } finally {
-    session.endSession();
   }
 };
 
-export const deleteTripExpenses = async (tripId, userID, session) => {
+export const deleteTripExpenses = async (tripId, userId, session) => {
   try {
-    const exp = await expenseModal.deleteMany(
+    const exp = await expenseModal
+      .find(
+        {
+          userId,
+          ofTrip: tripId,
+          isTripExpense: true,
+        },
+        {
+          ofAmount: 1,
+          date: 1,
+          primeName: 1,
+          subName: 1,
+        }
+      )
+      .session(session);
+
+    if (!expenses.length) {
+      return 0;
+    }
+
+    const yearMap = {};
+    for (const exp of expenses) {
+      const d = new Date(exp.date);
+      const year = d.getFullYear();
+      const month = d.getMonth();
+
+      yearMap[year] ??= {
+        total: 0,
+        months: {},
+        primes: {},
+        subs: {},
+      };
+
+      yearMap[year].total += exp.ofAmount;
+
+      yearMap[year].months[month] =
+        (yearMap[year].months[month] || 0) + exp.ofAmount;
+
+      yearMap[year].primes[exp.primeName] =
+        (yearMap[year].primes[exp.primeName] || 0) + exp.ofAmount;
+
+      const subKey = `${exp.primeName}|${exp.subName}`;
+      yearMap[year].subs[subKey] =
+        (yearMap[year].subs[subKey] || 0) + exp.ofAmount;
+    }
+
+    for (const year in yearMap) {
+      const data = yearMap[year];
+
+      const doc = await totalModal
+        .findOne({ userId, year: Number(year), isTripExpense: true })
+        .session(session);
+      if (!doc) continue;
+
+      /* ---- total ---- */
+      doc.total = Math.max(0, doc.total - data.total);
+
+      /* ---- months ---- */
+      for (const month in data.months) {
+        const entry = doc.monthList.find(m => m.month === Number(month));
+        if (entry) {
+          entry.total = Math.max(0, entry.total - data.months[month]);
+        }
+      }
+
+      /* ---- primes ---- */
+      for (const primeName in data.primes) {
+        const entry = doc.primeList.find(p => p.name === primeName);
+        if (entry) {
+          entry.total = Math.max(0, entry.total - data.primes[primeName]);
+        }
+      }
+      /* ---- subs ---- */
+      for (const key in data.subs) {
+        const [primeName, subName] = key.split("|");
+
+        const entry = doc.subList.find(
+          s => s.primeName === primeName && s.subName === subName
+        );
+
+        if (entry) {
+          entry.total = Math.max(0, entry.total - data.subs[key]);
+        }
+      }
+
+      /* ---- cleanup ---- */
+      doc.monthList = doc.monthList.filter(m => m.total > 0);
+      doc.primeList = doc.primeList.filter(p => p.total > 0);
+      doc.subList = doc.subList.filter(s => s.total > 0);
+
+      if (doc.total === 0) {
+        await totalModal.deleteOne({ _id: doc._id }, { session });
+      } else {
+        await doc.save({ session });
+      }
+    }
+
+    const res = await expenseModal.deleteMany(
       {
-        userID,
+        userId,
         ofTrip: tripId,
         isTripExpense: true,
       },
@@ -395,10 +512,11 @@ export const updateExpense = async (req, res) => {
   const session = await mongoose.startSession();
   try {
     session.startTransaction();
+    const userId = req.user.id;
     const data = req.body;
     let runDispatch = false;
     const exp = await expenseModal.findOneAndUpdate(
-      { userID: data.userID, _id: data._id },
+      { userId, _id: data._id },
       data,
       { new: false, runValidators: true, timestamps: true, session: session }
     );
@@ -416,8 +534,8 @@ export const updateExpense = async (req, res) => {
       exp.primeCategory !== data.primeCategory ||
       exp.subCategory !== data.subCategory
     ) {
-      await decrementTotal(exp, session);
-      await insertTotal(data, session);
+      await decrementTotal(userId, exp, session);
+      await insertTotal(userId, data, session);
       runDispatch = true;
     }
     await session.commitTransaction();
@@ -436,10 +554,11 @@ export const updateIncome = async (req, res) => {
   const session = await mongoose.startSession();
   try {
     session.startTransaction();
+    const userId = req.user.id;
     const data = req.body;
     let runDispatch = false;
     const inc = await incomeModal.findOneAndUpdate(
-      { userID: data.userID, _id: data._id },
+      { userId, _id: data._id },
       data,
       { new: false, runValidators: true, timestamps: true, session: session }
     );
@@ -455,8 +574,8 @@ export const updateIncome = async (req, res) => {
       inc.primeCategory !== data.primeCategory ||
       inc.subCategory !== data.subCategory
     ) {
-      await decrementTotal(inc, session);
-      await insertTotal(data, session);
+      await decrementTotal(userId, inc, session);
+      await insertTotal(userId, data, session);
       runDispatch = true;
     }
     await session.commitTransaction();
@@ -472,31 +591,27 @@ export const updateIncome = async (req, res) => {
   }
 };
 export const updateRecurringExpense = async (req, res) => {
-  const session = await mongoose.startSession();
   try {
-    session.startTransaction();
+    const userId = req.user.id;
     const data = req.body;
     const recExp = await recurringExpModal.findOneAndUpdate(
-      { userID: data.userID, _id: data._id },
+      { userId, _id: data._id },
       data,
       { new: false, runValidators: true, timestamps: true, session: session }
     );
     if (!recExp) {
       // Abort the transaction before sending the response
-      await session.abortTransaction();
+
       return res
         .status(404)
         .json({ message: "Recurring Expense Entry not found to update." });
     }
-    await session.commitTransaction();
+
     res.status(200).json({ update: true });
   } catch (error) {
-    await session.abortTransaction();
     console.error("Update Recurring Expense Entry aborted:", error);
     return res.status(500).json({
       message: error.message || "Failed to Update Recurring Expense Entry",
     });
-  } finally {
-    session.endSession();
   }
 };

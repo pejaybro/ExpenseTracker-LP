@@ -1,3 +1,5 @@
+import { useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import { fetchBudget } from "@/redux/slices/budget-slice";
 import { fetchMM } from "@/redux/slices/minmax-slice";
 import { fetchTotal } from "@/redux/slices/total-slice";
@@ -7,12 +9,14 @@ import {
   fetchRecurringExpense,
 } from "@/redux/slices/transaction-slice";
 import { fetchTrips } from "@/redux/slices/trip-slice";
-import { useEffect } from "react";
-import { useDispatch } from "react-redux";
 
-const useInitalLoad = () => {
+const useDashboardLoad = () => {
   const dispatch = useDispatch();
+  const userId = useSelector((state) => state.user.id);
+
   useEffect(() => {
+    if (!userId) return;
+
     dispatch(fetchRecurringExpense());
     dispatch(fetchExpense());
     dispatch(fetchIncome());
@@ -20,7 +24,7 @@ const useInitalLoad = () => {
     dispatch(fetchTotal());
     dispatch(fetchMM());
     dispatch(fetchTrips());
-  }, [dispatch]);
+  }, [dispatch, userId]);
 };
 
-export default useInitalLoad;
+export default useDashboardLoad;

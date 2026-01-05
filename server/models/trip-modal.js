@@ -8,11 +8,11 @@ const Schema = mongoose.Schema;
 
 const tripSchema = new Schema(
   {
-    userID: {
-      type: Number,
-      required: true,
+    userId: {
+      type: Schema.Types.ObjectId,
+      ref: "User",
       index: true,
-      unique: false,
+      require: true,
     },
     tripType: {
       type: Number, // 0 = Domestic, 1 = International

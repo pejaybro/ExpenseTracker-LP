@@ -38,7 +38,7 @@ app.use("/budget", budgetRouter);
 app.use("/total", totalRouter);
 app.use("/minmax", minmaxRouter);
 app.use("/trip", tripRouter);
-app.use("/users", userRouter);
+app.use("/user", userRouter);
 app.use("/saving-goal", goalRouter);
 
 // This is needed when you're using "type": "module" in your package.json

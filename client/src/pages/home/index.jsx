@@ -47,7 +47,6 @@ const HomeIndex = () => {
         <NewExpense />
         <NewBudget />
         <NewIncome />
-        <IconLibrary />
       </Flexcol>
     );
   }

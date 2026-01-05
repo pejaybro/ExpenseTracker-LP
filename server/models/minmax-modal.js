@@ -31,11 +31,11 @@ const minmaxSub = new Schema(
 
 const minmaxSchema = new Schema(
   {
-    userID: {
-      type: Number,
-      required: true,
+    userId: {
+      type: Schema.Types.ObjectId,
+      ref: "User",
       index: true,
-      unique: false,
+      require: true,
     },
     year: {
       type: Number,

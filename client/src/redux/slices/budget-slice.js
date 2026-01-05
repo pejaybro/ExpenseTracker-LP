@@ -48,13 +48,13 @@ export const setBudget = createAsyncThunk(
   },
 );
 
-const userID = 123456;
+
 // The CORRECTED thunk for fetching
 export const fetchBudget = createAsyncThunk(
   "budget/fetchBudget",
   async (_, { rejectWithValue }) => {
     try {
-      const res = await apiCLient.get(`/budget/get-data/${userID}`);
+      const res = await apiCLient.get(`/budget/get-data`);
       const notify = res?.meta?.isNewYearCreated;
       if (notify) {
         createBudgetNotification(notify);

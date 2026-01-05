@@ -29,14 +29,13 @@ const initialState = {
   TripFlags: null,
 };
 
-const userID = 123456;
 // Fetch trips
 export const fetchTrips = createAsyncThunk(
   "trip/fetchTrips",
   async (_, { rejectWithValue }) => {
-    // <-- userID must be passed in
+    
     try {
-      const res = await apiCLient.get(`/trip/get-trip/${userID}`);
+      const res = await apiCLient.get(`/trip/get-trip`);
       return res.data;
     } catch (err) {
       return rejectWithValue(err.message);
@@ -60,10 +59,10 @@ export const insertTrip = createAsyncThunk(
 
 export const deleteTrip = createAsyncThunk(
   "trip/deleteTrip",
-  async ({ userID, tripId }, { dispatch, rejectWithValue }) => {
+  async ({  tripId }, { dispatch, rejectWithValue }) => {
     try {
       const res = await apiCLient.delete(
-        `/trip/delete-trip/${userID}/${tripId}`,
+        `/trip/delete-trip/${tripId}`,
       );
       return res.data;
     } catch (err) {

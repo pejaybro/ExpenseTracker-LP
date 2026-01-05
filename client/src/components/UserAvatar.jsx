@@ -14,7 +14,7 @@ import { Button } from "./ui/button";
 import { Slider } from "@/components/ui/slider";
 import Flexcol from "./section/flexcol";
 import { useDispatch, useSelector } from "react-redux";
-import { setProfileImage } from "@/redux/slices/user-slice";
+import { uploadProfileImage } from "@/redux/slices/user-slice";
 import Flexrow from "./section/flexrow";
 import ExpButton from "./buttons/exp-button";
 import { cn } from "@/lib/utils";
@@ -161,7 +161,7 @@ const UserAvatar = ({ isSettings }) => {
 
         const formData = new FormData();
         formData.append("avatar", croppedImageBlob, "avatar.jpeg");
-        await dispatch(setProfileImage({ formData })).unwrap();
+        await dispatch(uploadProfileImage({ formData })).unwrap();
         setIsEditorOpen(false);
       } catch (uploadError) {
         console.error("Failed to upload avatar:", uploadError);
