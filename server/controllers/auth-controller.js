@@ -1,5 +1,8 @@
 import { userModal } from "../models/user-modal.js";
-import { sendVerificationEmail } from "../services/email/send-user-otp.js";
+import {
+  sendPasswordResetEmail,
+  sendVerificationEmail,
+} from "../services/email/send-user-otp.js";
 import { generateVerificationCode } from "../utils/generateOtp.js";
 import crypto from "crypto";
 import jwt from "jsonwebtoken";
@@ -173,7 +176,6 @@ export const resendSignupOtp = async (req, res) => {
 export const login = async (req, res) => {
   try {
     const { identifier, password } = req.body;
-    // identifier = email OR username
 
     if (!identifier || !password) {
       return res.status(400).json({
@@ -181,7 +183,7 @@ export const login = async (req, res) => {
       });
     }
 
-    // 1️⃣ Find user by email OR username
+    // 1️⃣ Find user
     const user = await userModal
       .findOne({
         $or: [
@@ -198,6 +200,14 @@ export const login = async (req, res) => {
       });
     }
 
+    // 🔴 Google-only account
+    if (user.provider === "google" && !user.password) {
+      return res.status(403).json({
+        message:
+          "This account was created using Google. Please log in with Google or set a password using 'Forgot Password'.",
+      });
+    }
+
     // 🔴 User exists but not verified
     if (!user.isVerified) {
       return res.status(403).json({
@@ -205,32 +215,21 @@ export const login = async (req, res) => {
       });
     }
 
-    // 2️⃣ Compare password
+    // 2️⃣ Compare password (FIXED)
     const isMatch = await bcrypt.compare(password, user.password);
-    console.log(
-      "Compare result:",
-      await bcrypt.compare(password, user.password)
-    );
-    console.log("Password length:", password.length);
 
     if (!isMatch) {
       return res.status(401).json({
-        message: "Invalid Password",
+        message: "Invalid password",
       });
     }
 
     // 3️⃣ Generate JWT
-    const token = jwt.sign(
-      {
-        userId: user._id,
-      },
-      process.env.JWT_SECRET,
-      {
-        expiresIn: "7d",
-      }
-    );
+    const token = jwt.sign({ userId: user._id }, process.env.JWT_SECRET, {
+      expiresIn: "7d",
+    });
 
-    // 4️⃣ Respond (never send password)
+    // 4️⃣ Respond
     return res.status(200).json({
       message: "Login successful",
       token,
@@ -271,5 +270,161 @@ export const fetchMe = async (req, res) => {
   } catch (error) {
     console.error("fetchMe error:", error);
     res.status(500).json({ message: "Failed to fetch user" });
+  }
+};
+
+export const googleCallback = async (req, res) => {
+  try {
+    const user = req.user;
+    const token = jwt.sign(
+      {
+        userId: user._id,
+      },
+      process.env.JWT_SECRET,
+      {
+        expiresIn: "7d",
+      }
+    );
+    res.redirect(`http://localhost:5173/googleauthsuccess?token=${token}`);
+  } catch (error) {
+    console.error("Google callback error:", error);
+    res.redirect("http://localhost:5173/login");
+  }
+};
+
+export const resetPassword = async (req, res) => {
+  try {
+    const { email } = req.body;
+
+    const user = await userModal.findOne({ email: email.toLowerCase() });
+
+    if (!user) {
+      return res.status(200).json({
+        message: "User Not Found",
+      });
+    }
+
+    const otp = generateVerificationCode();
+    const hashedOtp = crypto.createHash("sha256").update(otp).digest("hex");
+
+    user.resetPasswordCode = hashedOtp;
+    user.resetPasswordExpire = Date.now() + 10 * 60 * 1000;
+
+    await user.save();
+
+    await sendPasswordResetEmail({
+      to: user.email,
+      name: user.fullname,
+      code: otp,
+    });
+
+    return res.status(200).json({
+      message: "Password Code Sent",
+    });
+  } catch (error) {
+    console.error("Reset Password error:", error);
+    return res.status(500).json({
+      message: "Password Reset failed",
+    });
+  }
+};
+
+export const verifyPasswordReset = async (req, res) => {
+  try {
+    const { email, code } = req.body;
+    if (!email || !code) {
+      return res.status(400).json({
+        message: "Email and verification code are required",
+      });
+    }
+
+    // 1️⃣ Hash the OTP entered by user
+    const hashedCode = crypto.createHash("sha256").update(code).digest("hex");
+
+    // 2️⃣ Find user (unverified)
+    const user = await userModal
+      .findOne({
+        email: email.toLowerCase(),
+      })
+      .select("+resetPasswordCode +resetPasswordExpire");
+
+    // 🔴 Case A: User not found
+    if (!user) {
+      return res.status(400).json({
+        message: "User not found",
+      });
+    }
+
+    // 🔴 Case B: OTP expired
+    if (!user.resetPasswordExpire || user.resetPasswordExpire < Date.now()) {
+      return res.status(400).json({
+        message: "Verification expired. Please Try again.",
+      });
+    }
+
+    // 🔴 Case C: OTP does not match
+    if (user.resetPasswordCode !== hashedCode) {
+      return res.status(400).json({
+        message: "Invalid verification code",
+      });
+    }
+
+    // ✅ Case D: OTP valid → activate user
+    user.resetPasswordVerified = true;
+    user.resetPasswordCode = undefined;
+    user.resetPasswordExpire = undefined;
+
+    await user.save();
+
+    return res.status(200).json({
+      message: "Password Reset Successfully",
+      passwordReset: true,
+    });
+  } catch (error) {
+    console.error("Reset Password Varification Error:", error);
+    return res.status(500).json({
+      message: "Password Reset Varification failed",
+    });
+  }
+};
+
+export const newPassword = async (req, res) => {
+  try {
+    const { email, password, code } = req.body;
+
+    // 1️⃣ Validate input
+    if (!email || !password) {
+      return res.status(400).json({
+        message: "Email and new password are required",
+      });
+    }
+
+    // 2️⃣ Find user
+    const user = await userModal
+      .findOne({ email: email.toLowerCase() })
+      .select("+resetPasswordVerified");
+
+    if (!user || !user.resetPasswordVerified) {
+      return res.status(403).json({
+        message: "Password reset not authorized",
+      });
+    }
+    // 3️⃣ Set new password
+    user.password = password;
+    // ✅ Important: allow email+password login for Google users
+    user.provider = "local";
+    // 4️⃣ Cleanup reset fields (safe even if undefined)
+    user.resetPasswordVerified = false;
+
+    await user.save(); // bcrypt runs via pre-save hook
+    return res.status(200).json({
+      message: "Password updated successfully",
+      newPassword: true,
+    });
+  } catch (error) {
+    console.error("Setting New Password Fail:", error);
+    return res.status(500).json({
+      message: "Setting new password failed",
+    });
   }
 };

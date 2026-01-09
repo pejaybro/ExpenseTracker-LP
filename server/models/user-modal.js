@@ -34,7 +34,8 @@ const userSchema = new Schema(
     },
     password: {
       type: String,
-      required: true,
+      required: false,
+      default: null,
       minlength: 8,
       select: false, // 🔒 never return password by default
     },
@@ -48,6 +49,11 @@ const userSchema = new Schema(
     profilePicture: {
       type: String,
       default: null,
+    },
+    provider: {
+      type: String,
+      enum: ["local", "google"],
+      default: "local",
     },
     isVerified: {
       type: Boolean,
@@ -63,6 +69,21 @@ const userSchema = new Schema(
       select: false,
       index: { expireAfterSeconds: 0 },
     },
+    resetPasswordCode: {
+      type: String,
+      select: false,
+    },
+    resetPasswordExpire: {
+      type: Date,
+      select: false,
+      select: false,
+      index: { expireAfterSeconds: 0 },
+    },
+    resetPasswordVerified: {
+      type: Boolean,
+      default: false,
+      select: false,
+    },
   },
   {
     collection: "default-users", // <-- this line overrides pluralization of adding "s" at last of collection name
@@ -72,7 +93,10 @@ const userSchema = new Schema(
 );
 
 userSchema.pre("save", async function (next) {
-  if (!this.isModified("password")) return next();
+  if (!this.isModified("password") || !this.password) {
+    return next();
+  }
+
   const saltRounds = 10;
   this.password = await bcrypt.hash(this.password, saltRounds);
   next();

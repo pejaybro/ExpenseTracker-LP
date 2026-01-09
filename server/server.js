@@ -22,6 +22,10 @@ import path from "path";
 //--- Crons ---
 import "./crons/reset-recurring-payment-status.js";
 
+// --- Passport
+import passport from "passport";
+import "./services/passport/passport-config.js";
+
 export const PORT = 8080;
 
 const app = express();
@@ -33,6 +37,7 @@ app.use(
 );
 
 app.use(express.json());
+app.use(passport.initialize());
 app.use("/transaction", transactionRouter);
 app.use("/budget", budgetRouter);
 app.use("/total", totalRouter);

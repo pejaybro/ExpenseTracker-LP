@@ -37,6 +37,8 @@ import TripDetails from "@/pages/trip-expense/trip-details.jsx";
 import ProtectedRoute from "./ProtectedRoute.jsx";
 import AppLayout from "@/pages/app-layout.jsx";
 import PublicRoute from "./PublicRoute.jsx";
+import GoogleAuthSuccess from "@/pages/google-auth-success.jsx";
+import ResetPassword from "@/pages/login-signup/reset-password.jsx";
 
 /* Auth */
 
@@ -51,6 +53,8 @@ const AppRouter = () => {
 
       {/* Public routes */}
       <Route element={<PublicRoute />}>
+        <Route path={PATH.googleAuthSuccess} element={<GoogleAuthSuccess />} />
+        <Route path={PATH.passwordReset} element={<ResetPassword />} />
         <Route path={PATH.login} element={<Login />} />
         <Route path={PATH.signup} element={<Signup />} />
       </Route>

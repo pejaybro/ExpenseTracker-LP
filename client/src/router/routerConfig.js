@@ -16,6 +16,8 @@ const PATH = {
   goal: "/goal",
   login: "/login",
   signup: "/signup",
+  passwordReset: "/password-reset",
+  googleAuthSuccess: "/googleauthsuccess",
 };
 
 export { PATH };

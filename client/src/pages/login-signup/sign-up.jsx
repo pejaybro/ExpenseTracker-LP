@@ -17,6 +17,7 @@ import { cn } from "@/lib/utils";
 import { apiCLient } from "@/api/apiClient";
 import { PATH } from "@/router/routerConfig";
 import { useDebounce } from "@/hooks/useDebounce";
+import HorizontalDivider from "@/components/strips/horizontal-divider";
 
 const Signup = () => {
   /* ---------------------------------------------------
@@ -326,6 +327,30 @@ const Signup = () => {
                     </ExpButton>
                   </FormField>
                 </form>
+
+                {/* Divider */}
+                <Flexrow className="text-slate-a4 my-2.5 items-center justify-center gap-2.5 !text-[12px]">
+                  <HorizontalDivider className="bg-slate-a6 h-[0.5px]" />
+                  <span>OR</span>
+                  <HorizontalDivider className="bg-slate-a6 h-[0.5px]" />
+                </Flexrow>
+
+                {/* Google Login */}
+                <ExpButton
+                  type="button"
+                  custom_textbtn
+                  className={cn(
+                    "bg-slate-a1 text-dark-a3 !text-14px w-full gap-2.5",
+                  )}
+                  onClick={() => googleLogin()}
+                >
+                  <img
+                    src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg"
+                    alt="Google"
+                    className="h-3 w-3"
+                  />
+                  <span>Continue with Google</span>
+                </ExpButton>
                 <Flexrow className="mt-2 gap-2">
                   <span> Already have an account ?</span>
                   <button

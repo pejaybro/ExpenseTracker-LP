@@ -22,7 +22,6 @@ const useDashboardLoad = () => {
     dispatch(fetchIncome());
     dispatch(fetchBudget());
     dispatch(fetchTotal());
-    dispatch(fetchMM());
     dispatch(fetchTrips());
   }, [dispatch, userId]);
 };

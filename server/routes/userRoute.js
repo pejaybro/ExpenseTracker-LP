@@ -15,9 +15,14 @@ import {
   resendSignupOtp,
   signup,
   verifySignupOtp,
-  login, // ✅ make sure this is imported
+  login,
+  googleCallback,
+  verifyPasswordReset,
+  resetPassword,
+  newPassword, // ✅ make sure this is imported
 } from "../controllers/auth-controller.js";
 import { protect } from "../middlewares/auth.js";
+import passport from "passport";
 
 export const userRouter = express.Router();
 
@@ -49,3 +54,32 @@ userRouter.post("/resend-code", resendSignupOtp);
 --------------------------- */
 userRouter.get("/check-username", checkUsernameAvailability);
 userRouter.get("/check-email", checkEmailAvailability);
+
+/* ---------------------------
+   Password Reset
+--------------------------- */
+
+userRouter.post("/reset-password", resetPassword);
+userRouter.post("/verify-password-reset", verifyPasswordReset);
+userRouter.post("/new-password", newPassword);
+
+/* ---------------------------
+   Google
+--------------------------- */
+
+userRouter.get(
+  "/google",
+  passport.authenticate("google", {
+    scope: ["profile", "email"],
+    session: false,
+  })
+);
+
+userRouter.get(
+  "/google/callback",
+  passport.authenticate("google", {
+    failureRedirect: "http://localhost:5173/login",
+    session: false,
+  }),
+  googleCallback
+);

@@ -14,6 +14,8 @@ import ExpButton from "@/components/buttons/exp-button";
 import { apiCLient } from "@/api/apiClient";
 import { useDispatch } from "react-redux";
 import { setUser } from "@/redux/slices/user-slice";
+import { googleLogin } from "@/components/login-by-google";
+import VerticalDevider from "@/components/strips/vertical-devider";
 
 const Login = () => {
   const navigate = useNavigate();
@@ -31,8 +33,6 @@ const Login = () => {
         identifier: data.identifier, // email or username
         password: data.password,
       });
-      console.log("Login success");
-
       localStorage.setItem("token", res.data.token);
       dispatch(setUser(res.data.user));
       navigate(PATH.home, { replace: true });
@@ -128,6 +128,7 @@ const Login = () => {
               className={cn(
                 "bg-slate-a1 text-dark-a3 !text-14px w-full gap-2.5",
               )}
+              onClick={() => googleLogin()}
             >
               <img
                 src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg"
@@ -139,7 +140,7 @@ const Login = () => {
 
             {/* Sign up */}
 
-            <Flexrow className="mt-2 gap-2">
+            <Flexrow className="mt-2 items-center gap-2">
               <span> Don’t have an account ?</span>
               <button
                 custom_textbtn
@@ -148,6 +149,15 @@ const Login = () => {
                 className={cn("text-exp-a3 cursor-pointer underline")}
               >
                 Sign up
+              </button>
+              <VerticalDevider />
+              <button
+                custom_textbtn
+                type="button"
+                onClick={() => navigate(PATH.passwordReset)}
+                className={cn("text-exp-a3 cursor-pointer underline")}
+              >
+                Forgot Password ?
               </button>
             </Flexrow>
           </Flexcol>

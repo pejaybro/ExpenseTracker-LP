@@ -9,8 +9,6 @@ const AppLayout = () => {
 
   const { pathname } = useLocation();
 
-  console.log("path", pathname);
-
   // Determine active nav button safely
   const activeBtn =
     [

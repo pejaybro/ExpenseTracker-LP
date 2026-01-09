@@ -22,8 +22,7 @@ export const signupValidation = [
     .normalizeEmail(),
 
   body("password")
-    .notEmpty()
-    .withMessage("Password is required")
+    .optional({ nullable: true })
     .isLength({ min: 8 })
     .withMessage("Password must be at least 8 characters"),
 
@@ -33,7 +32,11 @@ export const signupValidation = [
     .withMessage("Full name is required")
     .isLength({ min: 2, max: 50 })
     .withMessage("Full name must be 2 to 50 characters"),
-  body("profilePicture") .optional({ nullable: true }).isString(),
+  body("provider")
+    .optional()
+    .isIn(["local", "google"])
+    .withMessage("Invalid auth provider"),
+  body("profilePicture").optional({ nullable: true }).isString(),
   (req, res, next) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {

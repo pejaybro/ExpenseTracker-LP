@@ -60,3 +60,42 @@ export const sendVerificationEmail = async ({ to, name, code }) => {
 
   await transporter.sendMail(mailOptions);
 };
+
+export const sendPasswordResetEmail = async ({ to, name, code }) => {
+  const mailOptions = {
+    from: `"Specely" <${process.env.SMTP_FROM}>`,
+    to,
+    subject: "Reset your Specely password",
+    html: `
+      <div style="font-family: Arial, sans-serif; line-height: 1.5;">
+        <h2>Hello ${name},</h2>
+
+        <p>We received a request to reset the password for your <b>Specely</b> account.</p>
+
+        <p>Please use the verification code below to reset your password:</p>
+
+        <div style="
+          font-size: 24px;
+          font-weight: bold;
+          letter-spacing: 4px;
+          margin: 20px 0;
+        ">
+          ${code}
+        </div>
+
+        <p>This code will expire in <b>10 minutes</b>.</p>
+
+        <p>
+          If you did not request a password reset, please ignore this email.
+          Your account will remain secure.
+        </p>
+
+        <br />
+        <p>— Specely Team</p>
+      </div>
+    `,
+  };
+
+  await transporter.sendMail(mailOptions);
+};
+
