@@ -19,7 +19,9 @@ import {
   googleCallback,
   verifyPasswordReset,
   resetPassword,
-  newPassword, // ✅ make sure this is imported
+  newPassword,
+  updatePassword,
+  updateUserDetails, // ✅ make sure this is imported
 } from "../controllers/auth-controller.js";
 import { protect } from "../middlewares/auth.js";
 import passport from "passport";
@@ -62,6 +64,7 @@ userRouter.get("/check-email", checkEmailAvailability);
 userRouter.post("/reset-password", resetPassword);
 userRouter.post("/verify-password-reset", verifyPasswordReset);
 userRouter.post("/new-password", newPassword);
+userRouter.post("/update-password", protect, updatePassword);
 
 /* ---------------------------
    Google
@@ -83,3 +86,9 @@ userRouter.get(
   }),
   googleCallback
 );
+
+/* ---------------------------
+   Update User Details
+--------------------------- */
+
+userRouter.post("/update-user-details", protect, updateUserDetails);

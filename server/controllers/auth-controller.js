@@ -390,7 +390,7 @@ export const verifyPasswordReset = async (req, res) => {
 
 export const newPassword = async (req, res) => {
   try {
-    const { email, password, code } = req.body;
+    const { email, password } = req.body;
 
     // 1️⃣ Validate input
     if (!email || !password) {
@@ -425,6 +425,103 @@ export const newPassword = async (req, res) => {
     console.error("Setting New Password Fail:", error);
     return res.status(500).json({
       message: "Setting new password failed",
+    });
+  }
+};
+
+export const updatePassword = async (req, res) => {
+  try {
+    const userId = req.user.id;
+    const { currentPassword, newPassword } = req.body;
+
+    // 2️⃣ Find user
+    const user = await userModal.findById(userId).select("+password");
+
+    if (!user) {
+      return res.status(404).json({
+        message: "User not found",
+      });
+    }
+
+    if (!user.password || user.provider === "google") {
+      return res.status(400).json({
+        message:
+          "This account does not have a password yet. Please use 'Forgot Password' to set one.",
+      });
+    }
+
+    const samePassword = await bcrypt.compare(newPassword, user.password);
+    if (samePassword) {
+      return res.status(400).json({
+        message: "New password cannot be same as current password",
+      });
+    }
+
+    const isMatch = await bcrypt.compare(currentPassword, user.password);
+
+    if (!isMatch) {
+      return res.status(401).json({
+        message: "Current Password Not Matched",
+      });
+    }
+    user.password = newPassword;
+    await user.save(); // bcrypt runs via pre-save hook
+    return res.status(200).json({
+      message: "Password updated successfully",
+    });
+  } catch (error) {
+    console.error("Updating Password Faild:", error);
+    return res.status(500).json({
+      message: "Updating password failed",
+      error: error,
+    });
+  }
+};
+
+export const updateUserDetails = async (req, res) => {
+  try {
+    const userId = req.user.id;
+    const { username, email, fullname } = req.body;
+
+    const updates = {};
+
+    if (username) updates.username = username.toLowerCase();
+    if (email) updates.email = email.toLowerCase();
+    if (fullname) updates.fullname = fullname;
+
+    if (Object.keys(updates).length === 0) {
+      return res.status(400).json({
+        message: "No fields provided to update",
+      });
+    }
+
+     const user = await userModal.findByIdAndUpdate(
+      userId,
+      { $set: updates },
+      { new: true, runValidators: true }
+    );
+
+    if (!user) {
+      return res.status(404).json({
+        message: "User not found",
+      });
+    }
+
+    return res.status(200).json({
+      message: "Details updated successfully",
+      user: {
+        id: user._id,
+        username: user.username,
+        email: user.email,
+        fullname: user.fullname,
+        profilePicture: user.profilePicture,
+      },
+    });
+  } catch (error) {
+    console.error("Updating User Details Failed:", error);
+    return res.status(500).json({
+      message: "Updating User Details Failed",
+      error: error,
     });
   }
 };

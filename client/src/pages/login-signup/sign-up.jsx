@@ -225,6 +225,8 @@ const Signup = () => {
                       className={cn(inputStyle)}
                       {...register("username", {
                         required: "Username is required",
+                        value: 3,
+                        message: "Username must be at least 3 characters",
                       })}
                     />
                     <ErrorField error={errors.username} />
