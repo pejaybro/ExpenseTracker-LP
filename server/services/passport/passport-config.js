@@ -24,7 +24,7 @@ passport.use(
             email,
             password: null,
             isVerified: true,
-            profilePicture: profile.photos?.[0]?.value,
+            profilePicture: null,
             provider: "google",
           });
         }

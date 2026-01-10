@@ -229,6 +229,11 @@ export const login = async (req, res) => {
       expiresIn: "7d",
     });
 
+    let avatarUrl = null;
+    if (user.profilePicture) {
+      avatarUrl = `${process.env.BASE_URL}/users/upload/profile/${user.profilePicture}`;
+    }
+
     // 4️⃣ Respond
     return res.status(200).json({
       message: "Login successful",
@@ -238,7 +243,7 @@ export const login = async (req, res) => {
         username: user.username,
         email: user.email,
         fullname: user.fullname,
-        profilePicture: user.profilePicture,
+        profilePicture: avatarUrl,
       },
     });
   } catch (error) {
@@ -260,12 +265,17 @@ export const fetchMe = async (req, res) => {
       return res.status(404).json({ message: "User not found" });
     }
 
+    let avatarUrl = null;
+    if (user.profilePicture) {
+      avatarUrl = `${process.env.BASE_URL}/users/upload/profile/${user.profilePicture}`;
+    }
+
     res.status(200).json({
       id: user._id,
       username: user.username,
       email: user.email,
       fullname: user.fullname,
-      profilePicture: user.profilePicture || null,
+      profilePicture: avatarUrl,
     });
   } catch (error) {
     console.error("fetchMe error:", error);
@@ -495,7 +505,7 @@ export const updateUserDetails = async (req, res) => {
       });
     }
 
-     const user = await userModal.findByIdAndUpdate(
+    const user = await userModal.findByIdAndUpdate(
       userId,
       { $set: updates },
       { new: true, runValidators: true }
@@ -507,6 +517,11 @@ export const updateUserDetails = async (req, res) => {
       });
     }
 
+    let avatarUrl = null;
+    if (user.profilePicture) {
+      avatarUrl = `${process.env.BASE_URL}/users/upload/profile/${user.profilePicture}`;
+    }
+
     return res.status(200).json({
       message: "Details updated successfully",
       user: {
@@ -514,7 +529,7 @@ export const updateUserDetails = async (req, res) => {
         username: user.username,
         email: user.email,
         fullname: user.fullname,
-        profilePicture: user.profilePicture,
+        profilePicture: avatarUrl,
       },
     });
   } catch (error) {

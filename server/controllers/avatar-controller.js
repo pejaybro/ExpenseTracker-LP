@@ -1,5 +1,7 @@
 import { userModal } from "../models/user-modal.js";
-import { PORT, uploadDir } from "../server.js";
+import path from "path";
+import fs from "fs";
+import { PROFILE_UPLOAD_DIR } from "../server.js";
 
 export const avatarUpload = async (req, res) => {
   try {
@@ -16,19 +18,17 @@ export const avatarUpload = async (req, res) => {
       });
     }
 
-    if (user.profilePicture?.startsWith("/users/")) {
-      const oldPath = path.join(
-        process.cwd(),
-        user.profilePicture.replace("/users/", "users/")
-      );
-
-      if (fs.existsSync(oldPath)) {
-        fs.unlinkSync(oldPath);
+    if (user.profilePicture) {
+      const oldFilePath = path.join(PROFILE_UPLOAD_DIR, user.profilePicture);
+      if (fs.existsSync(oldFilePath)) {
+        fs.unlinkSync(oldFilePath);
       }
     }
-    const avatarUrl = `/users/upload/profile/${req.file.filename}`;
-    user.profilePicture = avatarUrl;
+
+    user.profilePicture = req.file.filename;
     await user.save();
+
+    const avatarUrl = `${process.env.BASE_URL}/users/upload/profile/${req.file.filename}`;
 
     res.status(200).json({
       message: "Avatar uploaded successfully",

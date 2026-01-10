@@ -8,6 +8,8 @@ import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
 import { apiCLient } from "@/api/apiClient";
 import { toast } from "sonner";
+import { cn } from "@/lib/utils";
+import ExpButton from "@/components/buttons/exp-button";
 
 const inputStyle =
   "border-dark-a3 bg-dark-a1 focus:bg-dark-a1 hover:bg-dark-a1 w-full rounded-md border p-2.5 outline-none";
@@ -59,7 +61,7 @@ const PasswordChange = () => {
         <FormField className="relative py-0">
           <input
             type={showPassword ? "text" : "password"}
-            placeholder="Password"
+            placeholder="Current Password"
             className={cn(inputStyle)}
             {...register("current_password", {
               required: "Password is required",
@@ -81,7 +83,7 @@ const PasswordChange = () => {
         <FormField className="relative py-0">
           <input
             type={showPassword ? "text" : "password"}
-            placeholder="Password"
+            placeholder="New Password"
             className={cn(inputStyle)}
             {...register("new_password", {
               required: "Password is required",
@@ -99,14 +101,11 @@ const PasswordChange = () => {
             {showPassword ? <Icons.eye_open /> : <Icons.eye_close />}
           </button>
           <ErrorField error={errors.new_password} />
-          <span className="text-12px text-rr font-para2-m">
-            {passwordMatch && "Password Not Matched"}
-          </span>
         </FormField>
         <FormField className="relative py-0">
           <input
             type={showPassword ? "text" : "password"}
-            placeholder="Password"
+            placeholder="Confirm New Password"
             className={cn(inputStyle)}
             {...register("confirm_new_password", {
               required: "Password is required",
@@ -124,15 +123,12 @@ const PasswordChange = () => {
             {showPassword ? <Icons.eye_open /> : <Icons.eye_close />}
           </button>
           <ErrorField error={errors.confirm_new_password} />
-          <span className="text-12px text-rr font-para2-m">
-            {passwordMatch && "Password Not Matched"}
-          </span>
         </FormField>
 
         <FormField className="flex-row justify-start">
           <ExpButton
             type="submit"
-            disable={isSubmitting}
+            disabled={isSubmitting}
             className={"text-dark-a1 bg-exp-a3"}
             custom_textbtn
           >

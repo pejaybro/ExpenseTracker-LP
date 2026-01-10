@@ -46,19 +46,15 @@ app.use("/trip", tripRouter);
 app.use("/user", userRouter);
 app.use("/saving-goal", goalRouter);
 
-// This is needed when you're using "type": "module" in your package.json
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
-
-// This ensures that Multer has a place to save the files.
-export const uploadDir = path.join(__dirname, "users", "upload", "profile");
-if (!fs.existsSync(uploadDir)) {
-  // Use 'recursive: true' to create nested directories
-  fs.mkdirSync(uploadDir, { recursive: true });
+export const USERS_DIR = path.join(process.cwd(), "users");
+export const PROFILE_UPLOAD_DIR = path.join(USERS_DIR, "upload", "profile");
+if (!fs.existsSync(PROFILE_UPLOAD_DIR)) {
+  fs.mkdirSync(PROFILE_UPLOAD_DIR, { recursive: true });
 }
-// This makes the 'users' folder publicly accessible so images can be viewed.
-// This is placed before the API router to ensure static file requests are handled first.
-app.use("/users", express.static(path.join(__dirname, "users")));
+app.use(
+  "/users/upload/profile",
+  express.static(PROFILE_UPLOAD_DIR)
+);
 
 // --- Start Server ---
 const server = app.listen(PORT, () => {

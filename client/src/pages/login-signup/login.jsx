@@ -143,7 +143,6 @@ const Login = () => {
             <Flexrow className="mt-2 items-center gap-2">
               <span> Don’t have an account ?</span>
               <button
-                custom_textbtn
                 type="button"
                 onClick={() => navigate(PATH.signup)}
                 className={cn("text-exp-a3 cursor-pointer underline")}
@@ -152,7 +151,6 @@ const Login = () => {
               </button>
               <VerticalDevider />
               <button
-                custom_textbtn
                 type="button"
                 onClick={() => navigate(PATH.passwordReset)}
                 className={cn("text-exp-a3 cursor-pointer underline")}

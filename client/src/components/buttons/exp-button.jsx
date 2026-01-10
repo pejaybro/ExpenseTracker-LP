@@ -58,6 +58,7 @@ const ExpButton = ({
       {custom_textbtn && (
         <Component
           {...props}
+        
           className={cn(baseBtn, Btn_text, "h-max", className)}
         >
           {children}

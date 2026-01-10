@@ -1,18 +1,18 @@
 import multer from "multer";
 import path from "path";
-import { uploadDir } from "../server.js";
+import { PROFILE_UPLOAD_DIR } from "../server.js";
 
 const profileStorage = multer.diskStorage({
   // 'destination' is the folder where the file will be saved.
   destination: (req, file, cb) => {
     // We direct all files to our specific profile picture directory.
-    cb(null, uploadDir);
+    cb(null, PROFILE_UPLOAD_DIR);
   },
   // 'filename' determines the name of the file inside the destination folder.
   filename: (req, file, cb) => {
     // req.user.id comes from JWT protect middleware
     const ext = path.extname(file.originalname);
-    const filename = `${req.user.id}${ext}`;
+    const filename = `${req.user.id}-${Date.now()}${ext}`;
     cb(null, filename);
   },
 });
@@ -23,7 +23,7 @@ const profileStorage = multer.diskStorage({
 export const upload = multer({
   storage: profileStorage,
   limits: {
-    fileSize: 2 * 1024 * 1024, // 2MB
+    fileSize: 10 * 1024 * 1024, // 2MB
   },
   fileFilter: (req, file, cb) => {
     if (!file.mimetype.startsWith("image/")) {

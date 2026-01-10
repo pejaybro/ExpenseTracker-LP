@@ -60,7 +60,7 @@ const user = createSlice({
       state.email = user.email || null;
       state.fullName = user.fullName || null;
 
-      state.profileImageUrl = user.profilePicture || userPlaceholderImage;
+      state.profileImageUrl = user.profilePicture ?? userPlaceholderImage;
 
       state.error = null;
     },

@@ -50,11 +50,11 @@ const AppRouter = () => {
     <Routes>
       {/* Root redirect */}
       <Route path="/" element={<Navigate to={PATH.home} replace />} />
+      <Route path={PATH.passwordReset} element={<ResetPassword />} />
 
       {/* Public routes */}
       <Route element={<PublicRoute />}>
         <Route path={PATH.googleAuthSuccess} element={<GoogleAuthSuccess />} />
-        <Route path={PATH.passwordReset} element={<ResetPassword />} />
         <Route path={PATH.login} element={<Login />} />
         <Route path={PATH.signup} element={<Signup />} />
       </Route>

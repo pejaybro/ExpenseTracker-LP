@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from "react";
+import React, { useState, useCallback, useMemo } from "react";
 import { useDropzone } from "react-dropzone";
 import Cropper from "react-easy-crop";
 
@@ -111,10 +111,10 @@ async function getCroppedImg(
 
 const UserAvatar = ({ isSettings }) => {
   const dispatch = useDispatch();
-  const { profileImageUrl, loading, error } = useSelector(
-    (state) => state.user,
-  );
-  const finalAvatarUrl = profileImageUrl;
+  const { profileImageUrl, loading } = useSelector((state) => state.user);
+  const finalAvatarUrl = profileImageUrl ? profileImageUrl : undefined;
+
+  console.log("URL", finalAvatarUrl);
 
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isEditorOpen, setIsEditorOpen] = useState(false);
@@ -186,11 +186,16 @@ const UserAvatar = ({ isSettings }) => {
       <Flexrow className={"flex-wrap items-end"}>
         <Avatar
           className={cn(
-            "m-2 size-[60px] cursor-default rounded-md",
+            "m-2 size-[60px] cursor-default overflow-hidden rounded-md",
             isSettings && "m-0 size-[100px]",
           )}
         >
-          <AvatarImage src={finalAvatarUrl} alt="User Avatar" />
+          <AvatarImage
+            src={finalAvatarUrl}
+            alt="User Avatar"
+            className="h-full w-full object-cover"
+          />
+
           <AvatarFallback className="bg-exp-a0 rounded-md" />
         </Avatar>
         {isSettings && (

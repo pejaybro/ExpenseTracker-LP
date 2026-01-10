@@ -48,19 +48,20 @@ export const setBudget = createAsyncThunk(
   },
 );
 
-
 // The CORRECTED thunk for fetching
 export const fetchBudget = createAsyncThunk(
   "budget/fetchBudget",
   async (_, { rejectWithValue }) => {
     try {
-      const res = await apiCLient.get(`/budget/get-data`);
-      const notify = res?.meta?.isNewYearCreated;
+      const { data } = await apiCLient.get(`/budget/get-data`);
+
+      const notify = data?.meta?.isNewYearCreated;
+
       if (notify) {
         createBudgetNotification(notify);
       }
 
-      return res?.data?.data;
+      return data.data;
     } catch (err) {
       return rejectWithValue(err.message);
     }

@@ -30,6 +30,7 @@ import NotificationsBlock from "./notifications-block";
 import { useState } from "react";
 import useBudgetConfig from "@/hooks/useBudgetConfig";
 import { useCheckViewport } from "@/hooks/useCheckViewport";
+import { useSelector } from "react-redux";
 
 function Dashboard({ activeBtn, children }) {
   const { hide } = useCheckViewport();
@@ -37,6 +38,8 @@ function Dashboard({ activeBtn, children }) {
   const navigate = useNavigate();
 
   const [isNotiOpen, setIsNotiOpen] = useState(false);
+
+  const username = useSelector((state) => state.user.username);
 
   function selectedStyle(toSet) {
     if (activeBtn === toSet)
@@ -162,7 +165,7 @@ function Dashboard({ activeBtn, children }) {
                 className="!text-14px text-slate-a1 justify-start space-x-0.75 px-2 py-1"
               >
                 <FaUser className="text-slate-a5" />
-                <span>codingtaxipj</span>
+                <span>{username}</span>
               </ExpButton>
               <Separator
                 className={
