@@ -4,7 +4,7 @@ A full-stack **MERN** application for managing expenses, budgets, and recurring 
 
 ---
 
-## 💜 Specely : Project Name
+## 💜 Project Name : Specely 
 
 ![ProjectName](./screenshots/project-name.png)
 
