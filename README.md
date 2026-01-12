@@ -4,9 +4,14 @@ A full-stack **MERN** application for managing expenses, budgets, and recurring 
 
 ---
 
+### Project Name
+
+![ProjectName](./screenshots/project-name.png)
+
 ## 🚀 Tech Stack
 
 ### 🎨 Frontend
+
 - ⚛️ **React** (Vite)
 - 🧭 **React Router** – Client-side routing
 - 🧠 **Redux** – Global state management
@@ -16,6 +21,7 @@ A full-stack **MERN** application for managing expenses, budgets, and recurring 
 - 🌐 **Axios** – API communication
 
 ### 💅 UI & Styling
+
 - 🎨 **Tailwind CSS** – Utility-first styling
 - 🧩 **ShadCN UI** – Reusable UI components
 - 📊 **Charts & Graphs** – Data visualization
@@ -23,6 +29,7 @@ A full-stack **MERN** application for managing expenses, budgets, and recurring 
 ---
 
 ## 🛠 Backend
+
 - 🟢 **Node.js**
 - 🚂 **Express.js**
 - 🍃 **MongoDB** (Mongoose)
@@ -30,6 +37,7 @@ A full-stack **MERN** application for managing expenses, budgets, and recurring 
 ---
 
 ## 🔐 Authentication & Security
+
 - 🔑 **JWT Authentication**
 - 🛂 **Passport.js**
 - 🔵 **Google OAuth 2.0**
@@ -42,6 +50,7 @@ A full-stack **MERN** application for managing expenses, budgets, and recurring 
 ## 📦 Core Features
 
 ### 🔐 Authentication & User Management
+
 - 👤 User authentication using **JWT & Google OAuth**
 - 📩 Secure signup with **OTP verification**
 - 🔁 Password reset via **email OTP**
@@ -53,10 +62,11 @@ A full-stack **MERN** application for managing expenses, budgets, and recurring 
 ---
 
 ### 💰 Expense & Income Management
+
 - 💸 **Expense tracking** with category & date support
 - 💵 **Income tracking**
 - 🔄 **Recurring expenses** management
-- 📅 Automatic monthly resets for recurring expenses *(paid only)*
+- 📅 Automatic monthly resets for recurring expenses _(paid only)_
 - 🎯 **Budgeting system**
   - Yearly budget creation
   - Monthly budget distribution
@@ -64,6 +74,7 @@ A full-stack **MERN** application for managing expenses, budgets, and recurring 
 ---
 
 ### ✈️ Trips & Goals
+
 - 🧳 Create **trips** with a dedicated **trip details page**
 - 📍 Track **trip-based expenses**
 - 🏆 Create **savings goals**
@@ -73,6 +84,7 @@ A full-stack **MERN** application for managing expenses, budgets, and recurring 
 ---
 
 ### 📊 Analytics & Insights
+
 - 📊 Interactive analytics dashboard
 - 📈 Graph-based comparisons:
   - Income vs Expenses
@@ -80,9 +92,11 @@ A full-stack **MERN** application for managing expenses, budgets, and recurring 
   - Category-wise expense tracking
 
 #### 🕒 Global Time-Range Filter
+
 A centralized time filter applied across expenses, income, trips, and analytics.
 
 **Supported Ranges:**
+
 - 📅 This Year
 - 📆 This Month
 - ⏳ Last 9 Months
@@ -91,12 +105,13 @@ A centralized time filter applied across expenses, income, trips, and analytics.
 - 🗓 Last 30 Days
 - 🗓 Last 15 Days
 - 🗓 Last 7 Days
-- 📊 By Year *(year-wise aggregation)*
-- 📈 By Month *(month-wise aggregation)*
+- 📊 By Year _(year-wise aggregation)_
+- 📈 By Month _(month-wise aggregation)_
 
 ---
 
 ### 🔔 Notifications & Reminders
+
 - 🔔 Toast-based feedback system
 - ⏰ Budget reminder on **year change**
 - 📌 Recurring payment reminders:
@@ -107,18 +122,21 @@ A centralized time filter applied across expenses, income, trips, and analytics.
 ---
 
 ### 🖼 File & Media Handling
+
 - 🖼 Profile picture upload & management
 
 ---
 
 ## ⏱ Scheduling & Automation
+
 - ⏰ **node-cron**
-  - 🔄 Reset recurring expenses **monthly** *(paid only)*
+  - 🔄 Reset recurring expenses **monthly** _(paid only)_
   - 🗓 Reset budgets **every new year**
 
 ---
 
 ## 📧 Email Services
+
 - ✉️ **Nodemailer**
   - OTP for signup verification
   - OTP for password reset
@@ -126,12 +144,14 @@ A centralized time filter applied across expenses, income, trips, and analytics.
 ---
 
 ## 📊 Utilities
+
 - 📅 **Moment.js** – Date & time formatting
 - 💲 **Numeral.js** – Amount & currency formatting
 
 ---
 
 ## 🌐 API & Data Flow
+
 - 🔁 **RESTful API architecture**
 - 🌍 **Axios** for frontend API calls
 - 🔓 **CORS** enabled
@@ -139,10 +159,10 @@ A centralized time filter applied across expenses, income, trips, and analytics.
 ---
 
 ## 🗂 File Uploads
+
 - 📁 **Multer**
   - Secure profile image upload
 
 ---
 
 ## 📁 Project Structure
-
