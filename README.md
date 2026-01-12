@@ -163,6 +163,3 @@ A centralized time filter applied across expenses, income, trips, and analytics.
 - 📁 **Multer**
   - Secure profile image upload
 
----
-
-## 📁 Project Structure
